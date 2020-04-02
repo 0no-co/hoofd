@@ -1,22 +1,12 @@
 import { useMemo, useRef, useEffect } from 'react';
-
-// TODO: type this
-// type Meta = 'application-name' | 'author' | 'description' | 'generator' | 'keywords' | 'viewport' | 'referrer' | 'theme-color' | 'color-scheme';
-// type Property = string;
-
-export type HttpEquiv =
-  | 'content-type'
-  | 'default-style'
-  | 'refresh'
-  | 'content-security-policy';
-export type CharSet = 'utf-8';
+import { Name, HttpEquiv, CharSet, Property } from './types';
 
 export interface MetaOptions {
-  name?: string;
+  name?: Name;
   httpEquiv?: HttpEquiv;
   charset?: CharSet;
   content?: string;
-  property?: string;
+  property?: Property;
 }
 
 export const useMeta = ({
