@@ -4,8 +4,9 @@
   "description": "Hooks to populate the html head.",
   "main": "index.js",
   "scripts": {
-    "build": "rimraf dist && yarn build:uncompressed",
+    "build": "rimraf dist && yarn build:uncompressed && yarn build:compressed",
     "build:uncompressed": "microbundle --jsx React.createElement --external react --no-compress --name reactHead --output dist/",
+    "build:compressed": "microbundle --jsx React.createElement --external react --name reactHead --output dist/prod",
     "test": "cross-env NODE_ENV=test jest",
     "test:watch": "cross-env npm run test -- --watch",
     "prepublishOnly": "npm run test && npm run build",
@@ -23,6 +24,8 @@
   "homepage": "https://github.com/JoviDeCroock/react-head#readme",
   "dependencies": {},
   "devDependencies": {
+    "@testing-library/jest-dom": "^5.3.0",
+    "@testing-library/react": "^10.0.2",
     "@types/jest": "24.0.23",
     "@types/react": "16.9.16",
     "@types/react-dom": "16.9.4",
@@ -43,6 +46,7 @@
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "rimraf": "^3.0.2",
+    "ts-jest": "^25.3.0",
     "tslib": "^1.11.1",
     "typescript": "^3.8.3"
   },
@@ -70,6 +74,7 @@
     }
   },
   "jest": {
+    "preset": "ts-jest",
     "coverageDirectory": "./coverage/",
     "collectCoverage": true,
     "testMatch": [
