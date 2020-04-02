@@ -4,6 +4,11 @@ This project aims at providing a set of hooks to populate `<meta>`, ... for each
 
 ## Goals
 
-- [] React support
+Initially this will be `title` and `meta`.
+
+- [x] React support
+- [] Concurrent friendly (dispatcher of some sorts)
 - [] Preact support
+- [] Support `<link>`
+- [] Type all the things
 - [] SSR support
