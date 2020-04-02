@@ -1,16 +1,15 @@
 import { useEffect, useRef } from 'react';
+import { useMemo } from 'react';
 
 export const useTitle = (title: string) => {
-  const prevTitle = useRef<string | undefined>(undefined);
   const hasMounted = useRef(false);
   const titleBeforeHook = useRef<string | undefined>();
 
-  if (!hasMounted.current) titleBeforeHook.current = document.title;
-
-  if (prevTitle.current !== title) {
+  useMemo(() => {
+    // TODO: should we make a title node for this?
+    if (!hasMounted.current) titleBeforeHook.current = document.title;
     document.title = title;
-    prevTitle.current = title;
-  }
+  }, [title]);
 
   useEffect(() => {
     hasMounted.current = true;

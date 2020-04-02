@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useMemo, useRef, useEffect } from 'react';
 
 // TODO: type this
 // type Meta = 'application-name' | 'author' | 'description' | 'generator' | 'keywords' | 'viewport' | 'referrer' | 'theme-color' | 'color-scheme';
@@ -26,7 +26,11 @@ export const useMeta = ({
   httpEquiv,
   property,
 }: MetaOptions) => {
-  useEffect(() => {
+  const hasMounted = useRef(false);
+  const valueBeforeHook = useRef<string | null | undefined>();
+  const initialElement = useRef<Element | undefined>();
+
+  useMemo(() => {
     const result = document.head.querySelectorAll(
       charset
         ? '[charset]'
@@ -36,7 +40,11 @@ export const useMeta = ({
         ? `[property=${property}]`
         : `[http-equiv=${httpEquiv}]`
     );
-    const element = result[0];
+
+    let element = result[0];
+    if (!hasMounted.current && element) {
+      valueBeforeHook.current = element.getAttribute('content');
+    }
 
     if (element) {
       if (charset) {
@@ -45,7 +53,7 @@ export const useMeta = ({
         element.setAttribute('content', content || '');
       }
     } else {
-      const metaTag = document.createElement('meta');
+      const metaTag = (element = document.createElement('meta'));
       if (charset) {
         metaTag.setAttribute('charset', charset);
       } else {
@@ -60,7 +68,20 @@ export const useMeta = ({
         metaTag.setAttribute('content', content || '');
       }
 
+      initialElement.current = element;
       document.head.appendChild(metaTag);
     }
-  }, [name, content, httpEquiv, property]);
+  }, [content]);
+
+  useEffect(() => {
+    hasMounted.current = true;
+    return () => {
+      if (initialElement.current && valueBeforeHook.current)
+        initialElement.current.setAttribute(
+          'content',
+          valueBeforeHook.current || ''
+        );
+      else document.head.removeChild(initialElement.current as Element);
+    };
+  });
 };

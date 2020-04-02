@@ -76,6 +76,4 @@ describe('useTitle', () => {
     );
     expect(document.title).toEqual('coolStoryBruh');
   });
-
-  it('should deeply restore the previous title', () => {});
 });
