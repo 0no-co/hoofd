@@ -33,24 +33,28 @@ export const useMeta = ({
   useMemo(() => {
     const result = document.head.querySelectorAll(
       charset
-        ? '[charset]'
+        ? 'meta[charset]'
         : name
-        ? `[name=${name}]`
+        ? `meta[name="${name}"]`
         : property
-        ? `[property=${property}]`
-        : `[http-equiv=${httpEquiv}]`
+        ? `meta[property="${property}"]`
+        : `meta[http-equiv="${httpEquiv}"]`
     );
 
-    let element = result[0];
+    let element = (initialElement.current = result[0]);
     if (!hasMounted.current && element) {
-      valueBeforeHook.current = element.getAttribute('content');
+      if (charset) {
+        valueBeforeHook.current = element.getAttribute('charset');
+      } else {
+        valueBeforeHook.current = element.getAttribute('content');
+      }
     }
 
     if (element) {
       if (charset) {
         element.setAttribute('charset', charset);
       } else {
-        element.setAttribute('content', content || '');
+        element.setAttribute('content', content as string);
       }
     } else {
       const metaTag = (element = document.createElement('meta'));
@@ -65,7 +69,7 @@ export const useMeta = ({
           metaTag.setAttribute('http-equiv', httpEquiv as string);
         }
 
-        metaTag.setAttribute('content', content || '');
+        metaTag.setAttribute('content', content as string);
       }
 
       initialElement.current = element;
@@ -76,12 +80,12 @@ export const useMeta = ({
   useEffect(() => {
     hasMounted.current = true;
     return () => {
-      if (initialElement.current && valueBeforeHook.current)
-        initialElement.current.setAttribute(
-          'content',
-          valueBeforeHook.current || ''
+      if (valueBeforeHook.current)
+        (initialElement.current as Element).setAttribute(
+          charset ? 'charset' : 'content',
+          valueBeforeHook.current as string
         );
       else document.head.removeChild(initialElement.current as Element);
     };
-  });
+  }, []);
 };
