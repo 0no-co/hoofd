@@ -7,8 +7,8 @@ This project aims at providing a set of hooks to populate `<meta>`, ... for each
 Initially this will be `title` and `meta`.
 
 - [x] React support
-- [] Concurrent friendly (dispatcher of some sorts)
+- [ ] Concurrent friendly (dispatcher of some sorts)
 - [x] Preact support
-- [] Support `<link>`
-- [] Type all the things
-- [] SSR support
+- [ ] Support `<link>`
+- [ ] Type all the things
+- [ ] SSR support
