@@ -2,11 +2,10 @@
   "name": "react-head",
   "version": "1.0.0",
   "description": "Hooks to populate the html head.",
-  "main": "index.js",
   "scripts": {
-    "build": "rimraf dist && yarn build:uncompressed && yarn build:compressed",
-    "build:uncompressed": "microbundle --jsx React.createElement --external react --no-compress --name reactHead --output dist/",
-    "build:compressed": "microbundle --jsx React.createElement --external react --name reactHead --output dist/prod",
+    "build": "rimraf dist && yarn build:preact && yarn build:react",
+    "build:react": "microbundle --external react --name reactHead --output dist/",
+    "build:preact": "microbundle --external preact --name reactHead --output preact/dist --alias react=preact/hooks",
     "test": "cross-env NODE_ENV=test jest",
     "test:watch": "cross-env npm run test -- --watch",
     "prepublishOnly": "npm run test && npm run build",
@@ -22,6 +21,28 @@
     "url": "https://github.com/JoviDeCroock/react-head/issues"
   },
   "homepage": "https://github.com/JoviDeCroock/react-head#readme",
+  "main": "./dist/react-head.js",
+  "browser": "./dist/react-head.umd.js",
+  "umd:main": "./dist/react-head.umd.js",
+  "jsnext:main": "./dist/react-head.modern.js",
+  "module": "./dist/react-head.module.js",
+  "source": "./src/index.ts",
+  "types": "./dist/index.d.ts",
+  "typings": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "browser": "./dist/react-head.module.js",
+      "umd": "./dist/react-head.umd.js",
+      "import": "./dist/react-head.module.js",
+      "require": "./dist/react-head.js"
+    },
+    "./preact": {
+      "browser": "./preact/dist/react-head.module.js",
+      "umd": "./preact/dist/react-head.umd.js",
+      "import": "./preact/dist/react-head.module.js",
+      "require": "./preact/dist/react-head.js"
+    }
+  },
   "dependencies": {},
   "devDependencies": {
     "@testing-library/jest-dom": "^5.3.0",

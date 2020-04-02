@@ -8,7 +8,7 @@ Initially this will be `title` and `meta`.
 
 - [x] React support
 - [] Concurrent friendly (dispatcher of some sorts)
-- [] Preact support
+- [x] Preact support
 - [] Support `<link>`
 - [] Type all the things
 - [] SSR support
