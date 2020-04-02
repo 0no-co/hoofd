@@ -1,0 +1,26 @@
+{
+  "version": "2.0.0",
+  "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
+    "jsx": "react",
+    "target": "es2015",
+    "sourceMap": true,
+    "declaration": true,
+    "module": "es2015",
+    "removeComments": true,
+    "outDir": "lib/",
+    "moduleResolution": "node",
+    "experimentalDecorators": false,
+    "strict": true,
+    "strictPropertyInitialization": false,
+    "strictNullChecks": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitReturns": true,
+    "importHelpers": true,
+    "stripInternal": true,
+    "lib": ["es2015", "dom"]
+  },
+  "exclude": ["__tests__/**/*"],
+  "include": ["src/**/*"],
+  "files": ["src/index.ts"]
+}

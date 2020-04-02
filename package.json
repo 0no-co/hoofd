@@ -1,0 +1,84 @@
+{
+  "name": "react-head",
+  "version": "1.0.0",
+  "description": "Hooks to populate the html head.",
+  "main": "index.js",
+  "scripts": {
+    "build": "rimraf dist && yarn build:uncompressed",
+    "build:uncompressed": "microbundle --jsx React.createElement --external react --no-compress --name reactHead --output dist/",
+    "test": "cross-env NODE_ENV=test jest",
+    "test:watch": "cross-env npm run test -- --watch",
+    "prepublishOnly": "npm run test && npm run build",
+    "lint": "eslint . --ext .ts,.tsx"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JoviDeCroock/react-head.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JoviDeCroock/react-head/issues"
+  },
+  "homepage": "https://github.com/JoviDeCroock/react-head#readme",
+  "dependencies": {},
+  "devDependencies": {
+    "@types/jest": "24.0.23",
+    "@types/react": "16.9.16",
+    "@types/react-dom": "16.9.4",
+    "@typescript-eslint/eslint-plugin": "2.11.0",
+    "@typescript-eslint/parser": "2.11.0",
+    "codecov": "3.6.5",
+    "cross-env": "5.2.0",
+    "eslint": "6.7.2",
+    "eslint-config-prettier": "6.7.0",
+    "eslint-plugin-react": "7.17.0",
+    "husky": "3.1.0",
+    "jest": "^25.2.6",
+    "jest-cli": "^25.2.6",
+    "lint-staged": "9.5.0",
+    "microbundle": "0.12.0-next.8",
+    "preact": "^10.3.4",
+    "prettier": "^2.0.2",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "rimraf": "^3.0.2",
+    "tslib": "^1.11.1",
+    "typescript": "^3.8.3"
+  },
+  "mangle": {
+    "regex": "^_"
+  },
+  "prettier": {
+    "singleQuote": true,
+    "trailingComma": "es5"
+  },
+  "lint-staged": {
+    "*.{json,md}": [
+      "prettier --write",
+      "git add"
+    ],
+    "*.{ts,tsx}": [
+      "eslint --fix",
+      "prettier --write",
+      "git add"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "jest": {
+    "coverageDirectory": "./coverage/",
+    "collectCoverage": true,
+    "testMatch": [
+      "<rootDir>/__tests__/**/*.(test|spec).ts?(x)"
+    ],
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js"
+    ]
+  }
+}
