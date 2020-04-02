@@ -1,5 +1,4 @@
-import { useEffect, useRef } from 'react';
-import { useMemo } from 'react';
+import { useEffect, useRef, useMemo } from 'react';
 
 export const useTitle = (title: string) => {
   const hasMounted = useRef(false);
