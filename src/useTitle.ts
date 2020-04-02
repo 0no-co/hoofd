@@ -5,7 +5,6 @@ export const useTitle = (title: string) => {
   const titleBeforeHook = useRef<string | undefined>();
 
   useMemo(() => {
-    // TODO: should we make a title node for this?
     if (!hasMounted.current) titleBeforeHook.current = document.title;
     document.title = title;
   }, [title]);
