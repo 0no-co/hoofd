@@ -36,9 +36,6 @@ This means that `[title, title]` only the first one should be applied, so that w
 to the one still in the array. The issue here is to consistently order these correctly since knowing `depth` isn't really a thing
 in React. This would also need to happen for `meta`, this could get quite complicated for the case of hooks.
 
-We could also try using `unshift` instead of `push`, I think it's safe to assume that a higher-up component can insert when it's changed
-this means that something unexpected happened. The only issue is scheduling an unmount.... Which is kinda hard
-
 1. Queue in React-tree by doing `queue.push(payload)` in a `useEffect`.
 2. Schedule a `processQueue` in the first step.
 3. Process the `titleQueue` by doing a `.reverse()` and taking the first one.
