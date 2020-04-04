@@ -6,13 +6,12 @@ const metaQueue: any[] = [];
 function debounce(func: any) {
   let timeout: any;
 
-  return function executedFunction() {
+  return () => {
     clearTimeout(timeout);
-
     timeout = setTimeout(() => {
       timeout = null;
       func();
-    }, 250);
+    }, 20);
   };
 }
 
@@ -34,6 +33,8 @@ export const removeFromQueue = (type: HeadType, index: number) => {
       break;
     }
     case 'meta': {
+      // TODO: we have to find instead of holding indices when rapidly removing, we can't
+      // update the indices of certain components due to rapid unmounts.
       const oldMeta = metaQueue[index];
       if (oldMeta) {
         metaQueue.splice(index, 1);
