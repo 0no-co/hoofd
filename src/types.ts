@@ -63,5 +63,25 @@ export type Rel =
   | 'alternate'
   | 'shortcut icon'
   | 'fluid-icon'
+  | 'icon'
+  | 'stylesheet'
   | 'me'
-  | 'canonical';
+  | 'canonical'
+  | 'preload'
+  | 'prefetch'
+  | 'preconnect'
+  | 'modulepreload';
+
+export type As =
+  | 'audio'
+  | 'document'
+  | 'embed'
+  | 'fetch'
+  | 'font'
+  | 'image'
+  | 'object'
+  | 'script'
+  | 'style'
+  | 'track'
+  | 'video'
+  | 'worker';
