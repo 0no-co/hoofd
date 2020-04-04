@@ -4,8 +4,8 @@
   "description": "Hooks to populate the html head.",
   "scripts": {
     "build": "rimraf dist && yarn build:preact && yarn build:react",
-    "build:react": "microbundle --external react --name reactHead --output dist/",
-    "build:preact": "microbundle --external preact --name reactHead --output preact/dist --alias react=preact/hooks",
+    "build:react": "microbundle --external react --name reactHead --no-compress --output dist/",
+    "build:preact": "microbundle --external preact --name reactHead --no-compress --output preact/dist --alias react=preact/hooks",
     "test": "cross-env NODE_ENV=test jest",
     "test:watch": "cross-env npm run test -- --watch",
     "prepublishOnly": "npm run test && npm run build",

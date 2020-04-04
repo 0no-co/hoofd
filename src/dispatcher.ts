@@ -24,7 +24,7 @@ const changeOrCreateMetaTag = (meta: any) => {
 
   if (result[0]) {
     if (meta.charset) {
-      result[0].setAttribute('charset', meta.charset);
+      result[0].setAttribute(meta.keyword, meta.charset);
     } else {
       result[0].setAttribute('content', meta.content as string);
     }
@@ -54,7 +54,8 @@ const createDispatcher = () => {
     document.title = titleQueue[0];
 
     metaQueue.forEach((meta) => {
-      const val = meta.keyword === 'charset' ? 'charset' : meta[meta.keyword];
+      const val =
+        meta.keyword === 'charset' ? meta.keyword : meta[meta.keyword];
       if (!visited.has(val)) {
         visited.add(val);
         changeOrCreateMetaTag(meta);
