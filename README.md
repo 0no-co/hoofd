@@ -8,9 +8,10 @@ Initially this will be `title` and `meta`.
 
 - [x] React support
 - [x] Add majority of types for meta and link.
-- [x] Concurrent friendly ([dispatcher](#dispatcher) of some sorts)
+- [x] Concurrent friendly
 - [x] Preact support
 - [x] Support `<link>`
 - [ ] SSR support
 - [ ] Document the dispatcher
 - [ ] Document the hooks
+- [ ] Golf bytes
