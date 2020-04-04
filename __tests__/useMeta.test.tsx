@@ -147,4 +147,6 @@ describe('useMeta', () => {
       '<meta http-equiv="refresh" content="60">'
     );
   });
+
+  // TODO: test with un + remount (similar to the last one in useTitle)
 });

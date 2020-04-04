@@ -6,9 +6,9 @@
     "build": "rimraf dist && yarn build:preact && yarn build:react",
     "build:react": "microbundle --external react --name reactHead --no-compress --output dist/",
     "build:preact": "microbundle --external preact --name reactHead --no-compress --output preact/dist --alias react=preact/hooks",
-    "test": "cross-env NODE_ENV=test jest",
-    "test:watch": "cross-env npm run test -- --watch",
-    "prepublishOnly": "npm run test && npm run build",
+    "test": "jest",
+    "test:watch": "npm run test -- --watch",
+    "prepublishOnly": "npm run test && npm run lint && npm run build",
     "lint": "eslint . --ext .ts,.tsx"
   },
   "repository": {
@@ -53,7 +53,6 @@
     "@typescript-eslint/eslint-plugin": "2.11.0",
     "@typescript-eslint/parser": "2.11.0",
     "codecov": "3.6.5",
-    "cross-env": "5.2.0",
     "eslint": "6.7.2",
     "eslint-config-prettier": "6.7.0",
     "eslint-plugin-react": "7.17.0",
