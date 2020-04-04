@@ -94,8 +94,7 @@ describe('useTitle', () => {
     expect(document.title).toEqual('coolStoryBruh');
   });
 
-  // Still failing
-  it.skip('should react correctly to a replaced title', async () => {
+  it('should react correctly to a replaced title', async () => {
     let rerender: any;
     const MyComponent = ({
       children,

@@ -46,6 +46,8 @@ const changeOrCreateMetaTag = (meta: any) => {
 const createDispatcher = () => {
   let titleQueue: string[] = [];
   let metaQueue: any[] = [];
+  let currentTitleIndex = 0;
+  let currentMetaIndex = 0;
 
   const process = debounce(() => {
     const visited = new Set();
@@ -58,17 +60,20 @@ const createDispatcher = () => {
         changeOrCreateMetaTag(meta);
       }
     });
+
+    currentTitleIndex = currentMetaIndex = 0;
   });
 
   return {
     addToQueue: (type: HeadType, payload: any): void => {
       process();
+
       switch (type) {
         case 'title':
-          titleQueue.push(payload);
+          titleQueue.splice(currentTitleIndex++, 0, payload);
           break;
         case 'meta':
-          metaQueue.push(payload);
+          metaQueue.splice(currentMetaIndex++, 0, payload);
           break;
       }
     },
