@@ -1,5 +1,7 @@
 type HeadType = 'title' | 'meta';
 
+const isServerSide = typeof document === 'undefined';
+
 function debounceFrame(func: any) {
   let timeout: any;
 
@@ -67,7 +69,7 @@ const createDispatcher = () => {
 
   return {
     addToQueue: (type: HeadType, payload: any): void => {
-      process();
+      if (!isServerSide) process();
 
       switch (type) {
         case 'title':
@@ -137,6 +139,10 @@ const createDispatcher = () => {
       titleQueue = [];
       metaQueue = [];
     },
+    // toString: () => {
+    //  Will process the two arrays, taking the first title in the array and returning <title>{string}</title>
+    //  Then do a similar for the meta's. (will also need to add links, and add a linkQueue).
+    // },
   };
 };
 
