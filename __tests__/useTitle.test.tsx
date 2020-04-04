@@ -5,6 +5,7 @@ import { useTitle } from '../src';
 
 describe('useTitle', () => {
   it('should fill in the title', () => {
+    jest.useFakeTimers();
     const MyComponent = ({ title }: { title: string }) => {
       useTitle(title);
       return <p>hi</p>;
@@ -14,15 +15,19 @@ describe('useTitle', () => {
 
     act(() => {
       ({ rerender } = render(<MyComponent title="coolStoryBruh" />));
+      jest.runAllTimers();
     });
-
     expect(document.title).toEqual('coolStoryBruh');
 
-    rerender!(<MyComponent title="itWorks" />);
+    act(() => {
+      rerender!(<MyComponent title="itWorks" />);
+      jest.runAllTimers();
+    });
     expect(document.title).toEqual('itWorks');
   });
 
   it('should restore the title', () => {
+    jest.useFakeTimers();
     const MyComponent = ({ title }: { title: string }) => {
       useTitle(title);
       return <p>hi</p>;
@@ -32,15 +37,20 @@ describe('useTitle', () => {
 
     act(() => {
       ({ rerender } = render(<MyComponent title="coolStoryBruh" />));
+      jest.runAllTimers();
     });
 
     expect(document.title).toEqual('coolStoryBruh');
 
-    rerender!(<p>hi</p>);
+    act(() => {
+      rerender!(<p>hi</p>);
+      jest.runAllTimers();
+    });
     expect(document.title).toEqual('');
   });
 
   it('should deeply fill in the title', () => {
+    jest.useFakeTimers();
     const MyComponent = ({
       children,
       title,
@@ -65,15 +75,20 @@ describe('useTitle', () => {
           <MyDeepComponent title="resettedBruv" />
         </MyComponent>
       ));
+      jest.runAllTimers();
     });
 
     expect(document.title).toEqual('resettedBruv');
 
-    rerender!(
-      <MyComponent title="coolStoryBruh">
-        <p>hi</p>
-      </MyComponent>
-    );
+    act(() => {
+      rerender!(
+        <MyComponent title="coolStoryBruh">
+          <p>hi</p>
+        </MyComponent>
+      );
+      jest.runAllTimers();
+    });
+
     expect(document.title).toEqual('coolStoryBruh');
   });
 });

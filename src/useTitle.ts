@@ -1,18 +1,22 @@
-import { useEffect, useRef, useMemo } from 'react';
+import { useEffect, useRef } from 'react';
+import { addToQueue, removeFromQueue, change } from './dispatcher';
 
 export const useTitle = (title: string) => {
   const hasMounted = useRef(false);
-  const titleBeforeHook = useRef<string | undefined>();
+  const index = useRef<number | undefined>();
 
-  useMemo(() => {
-    if (!hasMounted.current) titleBeforeHook.current = document.title;
-    document.title = title;
+  useEffect(() => {
+    if (hasMounted.current) {
+      change('title', index.current as number, title);
+    }
   }, [title]);
 
   useEffect(() => {
     hasMounted.current = true;
+    index.current = addToQueue('title', title);
     return () => {
-      document.title = titleBeforeHook.current || '';
+      hasMounted.current = false;
+      removeFromQueue('title', index.current as number);
     };
   }, []);
 };
