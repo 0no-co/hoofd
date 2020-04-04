@@ -1,6 +1,6 @@
 import { useRef, useEffect } from 'react';
 import { Name, HttpEquiv, CharSet, Property } from './types';
-import { addToQueue, removeFromQueue, change } from './dispatcher';
+import dispatcher from './dispatcher';
 
 export interface MetaOptions {
   name?: Name;
@@ -19,41 +19,48 @@ export const useMeta = ({
 }: MetaOptions) => {
   const hasMounted = useRef(false);
   const keyword = useRef<string | undefined>();
-  const index = useRef<number | undefined>();
+  const metaObject = useRef<any>();
 
   useEffect(() => {
     if (hasMounted.current) {
-      change('meta', index.current as number, {
-        keyword: keyword.current,
+      dispatcher.change(
+        'meta',
+        metaObject.current,
+        (metaObject.current = {
+          keyword: keyword.current,
+          name,
+          charset,
+          httpEquiv,
+          property,
+          content,
+        })
+      );
+    }
+  }, [content]);
+
+  useEffect(() => {
+    dispatcher.addToQueue(
+      'meta',
+      (metaObject.current = {
+        keyword: keyword.current = charset
+          ? 'charset'
+          : name
+          ? 'name'
+          : property
+          ? 'property'
+          : 'httpEquiv',
         name,
         charset,
         httpEquiv,
         property,
         content,
-      });
-    }
-  }, [content]);
-
-  useEffect(() => {
-    index.current = addToQueue('meta', {
-      keyword: keyword.current = charset
-        ? 'charset'
-        : name
-        ? 'name'
-        : property
-        ? 'property'
-        : 'httpEquiv',
-      name,
-      charset,
-      httpEquiv,
-      property,
-      content,
-    });
+      })
+    );
 
     hasMounted.current = true;
     return () => {
       hasMounted.current = false;
-      removeFromQueue('meta', index.current as number);
+      dispatcher.removeFromQueue('meta', metaObject.current);
     };
   }, []);
 };

@@ -1,22 +1,26 @@
 import { useEffect, useRef } from 'react';
-import { addToQueue, removeFromQueue, change } from './dispatcher';
+import dispatcher from './dispatcher';
 
 export const useTitle = (title: string) => {
   const hasMounted = useRef(false);
-  const index = useRef<number | undefined>();
+  const prevTitle = useRef<string | undefined>();
 
   useEffect(() => {
     if (hasMounted.current) {
-      change('title', index.current as number, title);
+      dispatcher.change(
+        'title',
+        prevTitle.current as string,
+        (prevTitle.current = title)
+      );
     }
   }, [title]);
 
   useEffect(() => {
     hasMounted.current = true;
-    index.current = addToQueue('title', title);
+    dispatcher.addToQueue('title', (prevTitle.current = title));
     return () => {
       hasMounted.current = false;
-      removeFromQueue('title', index.current as number);
+      dispatcher.removeFromQueue('title', prevTitle.current);
     };
   }, []);
 };

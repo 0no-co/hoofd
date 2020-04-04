@@ -1,9 +1,15 @@
 import '@testing-library/jest-dom';
 import * as React from 'react';
-import { act, render } from '@testing-library/react';
+import { act, render, cleanup } from '@testing-library/react';
 import { useMeta } from '../src';
+import dispatcher from '../src/dispatcher';
 
 describe('useMeta', () => {
+  afterEach(() => {
+    cleanup();
+    dispatcher.reset();
+  });
+
   it('should use meta tags', async () => {
     jest.useFakeTimers();
     const MyComponent = ({ description }: any) => {

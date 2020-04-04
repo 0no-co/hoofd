@@ -1,8 +1,5 @@
 type HeadType = 'title' | 'meta';
 
-const titleQueue: string[] = [];
-const metaQueue: any[] = [];
-
 function debounce(func: any) {
   let timeout: any;
 
@@ -14,71 +11,6 @@ function debounce(func: any) {
     }, 20);
   };
 }
-
-export const addToQueue = (type: HeadType, payload: any): number => {
-  process();
-  switch (type) {
-    case 'title':
-      return titleQueue.push(payload) - 1;
-    case 'meta':
-      return metaQueue.push(payload) - 1;
-  }
-};
-
-export const removeFromQueue = (type: HeadType, index: number) => {
-  switch (type) {
-    case 'title': {
-      titleQueue.splice(index, 1);
-      document.title = titleQueue[0] || '';
-      break;
-    }
-    case 'meta': {
-      // TODO: we have to find instead of holding indices when rapidly removing, we can't
-      // update the indices of certain components due to rapid unmounts.
-      const oldMeta = metaQueue[index];
-      if (oldMeta) {
-        metaQueue.splice(index, 1);
-        const newMeta = metaQueue.find(
-          (m) =>
-            m.keyword === oldMeta.keyword &&
-            (m.keyword === 'charset' || m[m.keyword] === oldMeta[m.keyword])
-        );
-
-        if (newMeta) {
-          changeOrCreateMetaTag(newMeta);
-        } else if (oldMeta) {
-          const result = document.head.querySelectorAll(
-            oldMeta.charset
-              ? 'meta[charset]'
-              : `meta[${
-                  oldMeta.keyword === 'httpEquiv'
-                    ? 'http-equiv'
-                    : oldMeta.keyword
-                }="${oldMeta[oldMeta.keyword]}"]`
-          );
-
-          if (result[0]) {
-            document.head.removeChild(result[0]);
-          }
-        }
-      }
-      break;
-    }
-  }
-};
-
-export const change = (type: HeadType, index: number, payload: any) => {
-  switch (type) {
-    case 'title': {
-      document.title = titleQueue[index] = payload;
-      break;
-    }
-    case 'meta': {
-      changeOrCreateMetaTag((titleQueue[index] = payload));
-      break;
-    }
-  }
-};
 
 const changeOrCreateMetaTag = (meta: any) => {
   const propertyValue = meta[meta.keyword];
@@ -111,15 +43,96 @@ const changeOrCreateMetaTag = (meta: any) => {
   }
 };
 
-const process = debounce(() => {
-  const visited = new Set();
-  document.title = titleQueue[0];
+const createDispatcher = () => {
+  let titleQueue: string[] = [];
+  let metaQueue: any[] = [];
 
-  metaQueue.forEach((meta) => {
-    const val = meta.keyword === 'charset' ? 'charset' : meta[meta.keyword];
-    if (!visited.has(val)) {
-      visited.add(val);
-      changeOrCreateMetaTag(meta);
-    }
+  const process = debounce(() => {
+    const visited = new Set();
+    document.title = titleQueue[0];
+
+    metaQueue.forEach((meta) => {
+      const val = meta.keyword === 'charset' ? 'charset' : meta[meta.keyword];
+      if (!visited.has(val)) {
+        visited.add(val);
+        changeOrCreateMetaTag(meta);
+      }
+    });
   });
-});
+
+  return {
+    addToQueue: (type: HeadType, payload: any): void => {
+      process();
+      switch (type) {
+        case 'title':
+          titleQueue.push(payload);
+          break;
+        case 'meta':
+          metaQueue.push(payload);
+          break;
+      }
+    },
+    removeFromQueue: (type: HeadType, payload: any) => {
+      switch (type) {
+        case 'title': {
+          titleQueue.splice(titleQueue.indexOf(payload), 1);
+          document.title = titleQueue[0] || '';
+          break;
+        }
+        case 'meta': {
+          const index = metaQueue.indexOf(payload);
+          const oldMeta = metaQueue[index];
+          if (oldMeta) {
+            metaQueue.splice(index, 1);
+            const newMeta = metaQueue.find(
+              (m) =>
+                m.keyword === oldMeta.keyword &&
+                (m.keyword === 'charset' || m[m.keyword] === oldMeta[m.keyword])
+            );
+
+            if (newMeta) {
+              changeOrCreateMetaTag(newMeta);
+            } else {
+              const result = document.head.querySelectorAll(
+                oldMeta.charset
+                  ? 'meta[charset]'
+                  : `meta[${
+                      oldMeta.keyword === 'httpEquiv'
+                        ? 'http-equiv'
+                        : oldMeta.keyword
+                    }="${oldMeta[oldMeta.keyword]}"]`
+              );
+
+              if (result[0]) {
+                document.head.removeChild(result[0]);
+              }
+            }
+          }
+          break;
+        }
+      }
+    },
+    change: (type: HeadType, prevPayload: string, payload: any) => {
+      switch (type) {
+        case 'title': {
+          document.title = titleQueue[
+            titleQueue.indexOf(prevPayload)
+          ] = payload;
+          break;
+        }
+        case 'meta': {
+          changeOrCreateMetaTag(
+            (metaQueue[metaQueue.indexOf(prevPayload)] = payload)
+          );
+          break;
+        }
+      }
+    },
+    reset: () => {
+      titleQueue = [];
+      metaQueue = [];
+    },
+  };
+};
+
+export default createDispatcher();
