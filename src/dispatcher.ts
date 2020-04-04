@@ -1,6 +1,6 @@
 type HeadType = 'title' | 'meta';
 
-function debounce(func: any) {
+function debounceFrame(func: any) {
   let timeout: any;
 
   return () => {
@@ -8,7 +8,7 @@ function debounce(func: any) {
     timeout = setTimeout(() => {
       timeout = null;
       func();
-    }, 20);
+    }, 1000 / 60);
   };
 }
 
@@ -49,7 +49,7 @@ const createDispatcher = () => {
   let currentTitleIndex = 0;
   let currentMetaIndex = 0;
 
-  const process = debounce(() => {
+  const process = debounceFrame(() => {
     const visited = new Set();
     document.title = titleQueue[0];
 
