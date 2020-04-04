@@ -88,6 +88,7 @@ const createDispatcher = () => {
         case 'meta': {
           const index = metaQueue.indexOf(payload);
           const oldMeta = metaQueue[index];
+
           if (oldMeta) {
             metaQueue.splice(index, 1);
             const newMeta = metaQueue.find(
@@ -109,9 +110,7 @@ const createDispatcher = () => {
                     }="${oldMeta[oldMeta.keyword]}"]`
               );
 
-              if (result[0]) {
-                document.head.removeChild(result[0]);
-              }
+              document.head.removeChild(result[0]);
             }
           }
           break;
