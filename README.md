@@ -10,8 +10,7 @@ Initially this will be `title` and `meta`.
 - [x] Add majority of types for meta and link.
 - [x] Concurrent friendly ([dispatcher](#dispatcher) of some sorts)
 - [x] Preact support
-- [ ] Support `<link>`
-- [ ] Support `<script>`
+- [x] Support `<link>`
 - [ ] SSR support
 - [ ] Document the dispatcher
 - [ ] Document the hooks
