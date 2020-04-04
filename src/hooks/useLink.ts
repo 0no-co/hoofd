@@ -1,4 +1,4 @@
-import { Rel, As } from './types';
+import { Rel, As } from '../types';
 
 interface LinkOptions {
   rel: Rel;

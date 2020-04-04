@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import dispatcher from './dispatcher';
+import dispatcher from '../dispatcher';
 
 export const useTitle = (title: string) => {
   const hasMounted = useRef(false);

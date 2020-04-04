@@ -1,6 +1,6 @@
 import { useRef, useEffect } from 'react';
-import { Name, HttpEquiv, CharSet, Property } from './types';
-import dispatcher from './dispatcher';
+import { Name, HttpEquiv, CharSet, Property } from '../types';
+import dispatcher from '../dispatcher';
 
 export interface MetaOptions {
   name?: Name;
