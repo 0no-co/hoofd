@@ -42,7 +42,7 @@ export const useMeta = ({
         ? 'name'
         : property
         ? 'property'
-        : 'http-equiv',
+        : 'httpEquiv',
       name,
       charset,
       httpEquiv,

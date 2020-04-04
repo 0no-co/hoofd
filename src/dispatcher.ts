@@ -1,16 +1,23 @@
 type HeadType = 'title' | 'meta';
 
-let scheduled = false;
 const titleQueue: string[] = [];
 const metaQueue: any[] = [];
 
-const defer =
-  typeof Promise == 'function'
-    ? Promise.prototype.then.bind(Promise.resolve())
-    : setTimeout;
+function debounce(func: any) {
+  let timeout: any;
+
+  return function executedFunction() {
+    clearTimeout(timeout);
+
+    timeout = setTimeout(() => {
+      timeout = null;
+      func();
+    }, 250);
+  };
+}
 
 export const addToQueue = (type: HeadType, payload: any): number => {
-  scheduleQueueProcessing();
+  process();
   switch (type) {
     case 'title':
       return titleQueue.push(payload) - 1;
@@ -20,7 +27,6 @@ export const addToQueue = (type: HeadType, payload: any): number => {
 };
 
 export const removeFromQueue = (type: HeadType, index: number) => {
-  // splice and look for replacement
   switch (type) {
     case 'title': {
       titleQueue.splice(index, 1);
@@ -29,24 +35,30 @@ export const removeFromQueue = (type: HeadType, index: number) => {
     }
     case 'meta': {
       const oldMeta = metaQueue[index];
-      metaQueue.splice(index, 1);
-      const newMeta = metaQueue.find(
-        (m) =>
-          m.keyword === oldMeta.keyword && m[m.keyword] === oldMeta[m.keyword]
-      );
-
-      if (newMeta) {
-        changeOrCreateMetaTag(newMeta);
-      } else if (oldMeta) {
-        const result = document.head.querySelectorAll(
-          oldMeta.charset
-            ? 'meta[charset]'
-            : `meta[${
-                oldMeta.keyword === 'httpEquiv' ? 'http-equiv' : oldMeta.keyword
-              }="${oldMeta[oldMeta.keyword]}"]`
+      if (oldMeta) {
+        metaQueue.splice(index, 1);
+        const newMeta = metaQueue.find(
+          (m) =>
+            m.keyword === oldMeta.keyword &&
+            (m.keyword === 'charset' || m[m.keyword] === oldMeta[m.keyword])
         );
-        if (result[0]) {
-          document.head.removeChild(result[0]);
+
+        if (newMeta) {
+          changeOrCreateMetaTag(newMeta);
+        } else if (oldMeta) {
+          const result = document.head.querySelectorAll(
+            oldMeta.charset
+              ? 'meta[charset]'
+              : `meta[${
+                  oldMeta.keyword === 'httpEquiv'
+                    ? 'http-equiv'
+                    : oldMeta.keyword
+                }="${oldMeta[oldMeta.keyword]}"]`
+          );
+
+          if (result[0]) {
+            document.head.removeChild(result[0]);
+          }
         }
       }
       break;
@@ -98,20 +110,15 @@ const changeOrCreateMetaTag = (meta: any) => {
   }
 };
 
-export const scheduleQueueProcessing = () => {
-  if (!scheduled) {
-    scheduled = true;
-    defer(() => {
-      const visited = new Set();
-      document.title = titleQueue[0];
+const process = debounce(() => {
+  const visited = new Set();
+  document.title = titleQueue[0];
 
-      metaQueue.forEach((meta) => {
-        if (!visited.has(meta[meta.keyword])) {
-          visited.add(meta[meta.keyword]);
-          changeOrCreateMetaTag(meta);
-        }
-      });
-      scheduled = false;
-    });
-  }
-};
+  metaQueue.forEach((meta) => {
+    const val = meta.keyword === 'charset' ? 'charset' : meta[meta.keyword];
+    if (!visited.has(val)) {
+      visited.add(val);
+      changeOrCreateMetaTag(meta);
+    }
+  });
+});

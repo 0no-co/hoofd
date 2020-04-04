@@ -5,6 +5,7 @@ import { useMeta } from '../src';
 
 describe('useMeta', () => {
   it('should use meta tags', async () => {
+    jest.useFakeTimers();
     const MyComponent = ({ description }: any) => {
       useMeta({ charset: 'utf-8' });
       useMeta({ name: 'description', content: description });
@@ -20,7 +21,7 @@ describe('useMeta', () => {
         <MyComponent description="This is a test" />
       ));
     });
-
+    jest.runAllTimers();
     expect(document.head.innerHTML).toContain('<meta charset="utf-8">');
     expect(document.head.innerHTML).toContain(
       '<meta name="description" content="This is a test">'
@@ -35,7 +36,7 @@ describe('useMeta', () => {
     await act(async () => {
       await rerender(<MyComponent description="This is not a test" />);
     });
-
+    jest.runAllTimers();
     expect(document.head.innerHTML).toContain('<meta charset="utf-8">');
     expect(document.head.innerHTML).toContain(
       '<meta name="description" content="This is not a test">'
@@ -55,6 +56,7 @@ describe('useMeta', () => {
   });
 
   it('should deeply use meta-tags', async () => {
+    jest.useFakeTimers();
     const MyComponent = ({ children }: any) => {
       useMeta({ charset: 'utf-8' });
       useMeta({ name: 'description', content: 'This is a test' });
@@ -82,7 +84,7 @@ describe('useMeta', () => {
         </MyComponent>
       ));
     });
-
+    jest.runAllTimers();
     expect(document.head.innerHTML).toContain('<meta charset="utf-2">');
     expect(document.head.innerHTML).toContain(
       '<meta name="description" content="This is not a test">'
@@ -114,7 +116,7 @@ describe('useMeta', () => {
         </MyComponent>
       );
     });
-
+    jest.runAllTimers();
     expect(document.head.innerHTML).toContain('<meta charset="utf-8">');
     expect(document.head.innerHTML).toContain(
       '<meta http-equiv="refresh" content="30">'
