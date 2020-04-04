@@ -4,30 +4,25 @@ import { act, render } from '@testing-library/react';
 import { useTitle } from '../src';
 
 describe('useTitle', () => {
-  it('should fill in the title', () => {
-    jest.useFakeTimers();
+  it('should fill in the title', async () => {
     const MyComponent = ({ title }: { title: string }) => {
       useTitle(title);
       return <p>hi</p>;
     };
 
     let rerender: any;
-
-    act(() => {
-      ({ rerender } = render(<MyComponent title="coolStoryBruh" />));
-      jest.runAllTimers();
+    await act(async () => {
+      ({ rerender } = await render(<MyComponent title="coolStoryBruh" />));
     });
     expect(document.title).toEqual('coolStoryBruh');
 
-    act(() => {
-      rerender!(<MyComponent title="itWorks" />);
-      jest.runAllTimers();
+    await act(async () => {
+      await rerender!(<MyComponent title="itWorks" />);
     });
     expect(document.title).toEqual('itWorks');
   });
 
-  it('should restore the title', () => {
-    jest.useFakeTimers();
+  it('should restore the title', async () => {
     const MyComponent = ({ title }: { title: string }) => {
       useTitle(title);
       return <p>hi</p>;
@@ -35,22 +30,19 @@ describe('useTitle', () => {
 
     let rerender: any;
 
-    act(() => {
-      ({ rerender } = render(<MyComponent title="coolStoryBruh" />));
-      jest.runAllTimers();
+    await act(async () => {
+      ({ rerender } = await render(<MyComponent title="coolStoryBruh" />));
     });
 
     expect(document.title).toEqual('coolStoryBruh');
 
-    act(() => {
-      rerender!(<p>hi</p>);
-      jest.runAllTimers();
+    await act(async () => {
+      await rerender!(<p>hi</p>);
     });
     expect(document.title).toEqual('');
   });
 
-  it('should deeply fill in the title', () => {
-    jest.useFakeTimers();
+  it('should deeply fill in the title', async () => {
     const MyComponent = ({
       children,
       title,
@@ -69,24 +61,22 @@ describe('useTitle', () => {
 
     let rerender: any;
 
-    act(() => {
-      ({ rerender } = render(
+    await act(async () => {
+      ({ rerender } = await render(
         <MyComponent title="coolStoryBruh">
           <MyDeepComponent title="resettedBruv" />
         </MyComponent>
       ));
-      jest.runAllTimers();
     });
 
     expect(document.title).toEqual('resettedBruv');
 
-    act(() => {
-      rerender!(
+    await act(async () => {
+      await rerender!(
         <MyComponent title="coolStoryBruh">
           <p>hi</p>
         </MyComponent>
       );
-      jest.runAllTimers();
     });
 
     expect(document.title).toEqual('coolStoryBruh');

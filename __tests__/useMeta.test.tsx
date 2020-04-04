@@ -4,7 +4,7 @@ import { act, render } from '@testing-library/react';
 import { useMeta } from '../src';
 
 describe('useMeta', () => {
-  it('should use meta tags', () => {
+  it('should use meta tags', async () => {
     const MyComponent = ({ description }: any) => {
       useMeta({ charset: 'utf-8' });
       useMeta({ name: 'description', content: description });
@@ -15,8 +15,10 @@ describe('useMeta', () => {
 
     let rerender: any;
 
-    act(() => {
-      ({ rerender } = render(<MyComponent description="This is a test" />));
+    await act(async () => {
+      ({ rerender } = await render(
+        <MyComponent description="This is a test" />
+      ));
     });
 
     expect(document.head.innerHTML).toContain('<meta charset="utf-8">');
@@ -30,8 +32,8 @@ describe('useMeta', () => {
       '<meta http-equiv="refresh" content="30">'
     );
 
-    act(() => {
-      rerender(<MyComponent description="This is not a test" />);
+    await act(async () => {
+      await rerender(<MyComponent description="This is not a test" />);
     });
 
     expect(document.head.innerHTML).toContain('<meta charset="utf-8">');
@@ -52,7 +54,7 @@ describe('useMeta', () => {
     );
   });
 
-  it('should deeply use meta-tags', () => {
+  it('should deeply use meta-tags', async () => {
     const MyComponent = ({ children }: any) => {
       useMeta({ charset: 'utf-8' });
       useMeta({ name: 'description', content: 'This is a test' });
@@ -73,8 +75,8 @@ describe('useMeta', () => {
 
     let rerender: any;
 
-    act(() => {
-      ({ rerender } = render(
+    await act(async () => {
+      ({ rerender } = await render(
         <MyComponent>
           <MyPage />
         </MyComponent>
@@ -105,8 +107,8 @@ describe('useMeta', () => {
       '<meta property="og:description" content="This is a test">'
     );
 
-    act(() => {
-      rerender(
+    await act(async () => {
+      await rerender(
         <MyComponent>
           <p>hi</p>
         </MyComponent>

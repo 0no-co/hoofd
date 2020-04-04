@@ -1,4 +1,3 @@
-// TODO: scope this to one global provider.
 type HeadType = 'title' | 'meta';
 
 let scheduled = false;
@@ -14,9 +13,9 @@ export const addToQueue = (type: HeadType, payload: any): number => {
   scheduleQueueProcessing();
   switch (type) {
     case 'title':
-      return titleQueue.unshift(payload) - 1;
+      return titleQueue.push(payload) - 1;
     case 'meta':
-      return metaQueue.unshift(payload) - 1;
+      return metaQueue.push(payload) - 1;
   }
 };
 
@@ -35,13 +34,16 @@ export const removeFromQueue = (type: HeadType, index: number) => {
         (m) =>
           m.keyword === oldMeta.keyword && m[m.keyword] === oldMeta[m.keyword]
       );
+
       if (newMeta) {
         changeOrCreateMetaTag(newMeta);
-      } else {
+      } else if (oldMeta) {
         const result = document.head.querySelectorAll(
           oldMeta.charset
             ? 'meta[charset]'
-            : `meta[${oldMeta.keyword}="${oldMeta[oldMeta.keyword]}"]`
+            : `meta[${
+                oldMeta.keyword === 'httpEquiv' ? 'http-equiv' : oldMeta.keyword
+              }="${oldMeta[oldMeta.keyword]}"]`
         );
         if (result[0]) {
           document.head.removeChild(result[0]);
@@ -68,7 +70,11 @@ export const change = (type: HeadType, index: number, payload: any) => {
 const changeOrCreateMetaTag = (meta: any) => {
   const propertyValue = meta[meta.keyword];
   const result = document.head.querySelectorAll(
-    meta.charset ? 'meta[charset]' : `meta[${meta.keyword}="${propertyValue}"]`
+    meta.charset
+      ? 'meta[charset]'
+      : `meta[${
+          meta.keyword === 'httpEquiv' ? 'http-equiv' : meta.keyword
+        }="${propertyValue}"]`
   );
 
   if (result[0]) {
@@ -82,7 +88,10 @@ const changeOrCreateMetaTag = (meta: any) => {
     if (meta.charset) {
       metaTag.setAttribute('charset', meta.charset);
     } else {
-      metaTag.setAttribute(meta.keyword, meta[meta.keyword] as string);
+      metaTag.setAttribute(
+        meta.keyword === 'httpEquiv' ? 'http-equiv' : meta.keyword,
+        meta[meta.keyword] as string
+      );
       metaTag.setAttribute('content', meta.content as string);
     }
     document.head.appendChild(metaTag);
