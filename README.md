@@ -16,9 +16,9 @@ Initially this will be `title` and `meta`.
 - [x] Preact support
 - [x] Support `<link>`
 - [x] Stricter typings
-- [ ] SSR support
+- [x] Document the hooks
 - [x] Document the dispatcher
-- [ ] Document the hooks
+- [ ] SSR support
 - [ ] Golf bytes
 
 ## Preact
@@ -37,9 +37,23 @@ given string changes it will update the property.
 
 ### useMeta
 
+This hook accepts the regular `<meta>` properties, being `name`, `property`, `httpEquiv`,
+`charset` and `content`.
+
+These have to be passed as an object and will update when `content` changes.
+
 ### useLink
+
+This hook accepts the regular `<link>` properties, being `rel`, `as`, `media`,
+`href`, `sizes` and `crossorigin`.
+
+This will update within the same `useLink` but will never go outside
 
 ### useLang
 
 This hook accepts a string that will be used to set the `lang` property on the
 base `<html>` tag. Every time this string gets updated this will be reflected in the dom.
+
+## Dispatcher
+
+It can be interesting to give this a read, in the code itself.

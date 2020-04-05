@@ -58,7 +58,8 @@ const changeOrCreateMetaTag = (meta: MetaPayload) => {
  *  <Child /> --> useTitle('y')
  *
  * Will display 'x' due to the effects resolving bottom-up, instead we schedule
- * both meta and titles in batches.
+ * both meta and titles in batches. This way we can display 'y' and keep 'x' around
+ * as a fallback if <Child /> would unmount it will update to 'x'.
  *
  * When this batch is processed we only take one of each kind of meta and one title.
  *
