@@ -15,7 +15,7 @@ Initially this will be `title` and `meta`.
 - [x] Concurrent friendly
 - [x] Preact support
 - [x] Support `<link>`
-- [ ] Stricter typings
+- [x] Stricter typings
 - [ ] SSR support
 - [x] Document the dispatcher
 - [ ] Document the hooks
@@ -32,6 +32,9 @@ are used to control information conveyed by the `<head>` in an html document.
 
 ### useTitle
 
+This hook accepts a string that will be used to set the `document.title`, every time the
+given string changes it will update the property.
+
 ### useMeta
 
 ### useLink
@@ -39,4 +42,4 @@ are used to control information conveyed by the `<head>` in an html document.
 ### useLang
 
 This hook accepts a string that will be used to set the `lang` property on the
-base `<html>` tag.
+base `<html>` tag. Every time this string gets updated this will be reflected in the dom.
