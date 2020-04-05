@@ -1,6 +1,6 @@
 import { useRef, useEffect } from 'react';
 import { Name, HttpEquiv, CharSet, Property } from '../types';
-import dispatcher from '../dispatcher';
+import dispatcher, { MetaPayload } from '../dispatcher';
 
 export interface MetaOptions {
   name?: Name;
@@ -19,21 +19,21 @@ export const useMeta = ({
 }: MetaOptions) => {
   const hasMounted = useRef(false);
   const keyword = useRef<string | undefined>();
-  const metaObject = useRef<any>();
+  const metaObject = useRef<MetaPayload>();
 
   useEffect(() => {
     if (hasMounted.current) {
       dispatcher.change(
         'meta',
-        metaObject.current,
+        metaObject.current as MetaPayload,
         (metaObject.current = {
           keyword: keyword.current,
           name,
           charset,
-          httpEquiv,
+          'http-equiv': httpEquiv,
           property,
           content,
-        })
+        } as MetaPayload) as MetaPayload
       );
     }
   }, [content]);
@@ -54,13 +54,13 @@ export const useMeta = ({
         'http-equiv': httpEquiv,
         property,
         content,
-      })
+      } as MetaPayload) as MetaPayload
     );
 
     hasMounted.current = true;
     return () => {
       hasMounted.current = false;
-      dispatcher.removeFromQueue('meta', metaObject.current);
+      dispatcher.removeFromQueue('meta', metaObject.current as MetaPayload);
     };
   }, []);
 };

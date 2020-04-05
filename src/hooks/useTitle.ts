@@ -20,7 +20,7 @@ export const useTitle = (title: string) => {
     dispatcher.addToQueue('title', (prevTitle.current = title));
     return () => {
       hasMounted.current = false;
-      dispatcher.removeFromQueue('title', prevTitle.current);
+      dispatcher.removeFromQueue('title', prevTitle.current as string);
     };
   }, []);
 };

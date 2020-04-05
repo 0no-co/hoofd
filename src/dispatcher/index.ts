@@ -1,4 +1,15 @@
+import { Name, CharSet, HttpEquiv, Property } from '../types';
+
 type HeadType = 'title' | 'meta';
+type MetaKeyword = 'name' | 'charset' | 'http-equiv' | 'property';
+export interface MetaPayload {
+  keyword: MetaKeyword;
+  name: Name;
+  charset: CharSet;
+  'http-equiv': HttpEquiv;
+  property: Property;
+  content: string;
+}
 
 const isServerSide = typeof document === 'undefined';
 
@@ -14,7 +25,7 @@ function debounceFrame(func: any) {
   };
 }
 
-const changeOrCreateMetaTag = (meta: any) => {
+const changeOrCreateMetaTag = (meta: MetaPayload) => {
   const propertyValue = meta[meta.keyword];
   const result = document.head.querySelectorAll(
     meta.charset ? 'meta[charset]' : `meta[${meta.keyword}="${propertyValue}"]`
@@ -57,7 +68,7 @@ const changeOrCreateMetaTag = (meta: any) => {
  */
 const createDispatcher = () => {
   let titleQueue: string[] = [];
-  let metaQueue: any[] = [];
+  let metaQueue: MetaPayload[] = [];
   let currentTitleIndex = 0;
   let currentMetaIndex = 0;
 
@@ -85,25 +96,24 @@ const createDispatcher = () => {
   });
 
   return {
-    addToQueue: (type: HeadType, payload: any): void => {
+    addToQueue: (type: HeadType, payload: MetaPayload | string): void => {
       if (!isServerSide) process();
 
       if (type === 'title') {
-        titleQueue.splice(currentTitleIndex++, 0, payload);
+        titleQueue.splice(currentTitleIndex++, 0, payload as string);
       } else {
-        metaQueue.splice(currentMetaIndex++, 0, payload);
+        metaQueue.splice(currentMetaIndex++, 0, payload as MetaPayload);
       }
     },
-    removeFromQueue: (type: HeadType, payload: any) => {
+    removeFromQueue: (type: HeadType, payload: MetaPayload | string) => {
       if (type === 'title') {
-        titleQueue.splice(titleQueue.indexOf(payload), 1);
+        titleQueue.splice(titleQueue.indexOf(payload as string), 1);
         document.title = titleQueue[0] || '';
       } else {
-        const index = metaQueue.indexOf(payload);
-        const oldMeta = metaQueue[index];
+        const oldMeta = metaQueue[metaQueue.indexOf(payload as MetaPayload)];
 
         if (oldMeta) {
-          metaQueue.splice(index, 1);
+          metaQueue.splice(metaQueue.indexOf(payload as MetaPayload), 1);
           const newMeta = metaQueue.find(
             (m) =>
               m.keyword === oldMeta.keyword &&
@@ -124,12 +134,18 @@ const createDispatcher = () => {
         }
       }
     },
-    change: (type: HeadType, prevPayload: string, payload: any) => {
+    change: (
+      type: HeadType,
+      prevPayload: string | MetaPayload,
+      payload: any
+    ) => {
       if (type === 'title') {
-        document.title = titleQueue[titleQueue.indexOf(prevPayload)] = payload;
+        document.title = titleQueue[
+          titleQueue.indexOf(prevPayload as string)
+        ] = payload;
       } else {
         changeOrCreateMetaTag(
-          (metaQueue[metaQueue.indexOf(prevPayload)] = payload)
+          (metaQueue[metaQueue.indexOf(prevPayload as MetaPayload)] = payload)
         );
       }
     },
