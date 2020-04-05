@@ -10,6 +10,90 @@ describe('useMeta', () => {
     dispatcher.reset();
   });
 
+  it('should create and change http-equiv', async () => {
+    let rerender: any;
+    jest.useFakeTimers();
+    const Component = ({ content }: any) => {
+      useMeta({ httpEquiv: 'refresh', content });
+      return <p>hi</p>;
+    };
+
+    await act(async () => {
+      ({ rerender } = await render(<Component content="60" />));
+    });
+    jest.runAllTimers();
+    expect(document.head.innerHTML).toContain(
+      '<meta http-equiv="refresh" content="60">'
+    );
+
+    await act(async () => {
+      await rerender(<Component content="30" />);
+    });
+    jest.runAllTimers();
+    expect(document.head.innerHTML).not.toContain(
+      '<meta http-equiv="refresh" content="60">'
+    );
+    expect(document.head.innerHTML).toContain(
+      '<meta http-equiv="refresh" content="30">'
+    );
+  });
+
+  it('should create and change property', async () => {
+    let rerender: any;
+    jest.useFakeTimers();
+    const Component = ({ content }: any) => {
+      useMeta({ property: 'fb:admins', content });
+      return <p>hi</p>;
+    };
+
+    await act(async () => {
+      ({ rerender } = await render(<Component content="60" />));
+    });
+    jest.runAllTimers();
+    expect(document.head.innerHTML).toContain(
+      '<meta property="fb:admins" content="60">'
+    );
+
+    await act(async () => {
+      await rerender(<Component content="30" />);
+    });
+    jest.runAllTimers();
+    expect(document.head.innerHTML).not.toContain(
+      '<meta property="fb:admins" content="60">'
+    );
+    expect(document.head.innerHTML).toContain(
+      '<meta property="fb:admins" content="30">'
+    );
+  });
+
+  it('should create and change name', async () => {
+    let rerender: any;
+    jest.useFakeTimers();
+    const Component = ({ content }: any) => {
+      useMeta({ name: 'generator', content });
+      return <p>hi</p>;
+    };
+
+    await act(async () => {
+      ({ rerender } = await render(<Component content="60" />));
+    });
+    jest.runAllTimers();
+    expect(document.head.innerHTML).toContain(
+      '<meta name="generator" content="60">'
+    );
+
+    await act(async () => {
+      await rerender(<Component content="30" />);
+    });
+    jest.runAllTimers();
+    expect(document.head.innerHTML).not.toContain(
+      '<meta name="generator" content="60">'
+    );
+    expect(document.head.innerHTML).toContain(
+      '<meta name="generator" content="30">'
+    );
+  });
+
   it('should use meta tags', async () => {
     jest.useFakeTimers();
     const MyComponent = ({ description }: any) => {
