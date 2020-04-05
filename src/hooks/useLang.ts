@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 
-export const useLanguage = (language: string) => {
+export const useLang = (language: string) => {
   useEffect(() => {
     document.getElementsByTagName('html')[0].setAttribute('lang', language);
   }, [language]);

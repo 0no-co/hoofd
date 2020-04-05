@@ -1,16 +1,16 @@
 import '@testing-library/jest-dom';
 import * as React from 'react';
 import { act, render, cleanup } from '@testing-library/react';
-import { useLanguage } from '../src';
+import { useLang } from '../src';
 
-describe('useLanguage', () => {
+describe('useLang', () => {
   afterEach(() => {
     cleanup();
   });
 
   it('should fill in the language', () => {
     const MyComponent = ({ language }: { language: string }) => {
-      useLanguage(language);
+      useLang(language);
       return <p>hi</p>;
     };
 
