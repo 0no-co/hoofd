@@ -11,6 +11,7 @@ Initially this will be `title` and `meta`.
 - [x] Concurrent friendly
 - [x] Preact support
 - [x] Support `<link>`
+- [ ] Stricter typings
 - [ ] SSR support
 - [ ] Document the dispatcher
 - [ ] Document the hooks
