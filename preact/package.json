@@ -1,23 +1,23 @@
 {
-  "name": "react-head",
-  "version": "1.0.0",
+  "name": "hooked-head",
+  "version": "0.1.0",
   "description": "Hooks to populate the html head.",
   "scripts": {},
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/JoviDeCroock/react-head.git"
+    "url": "git+https://github.com/JoviDeCroock/hooked-head.git"
   },
   "author": "",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/JoviDeCroock/react-head/issues"
+    "url": "https://github.com/JoviDeCroock/hooked-head/issues"
   },
-  "homepage": "https://github.com/JoviDeCroock/react-head#readme",
-  "main": "./dist/react-head.js",
-  "browser": "./dist/react-head.umd.js",
-  "umd:main": "./dist/react-head.umd.js",
-  "jsnext:main": "./dist/react-head.modern.js",
-  "module": "./dist/react-head.module.js",
+  "homepage": "https://github.com/JoviDeCroock/hooked-head#readme",
+  "main": "./dist/hooked-head.js",
+  "browser": "./dist/hooked-head.umd.js",
+  "umd:main": "./dist/hooked-head.umd.js",
+  "jsnext:main": "./dist/hooked-head.modern.js",
+  "module": "./dist/hooked-head.module.js",
   "source": "./src/index.ts",
   "types": "./dist/index.d.ts",
   "typings": "./dist/index.d.ts"

@@ -1,8 +1,8 @@
-# react-head
+# hooked-head
 
-[![npm version](https://badgen.net/npm/v/react-head)](https://www.npmjs.com/package/react-head)
-[![Bundle size](https://badgen.net/bundlephobia/minzip/react-head)](https://badgen.net/bundlephobia/minzip/react-head)
-[![codecov](https://codecov.io/gh/JoviDeCroock/react-head/branch/master/graph/badge.svg)](https://codecov.io/gh/JoviDeCroock/react-head)
+[![npm version](https://badgen.net/npm/v/hooked-head)](https://www.npmjs.com/package/hooked-head)
+[![Bundle size](https://badgen.net/bundlephobia/minzip/hooked-head)](https://badgen.net/bundlephobia/minzip/hooked-head)
+[![codecov](https://codecov.io/gh/JoviDeCroock/hooked-head/branch/master/graph/badge.svg)](https://codecov.io/gh/JoviDeCroock/hooked-head)
 
 This project aims at providing a set of hooks to populate `<meta>`, ... for each page.
 
@@ -23,7 +23,7 @@ Initially this will be `title` and `meta`.
 
 ## Preact
 
-If you need support for [Preact](https://preactjs.com/) you can import from `react-head/preact` instead.
+If you need support for [Preact](https://preactjs.com/) you can import from `hooked-head/preact` instead.
 
 ## Hooks
 
