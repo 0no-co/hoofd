@@ -1,7 +1,7 @@
 import '@testing-library/jest-dom';
 import * as React from 'react';
 import { act, render, cleanup } from '@testing-library/react';
-import { useLanguage, useLink } from '../src';
+import { useLink } from '../src';
 
 describe('useLanguage', () => {
   afterEach(() => {
