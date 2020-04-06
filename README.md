@@ -59,15 +59,17 @@ base `<html>` tag. Every time this string gets updated this will be reflected in
 ```js
 import { toString } from 'hooked-head';
 
+const reactStuff = renderToString();
+const { head, lang } = toString();
 const html = `
   <!doctype html>
-    <html>
+    <html lang="${lang}">
       <head>
-        ${toString()}
+        ${head}
       </head>
       <body>
         <div id="content">
-          ${renderToString()}
+          ${reactStuff}
         </div>
       </body>
   </html>

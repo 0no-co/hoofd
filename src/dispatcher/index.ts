@@ -71,6 +71,7 @@ const changeOrCreateMetaTag = (meta: MetaPayload) => {
  * queue.
  */
 const createDispatcher = () => {
+  let lang: string;
   let linkQueue: any[] = [];
   let titleQueue: string[] = [];
   let metaQueue: MetaPayload[] = [];
@@ -101,6 +102,7 @@ const createDispatcher = () => {
   });
 
   return {
+    setLang: (l: string) => (lang = l),
     addToQueue: (type: HeadType, payload: MetaPayload | string): void => {
       processQueue();
 
@@ -194,7 +196,7 @@ const createDispatcher = () => {
       titleQueue = [];
       metaQueue = [];
       linkQueue = [];
-      return stringified;
+      return { head: stringified, lang };
     },
   };
 };

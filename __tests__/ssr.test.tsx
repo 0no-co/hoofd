@@ -19,10 +19,11 @@ describe('ssr', () => {
     };
 
     render(<MyComponent />);
-    const head = toString();
+    const { head, lang } = toString();
     expect(head).toContain('<title>hi</title>');
     expect(head).toContain('<meta property="fb:admins" content="hi">');
     expect(head).toContain('<link rel="stylesheet" href="x">');
+    expect(lang).toEqual('nl');
   });
 
   it('should render to string (nested)', () => {
@@ -45,7 +46,7 @@ describe('ssr', () => {
         <MyNestedComponent />
       </MyComponent>
     );
-    const head = toString();
+    const { head } = toString();
     expect(head).toContain('<title>bye</title>');
     expect(head).toContain('<meta property="fb:admins" content="bye">');
     expect(head).toContain('<link rel="stylesheet" href="y">');
