@@ -1,6 +1,7 @@
 import { Name, CharSet, HttpEquiv, Property } from '../types';
+import { isServerSide } from '../utils';
 
-type HeadType = 'title' | 'meta';
+type HeadType = 'title' | 'meta' | 'link';
 type MetaKeyword = 'name' | 'charset' | 'http-equiv' | 'property';
 export interface MetaPayload {
   keyword: MetaKeyword;
@@ -10,8 +11,6 @@ export interface MetaPayload {
   property: Property;
   content: string;
 }
-
-const isServerSide = typeof document === 'undefined';
 
 function debounceFrame(func: any) {
   let timeout: any;
@@ -26,26 +25,30 @@ function debounceFrame(func: any) {
 }
 
 const changeOrCreateMetaTag = (meta: MetaPayload) => {
-  const propertyValue = meta[meta.keyword];
-  const result = document.head.querySelectorAll(
-    meta.charset ? 'meta[charset]' : `meta[${meta.keyword}="${propertyValue}"]`
-  );
+  if (!isServerSide) {
+    const propertyValue = meta[meta.keyword];
+    const result = document.head.querySelectorAll(
+      meta.charset
+        ? 'meta[charset]'
+        : `meta[${meta.keyword}="${propertyValue}"]`
+    );
 
-  if (result[0]) {
-    if (meta.charset) {
-      result[0].setAttribute(meta.keyword, meta.charset);
+    if (result[0]) {
+      if (meta.charset) {
+        result[0].setAttribute(meta.keyword, meta.charset);
+      } else {
+        result[0].setAttribute('content', meta.content as string);
+      }
     } else {
-      result[0].setAttribute('content', meta.content as string);
+      const metaTag = document.createElement('meta');
+      if (meta.charset) {
+        metaTag.setAttribute('charset', meta.charset);
+      } else {
+        metaTag.setAttribute(meta.keyword, meta[meta.keyword] as string);
+        metaTag.setAttribute('content', meta.content as string);
+      }
+      document.head.appendChild(metaTag);
     }
-  } else {
-    const metaTag = document.createElement('meta');
-    if (meta.charset) {
-      metaTag.setAttribute('charset', meta.charset);
-    } else {
-      metaTag.setAttribute(meta.keyword, meta[meta.keyword] as string);
-      metaTag.setAttribute('content', meta.content as string);
-    }
-    document.head.appendChild(metaTag);
   }
 };
 
@@ -68,6 +71,7 @@ const changeOrCreateMetaTag = (meta: MetaPayload) => {
  * queue.
  */
 const createDispatcher = () => {
+  let linkQueue: any[] = [];
   let titleQueue: string[] = [];
   let metaQueue: MetaPayload[] = [];
   let currentTitleIndex = 0;
@@ -98,18 +102,20 @@ const createDispatcher = () => {
 
   return {
     addToQueue: (type: HeadType, payload: MetaPayload | string): void => {
-      if (!isServerSide) process();
+      process();
 
       if (type === 'title') {
         titleQueue.splice(currentTitleIndex++, 0, payload as string);
-      } else {
+      } else if (type === 'meta') {
         metaQueue.splice(currentMetaIndex++, 0, payload as MetaPayload);
+      } else {
+        linkQueue.push(payload);
       }
     },
     removeFromQueue: (type: HeadType, payload: MetaPayload | string) => {
       if (type === 'title') {
         titleQueue.splice(titleQueue.indexOf(payload as string), 1);
-        document.title = titleQueue[0] || '';
+        if (!isServerSide) document.title = titleQueue[0] || '';
       } else {
         const oldMeta = metaQueue[metaQueue.indexOf(payload as MetaPayload)];
 
@@ -123,7 +129,7 @@ const createDispatcher = () => {
 
           if (newMeta) {
             changeOrCreateMetaTag(newMeta);
-          } else {
+          } else if (!isServerSide) {
             const result = document.head.querySelectorAll(
               oldMeta.charset
                 ? 'meta[charset]'
@@ -141,9 +147,8 @@ const createDispatcher = () => {
       payload: any
     ) => {
       if (type === 'title') {
-        document.title = titleQueue[
-          titleQueue.indexOf(prevPayload as string)
-        ] = payload;
+        titleQueue[titleQueue.indexOf(prevPayload as string)] = payload;
+        if (!isServerSide) document.title = payload;
       } else {
         changeOrCreateMetaTag(
           (metaQueue[metaQueue.indexOf(prevPayload as MetaPayload)] = payload)
@@ -154,11 +159,42 @@ const createDispatcher = () => {
       titleQueue = [];
       metaQueue = [];
     },
-    // toString: () => {
-    //  Will process the two arrays, taking the first title in the array and returning <title>{string}</title>
-    //  Then do a similar for the meta's. (will also need to add links, and add a linkQueue). Note that both queues
-    //  will need a reset to prevent memory leaks.
-    // },
+    toString: () => {
+      //  Will process the two arrays, taking the first title in the array and returning <title>{string}</title>
+      //  Then do a similar for the meta's. (will also need to add links, and add a linkQueue). Note that both queues
+      //  will need a reset to prevent memory leaks.
+      const visited = new Set();
+      const stringified = `
+        <title>${titleQueue[0]}</title>
+        ${metaQueue.reduce((acc, meta) => {
+          if (
+            !visited.has(
+              meta.keyword === 'charset' ? meta.keyword : meta[meta.keyword]
+            )
+          ) {
+            visited.add(
+              meta.keyword === 'charset' ? meta.keyword : meta[meta.keyword]
+            );
+            return `${acc}<meta ${meta.keyword}="${
+              meta[meta.keyword]
+            }" content="${meta.content}">`;
+          }
+          return acc;
+        }, '')}
+        ${linkQueue.reduce((acc, link) => {
+          return `${acc}<link ${Object.keys(link).reduce((properties, key) => {
+            if (link[key]) {
+              return `${properties}${key}="${link[key]} "`;
+            }
+            return properties;
+          }, '')}>`;
+        }, '')}
+      `;
+      titleQueue = [];
+      metaQueue = [];
+      linkQueue = [];
+      return stringified;
+    },
   };
 };
 
