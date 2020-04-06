@@ -87,6 +87,6 @@ const html = `
 - [x] Document the hooks
 - [x] Document the dispatcher
 - [x] SSR support
-- [ ] Consider moving from `doc.title = x` to inserting `<title>x</title>`
-- [ ] Golf bytes
+- [x] Consider moving from `doc.title = x` to inserting `<title>x</title>`
+- [x] Golf bytes
 - [ ] improve typings, there are probably missing possibilities in `types.ts`
