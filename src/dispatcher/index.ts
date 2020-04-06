@@ -26,11 +26,10 @@ function debounceFrame(func: any) {
 
 const changeOrCreateMetaTag = (meta: MetaPayload) => {
   if (!isServerSide) {
-    const propertyValue = meta[meta.keyword];
     const result = document.head.querySelectorAll(
       meta.charset
-        ? 'meta[charset]'
-        : `meta[${meta.keyword}="${propertyValue}"]`
+        ? `meta[${meta.keyword}]`
+        : `meta[${meta.keyword}="${meta[meta.keyword]}"]`
     );
 
     if (result[0]) {
@@ -42,7 +41,7 @@ const changeOrCreateMetaTag = (meta: MetaPayload) => {
     } else {
       const metaTag = document.createElement('meta');
       if (meta.charset) {
-        metaTag.setAttribute('charset', meta.charset);
+        metaTag.setAttribute(meta.keyword, meta.charset);
       } else {
         metaTag.setAttribute(meta.keyword, meta[meta.keyword] as string);
         metaTag.setAttribute('content', meta.content as string);
@@ -134,7 +133,7 @@ const createDispatcher = () => {
           } else if (!isServerSide) {
             const result = document.head.querySelectorAll(
               oldMeta.charset
-                ? 'meta[charset]'
+                ? `meta[${oldMeta.keyword}]`
                 : `meta[${oldMeta.keyword}="${oldMeta[oldMeta.keyword]}"]`
             );
 
@@ -159,12 +158,14 @@ const createDispatcher = () => {
     },
     reset:
       process.env.NODE_ENV === 'test'
-        ? () => {
+        ? // istanbul ignore next
+          () => {
             titleQueue = [];
             metaQueue = [];
           }
-        : undefined,
-    toString: () => {
+        : // istanbul ignore next
+          undefined,
+    _toString: () => {
       //  Will process the two arrays, taking the first title in the array and returning <title>{string}</title>
       //  Then do a similar for the meta's. (will also need to add links, and add a linkQueue). Note that both queues
       //  will need a reset to prevent memory leaks.
@@ -180,9 +181,9 @@ const createDispatcher = () => {
             visited.add(
               meta.keyword === 'charset' ? meta.keyword : meta[meta.keyword]
             );
-            return `${acc}<meta ${meta.keyword}="${
-              meta[meta.keyword]
-            }" content="${meta.content}">`;
+            return `${acc}<meta ${meta.keyword}="${meta[meta.keyword]}"${
+              meta.charset ? '' : ` content="${meta.content}"`
+            }>`;
           }
           return acc;
         }, '')}
