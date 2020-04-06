@@ -7,7 +7,7 @@ import dispatcher from '../src/dispatcher';
 describe('useTitle', () => {
   afterEach(() => {
     cleanup();
-    dispatcher.reset();
+    dispatcher.reset!();
   });
 
   it('should fill in the title', async () => {

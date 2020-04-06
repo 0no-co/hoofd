@@ -18,7 +18,7 @@ Initially this will be `title` and `meta`.
 - [x] Stricter typings
 - [x] Document the hooks
 - [x] Document the dispatcher
-- [ ] SSR support
+- [x] SSR support
 - [ ] Golf bytes
 
 ## Preact

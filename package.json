@@ -4,11 +4,11 @@
   "description": "Hooks to populate the html head.",
   "scripts": {
     "build": "rimraf dist && yarn build:preact && yarn build:react && yarn build:minified",
-    "build:react": "microbundle --external react --name hookedHead --no-compress --output dist/",
-    "build:preact": "microbundle --external preact --name hookedHead --no-compress --output preact/dist --alias react=preact/hooks",
-    "build:minified": "microbundle --external react --name hookedHead --output prod/",
+    "build:react": "microbundle --define process.env.NODE_ENV=production --external react --name hookedHead --no-compress --output dist/",
+    "build:preact": "microbundle --define process.env.NODE_ENV=production --external preact --name hookedHead --no-compress --output preact/dist --alias react=preact/hooks",
+    "build:minified": "microbundle --define process.env.NODE_ENV=production --external react --name hookedHead --output prod/",
     "test": "jest",
-    "test:watch": "yarn test -- --watch",
+    "test:watch": "cross-env NODE_ENV=test yarn test -- --watch",
     "prepublishOnly": "yarn test && yarn lint && yarn build",
     "lint": "eslint . --ext .ts,.tsx"
   },

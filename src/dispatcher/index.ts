@@ -80,9 +80,9 @@ const createDispatcher = () => {
   // A process can be debounced by one frame timing,
   // since microticks could potentially interfere with how
   // React works.
-  const process = debounceFrame(() => {
+  const processQueue = debounceFrame(() => {
     const visited = new Set();
-    document.title = titleQueue[0];
+    if (!isServerSide) document.title = titleQueue[0];
 
     metaQueue.forEach((meta) => {
       if (
@@ -102,7 +102,7 @@ const createDispatcher = () => {
 
   return {
     addToQueue: (type: HeadType, payload: MetaPayload | string): void => {
-      process();
+      processQueue();
 
       if (type === 'title') {
         titleQueue.splice(currentTitleIndex++, 0, payload as string);
@@ -155,10 +155,13 @@ const createDispatcher = () => {
         );
       }
     },
-    reset: () => {
-      titleQueue = [];
-      metaQueue = [];
-    },
+    reset:
+      process.env.NODE_ENV === 'test'
+        ? () => {
+            titleQueue = [];
+            metaQueue = [];
+          }
+        : undefined,
     toString: () => {
       //  Will process the two arrays, taking the first title in the array and returning <title>{string}</title>
       //  Then do a similar for the meta's. (will also need to add links, and add a linkQueue). Note that both queues
@@ -182,12 +185,10 @@ const createDispatcher = () => {
           return acc;
         }, '')}
         ${linkQueue.reduce((acc, link) => {
-          return `${acc}<link ${Object.keys(link).reduce((properties, key) => {
-            if (link[key]) {
-              return `${properties}${key}="${link[key]} "`;
-            }
-            return properties;
-          }, '')}>`;
+          return `${acc}<link${Object.keys(link).reduce(
+            (properties, key) => `${properties} ${key}="${link[key]}"`,
+            ''
+          )}>`;
         }, '')}
       `;
       titleQueue = [];
