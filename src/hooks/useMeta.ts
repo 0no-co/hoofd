@@ -10,57 +10,51 @@ export interface MetaOptions {
   property?: Property;
 }
 
-export const useMeta = ({
-  name,
-  content,
-  charset,
-  httpEquiv,
-  property,
-}: MetaOptions) => {
+export const useMeta = (options: MetaOptions) => {
   const hasMounted = useRef(false);
   const keyword = useRef<string | undefined>();
   const metaObject = useRef<MetaPayload>();
 
   useEffect(() => {
     if (hasMounted.current) {
-      dispatcher.change(
+      dispatcher._change(
         'meta',
         metaObject.current as MetaPayload,
         (metaObject.current = {
           keyword: keyword.current,
-          name,
-          charset,
-          'http-equiv': httpEquiv,
-          property,
-          content,
+          name: options.name,
+          charset: options.charset,
+          'http-equiv': options.httpEquiv,
+          property: options.property,
+          content: options.content,
         } as MetaPayload) as MetaPayload
       );
     }
-  }, [content]);
+  }, [options.content]);
 
   useEffect(() => {
-    dispatcher.addToQueue(
+    dispatcher._addToQueue(
       'meta',
       (metaObject.current = {
-        keyword: keyword.current = charset
+        keyword: keyword.current = options.charset
           ? 'charset'
-          : name
+          : options.name
           ? 'name'
-          : property
+          : options.property
           ? 'property'
           : 'http-equiv',
-        name,
-        charset,
-        'http-equiv': httpEquiv,
-        property,
-        content,
+        name: options.name,
+        charset: options.charset,
+        'http-equiv': options.httpEquiv,
+        property: options.property,
+        content: options.content,
       } as MetaPayload) as MetaPayload
     );
 
     hasMounted.current = true;
     return () => {
       hasMounted.current = false;
-      dispatcher.removeFromQueue('meta', metaObject.current as MetaPayload);
+      dispatcher._removeFromQueue('meta', metaObject.current as MetaPayload);
     };
   }, []);
 };

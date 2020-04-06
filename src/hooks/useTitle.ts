@@ -7,7 +7,7 @@ export const useTitle = (title: string) => {
 
   useEffect(() => {
     if (hasMounted.current) {
-      dispatcher.change(
+      dispatcher._change(
         'title',
         prevTitle.current as string,
         (prevTitle.current = title)
@@ -17,10 +17,10 @@ export const useTitle = (title: string) => {
 
   useEffect(() => {
     hasMounted.current = true;
-    dispatcher.addToQueue('title', (prevTitle.current = title));
+    dispatcher._addToQueue('title', (prevTitle.current = title));
     return () => {
       hasMounted.current = false;
-      dispatcher.removeFromQueue('title', prevTitle.current as string);
+      dispatcher._removeFromQueue('title', prevTitle.current as string);
     };
   }, []);
 };

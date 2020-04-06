@@ -102,8 +102,8 @@ const createDispatcher = () => {
   });
 
   return {
-    setLang: (l: string) => (lang = l),
-    addToQueue: (type: HeadType, payload: MetaPayload | string): void => {
+    _setLang: (l: string) => (lang = l),
+    _addToQueue: (type: HeadType, payload: MetaPayload | string): void => {
       processQueue();
 
       if (type === 'title') {
@@ -114,7 +114,7 @@ const createDispatcher = () => {
         linkQueue.push(payload);
       }
     },
-    removeFromQueue: (type: HeadType, payload: MetaPayload | string) => {
+    _removeFromQueue: (type: HeadType, payload: MetaPayload | string) => {
       if (type === 'title') {
         titleQueue.splice(titleQueue.indexOf(payload as string), 1);
         if (!isServerSide) document.title = titleQueue[0] || '';
@@ -143,7 +143,7 @@ const createDispatcher = () => {
         }
       }
     },
-    change: (
+    _change: (
       type: HeadType,
       prevPayload: string | MetaPayload,
       payload: any

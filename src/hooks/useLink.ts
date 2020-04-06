@@ -33,7 +33,7 @@ export const useLink = (options: LinkOptions) => {
 
   useEffect(() => {
     if (isServerSide) {
-      dispatcher.addToQueue('link', options as any);
+      dispatcher._addToQueue('link', options as any);
     } else {
       hasMounted.current = true;
       node.current = document.createElement('link');
