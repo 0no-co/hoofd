@@ -4,22 +4,22 @@
 [![Bundle size](https://badgen.net/bundlephobia/minzip/hooked-head)](https://badgen.net/bundlephobia/minzip/hooked-head)
 [![codecov](https://codecov.io/gh/JoviDeCroock/hooked-head/branch/master/graph/badge.svg)](https://codecov.io/gh/JoviDeCroock/hooked-head)
 
-This project aims at providing a set of hooks to populate `<meta>`, ... for each page.
+This project aims at providing a set of hooks to populate `<meta>`, ... for each page. With crawlers now supporting
+client-side alterations it's important to support a fallback model for our `<head>` tags. The dispatcher located in this
+library will always make a queue of how we should fallback, ... This way we'll always have some information to give to a
+visiting crawler.
 
-## Goals
+```jsx
+import { useMeta, useLink, useLang, useTitle } from 'hooked-head';
 
-Initially this will be `title` and `meta`.
-
-- [x] React support
-- [x] Add majority of types for meta and link.
-- [x] Concurrent friendly
-- [x] Preact support
-- [x] Support `<link>`
-- [x] Stricter typings
-- [x] Document the hooks
-- [x] Document the dispatcher
-- [x] SSR support
-- [ ] Golf bytes
+const App = () => {
+  useLang('en');
+  useTitle('welcome to hooked-head');
+  useMeta({ name: 'author', content: 'Jovi De Croock' });
+  useLink({ rel: 'me', href: 'https://jovidecroock.com' });
+  return <p>Hooked-Head</p>;
+};
+```
 
 ## Preact
 
@@ -54,6 +54,36 @@ This will update within the same `useLink` but will never go outside
 This hook accepts a string that will be used to set the `lang` property on the
 base `<html>` tag. Every time this string gets updated this will be reflected in the dom.
 
-## Dispatcher
+## SSR
 
-It can be interesting to give this a read, in the code itself.
+```js
+import { toString } from 'hooked-head';
+
+const html = `
+  <!doctype html>
+    <html>
+      <head>
+        ${toString()}
+      </head>
+      <body>
+        <div id="content">
+          ${renderToString()}
+        </div>
+      </body>
+  </html>
+`;
+```
+
+## Goals
+
+- [x] React support
+- [x] Add majority of types for meta and link.
+- [x] Concurrent friendly
+- [x] Preact support
+- [x] Support `<link>`
+- [x] Stricter typings
+- [x] Document the hooks
+- [x] Document the dispatcher
+- [x] SSR support
+- [ ] Golf bytes
+- [ ] improve typings, there are probably missing possibilities in `types.ts`
