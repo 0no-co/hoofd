@@ -85,14 +85,8 @@ const createDispatcher = () => {
     if (!isServerSide) document.title = titleQueue[0];
 
     metaQueue.forEach((meta) => {
-      if (
-        !visited.has(
-          meta.keyword === 'charset' ? meta.keyword : meta[meta.keyword]
-        )
-      ) {
-        visited.add(
-          meta.keyword === 'charset' ? meta.keyword : meta[meta.keyword]
-        );
+      if (!visited.has(meta.charset ? meta.keyword : meta[meta.keyword])) {
+        visited.add(meta.charset ? meta.keyword : meta[meta.keyword]);
         changeOrCreateMetaTag(meta);
       }
     });
@@ -125,7 +119,7 @@ const createDispatcher = () => {
           const newMeta = metaQueue.find(
             (m) =>
               m.keyword === oldMeta.keyword &&
-              (m.keyword === 'charset' || m[m.keyword] === oldMeta[m.keyword])
+              (m.charset || m[m.keyword] === oldMeta[m.keyword])
           );
 
           if (newMeta) {
@@ -173,14 +167,8 @@ const createDispatcher = () => {
       const stringified = `
         <title>${titleQueue[0]}</title>
         ${metaQueue.reduce((acc, meta) => {
-          if (
-            !visited.has(
-              meta.keyword === 'charset' ? meta.keyword : meta[meta.keyword]
-            )
-          ) {
-            visited.add(
-              meta.keyword === 'charset' ? meta.keyword : meta[meta.keyword]
-            );
+          if (!visited.has(meta.charset ? meta.keyword : meta[meta.keyword])) {
+            visited.add(meta.charset ? meta.keyword : meta[meta.keyword]);
             return `${acc}<meta ${meta.keyword}="${meta[meta.keyword]}"${
               meta.charset ? '' : ` content="${meta.content}"`
             }>`;

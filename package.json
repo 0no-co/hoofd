@@ -84,6 +84,9 @@
     "tslib": "^1.11.1",
     "typescript": "^3.8.3"
   },
+  "peerDependencies": {
+    "react": ">= 16.8.0"
+  },
   "mangle": {
     "regex": "^_"
   },
