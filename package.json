@@ -22,6 +22,18 @@
     "url": "https://github.com/JoviDeCroock/hooked-head/issues"
   },
   "homepage": "https://github.com/JoviDeCroock/hooked-head#readme",
+  "keywords": [
+    "hooked-head",
+    "react",
+    "preact",
+    "document",
+    "head",
+    "title",
+    "meta",
+    "link",
+    "html",
+    "language"
+  ],
   "main": "./dist/hooked-head.js",
   "browser": "./dist/hooked-head.umd.js",
   "umd:main": "./dist/hooked-head.umd.js",
