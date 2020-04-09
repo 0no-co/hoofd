@@ -12,18 +12,6 @@ export interface MetaPayload {
   content: string;
 }
 
-function debounceFrame(func: any) {
-  let timeout: any;
-
-  return () => {
-    clearTimeout(timeout);
-    timeout = setTimeout(() => {
-      timeout = null;
-      func();
-    }, 1000 / 60);
-  };
-}
-
 const changeOrCreateMetaTag = (meta: MetaPayload) => {
   if (!isServerSide) {
     const result = document.head.querySelectorAll(
@@ -80,19 +68,27 @@ const createDispatcher = () => {
   // A process can be debounced by one frame timing,
   // since microticks could potentially interfere with how
   // React works.
-  const processQueue = debounceFrame(() => {
-    const visited = new Set();
-    if (!isServerSide) document.title = titleQueue[0];
+  const processQueue = (() => {
+    let timeout: any;
 
-    metaQueue.forEach((meta) => {
-      if (!visited.has(meta.charset ? meta.keyword : meta[meta.keyword])) {
-        visited.add(meta.charset ? meta.keyword : meta[meta.keyword]);
-        changeOrCreateMetaTag(meta);
-      }
-    });
+    return () => {
+      clearTimeout(timeout);
+      timeout = setTimeout(() => {
+        timeout = null;
+        const visited = new Set();
+        if (!isServerSide) document.title = titleQueue[0];
 
-    currentTitleIndex = currentMetaIndex = 0;
-  });
+        metaQueue.forEach((meta) => {
+          if (!visited.has(meta.charset ? meta.keyword : meta[meta.keyword])) {
+            visited.add(meta.charset ? meta.keyword : meta[meta.keyword]);
+            changeOrCreateMetaTag(meta);
+          }
+        });
+
+        currentTitleIndex = currentMetaIndex = 0;
+      }, 1000 / 60 /* One second divided by the max browser fps. */);
+    };
+  })();
 
   return {
     _setLang: (l: string) => (lang = l),
