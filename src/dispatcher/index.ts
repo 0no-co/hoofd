@@ -1,7 +1,7 @@
 import { Name, CharSet, HttpEquiv, Property } from '../types';
 import { isServerSide } from '../utils';
 
-type HeadType = 'title' | 'meta' | 'link';
+type HeadType = 'title' | 'titleTemplate' | 'meta' | 'link';
 type MetaKeyword = 'name' | 'charset' | 'http-equiv' | 'property';
 export interface MetaPayload {
   keyword: MetaKeyword;
@@ -11,6 +11,14 @@ export interface MetaPayload {
   property: Property;
   content: string;
 }
+
+const applyTemplate = (title: string, template?: string) => {
+  if (title && template) {
+    return template.replace(/%s/g, title);
+  }
+
+  return title;
+};
 
 const changeOrCreateMetaTag = (meta: MetaPayload) => {
   if (!isServerSide) {
@@ -61,8 +69,10 @@ const createDispatcher = () => {
   let lang: string;
   let linkQueue: any[] = [];
   let titleQueue: string[] = [];
+  let titleTemplateQueue: string[] = [];
   let metaQueue: MetaPayload[] = [];
   let currentTitleIndex = 0;
+  let currentTitleTemplateIndex = 0;
   let currentMetaIndex = 0;
 
   // A process can be debounced by one frame timing,
@@ -76,7 +86,8 @@ const createDispatcher = () => {
       timeout = setTimeout(() => {
         timeout = null;
         const visited = new Set();
-        if (!isServerSide) document.title = titleQueue[0];
+        if (!isServerSide)
+          document.title = applyTemplate(titleQueue[0], titleTemplateQueue[0]);
 
         metaQueue.forEach((meta) => {
           if (!visited.has(meta.charset ? meta.keyword : meta[meta.keyword])) {
@@ -85,7 +96,7 @@ const createDispatcher = () => {
           }
         });
 
-        currentTitleIndex = currentMetaIndex = 0;
+        currentTitleIndex = currentTitleTemplateIndex = currentMetaIndex = 0;
       }, 1000 / 60 /* One second divided by the max browser fps. */);
     };
   })();
@@ -99,6 +110,12 @@ const createDispatcher = () => {
         titleQueue.splice(currentTitleIndex++, 0, payload as string);
       } else if (type === 'meta') {
         metaQueue.splice(currentMetaIndex++, 0, payload as MetaPayload);
+      } else if (type === 'titleTemplate') {
+        titleTemplateQueue.splice(
+          currentTitleTemplateIndex++,
+          0,
+          payload as string
+        );
       } else {
         linkQueue.push(payload);
       }
@@ -106,7 +123,11 @@ const createDispatcher = () => {
     _removeFromQueue: (type: HeadType, payload: MetaPayload | string) => {
       if (type === 'title') {
         titleQueue.splice(titleQueue.indexOf(payload as string), 1);
-        if (!isServerSide) document.title = titleQueue[0] || '';
+        if (!isServerSide)
+          document.title = applyTemplate(
+            titleQueue[0] || '',
+            titleTemplateQueue[0] || undefined
+          );
       } else {
         const oldMeta = metaQueue[metaQueue.indexOf(payload as MetaPayload)];
 
@@ -140,6 +161,10 @@ const createDispatcher = () => {
       if (type === 'title') {
         titleQueue[titleQueue.indexOf(prevPayload as string)] = payload;
         if (!isServerSide) document.title = payload;
+      } else if (type === 'titleTemplate') {
+        titleTemplateQueue[
+          titleTemplateQueue.indexOf(prevPayload as string)
+        ] = payload;
       } else {
         changeOrCreateMetaTag(
           (metaQueue[metaQueue.indexOf(prevPayload as MetaPayload)] = payload)
@@ -160,8 +185,9 @@ const createDispatcher = () => {
       //  Then do a similar for the meta's. (will also need to add links, and add a linkQueue). Note that both queues
       //  will need a reset to prevent memory leaks.
       const visited = new Set();
+      const title = applyTemplate(titleQueue[0], titleTemplateQueue[0]);
       const stringified = `
-        <title>${titleQueue[0]}</title>
+        <title>${title}</title>
         ${metaQueue.reduce((acc, meta) => {
           if (!visited.has(meta.charset ? meta.keyword : meta[meta.keyword])) {
             visited.add(meta.charset ? meta.keyword : meta[meta.keyword]);
@@ -179,6 +205,7 @@ const createDispatcher = () => {
         }, '')}
       `;
       titleQueue = [];
+      titleTemplateQueue = [];
       metaQueue = [];
       linkQueue = [];
       return { head: stringified, lang };
