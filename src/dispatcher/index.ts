@@ -12,13 +12,8 @@ export interface MetaPayload {
   content: string;
 }
 
-const applyTitleTemplate = (title: string, template?: string) => {
-  if (title && template) {
-    return template.replace(/%s/g, title);
-  }
-
-  return title;
-};
+const applyTitleTemplate = (title: string, template?: string) =>
+  title && template ? template.replace(/%s/g, title) : title;
 
 const changeOrCreateMetaTag = (meta: MetaPayload) => {
   if (!isServerSide) {
@@ -129,7 +124,7 @@ const createDispatcher = () => {
         if (!isServerSide)
           document.title = applyTitleTemplate(
             titleQueue[0] || '',
-            titleTemplateQueue[0] || undefined
+            titleTemplateQueue[0]
           );
       } else {
         const oldMeta = metaQueue[metaQueue.indexOf(payload as MetaPayload)];
