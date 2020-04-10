@@ -12,7 +12,7 @@ export interface MetaPayload {
   content: string;
 }
 
-const applyTemplate = (title: string, template?: string) => {
+const applyTitleTemplate = (title: string, template?: string) => {
   if (title && template) {
     return template.replace(/%s/g, title);
   }
@@ -87,7 +87,10 @@ const createDispatcher = () => {
         timeout = null;
         const visited = new Set();
         if (!isServerSide)
-          document.title = applyTemplate(titleQueue[0], titleTemplateQueue[0]);
+          document.title = applyTitleTemplate(
+            titleQueue[0],
+            titleTemplateQueue[0]
+          );
 
         metaQueue.forEach((meta) => {
           if (!visited.has(meta.charset ? meta.keyword : meta[meta.keyword])) {
@@ -124,7 +127,7 @@ const createDispatcher = () => {
       if (type === 'title') {
         titleQueue.splice(titleQueue.indexOf(payload as string), 1);
         if (!isServerSide)
-          document.title = applyTemplate(
+          document.title = applyTitleTemplate(
             titleQueue[0] || '',
             titleTemplateQueue[0] || undefined
           );
@@ -185,7 +188,7 @@ const createDispatcher = () => {
       //  Then do a similar for the meta's. (will also need to add links, and add a linkQueue). Note that both queues
       //  will need a reset to prevent memory leaks.
       const visited = new Set();
-      const title = applyTemplate(titleQueue[0], titleTemplateQueue[0]);
+      const title = applyTitleTemplate(titleQueue[0], titleTemplateQueue[0]);
       const stringified = `
         <title>${title}</title>
         ${metaQueue.reduce((acc, meta) => {
