@@ -10,10 +10,17 @@ library will always make a queue of how we should fallback, ... This way we'll a
 visiting crawler.
 
 ```jsx
-import { useMeta, useLink, useLang, useTitle } from 'hooked-head';
+import {
+  useMeta,
+  useLink,
+  useLang,
+  useTitle,
+  useTitleTemplate,
+} from 'hooked-head';
 
 const App = () => {
   useLang('en');
+  useTitleTemplate('%s | 💭');
   useTitle('welcome to hooked-head');
   useMeta({ name: 'author', content: 'Jovi De Croock' });
   useLink({ rel: 'me', href: 'https://jovidecroock.com' });
@@ -27,13 +34,18 @@ If you need support for [Preact](https://preactjs.com/) you can import from `hoo
 
 ## Hooks
 
-This package exports `useTitle`, `useMeta`, `useLink` and `useLang`. These hooks
+This package exports `useTitle`, `useTitleTemplate`, `useMeta`, `useLink` and `useLang`. These hooks
 are used to control information conveyed by the `<head>` in an html document.
 
 ### useTitle
 
 This hook accepts a string that will be used to set the `document.title`, every time the
 given string changes it will update the property.
+
+### useTitleTemplate
+
+This hook accepts a string, which will be used to format the result of `useTitle` whenever
+it updates. Similar to react-helmet, the placeholder `%s` will be replaced with the `title`.
 
 ### useMeta
 
