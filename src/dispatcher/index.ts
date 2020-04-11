@@ -165,7 +165,8 @@ const createDispatcher = () => {
     ) => {
       if (type === 'title') {
         titleQueue[titleQueue.indexOf(prevPayload as string)] = payload;
-        if (!isServerSide) document.title = payload;
+        if (!isServerSide)
+          document.title = applyTitleTemplate(payload, titleTemplateQueue[0]);
       } else if (type === 'titleTemplate') {
         titleTemplateQueue[
           titleTemplateQueue.indexOf(prevPayload as string)

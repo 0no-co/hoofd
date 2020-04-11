@@ -38,46 +38,11 @@ describe('useTitle', () => {
 
     await act(async () => {
       await rerender!(
-        <MyComponent title="itWorks" template="| ignoring the template" />
+        <MyComponent title="itWorks" template="| without replacement" />
       );
     });
     jest.runAllTimers();
-    expect(document.title).toEqual('itWorks');
-  });
-
-  it('should fill in the title based on the template even in reverse order', async () => {
-    jest.useFakeTimers();
-    const MyComponent = ({
-      template,
-      title,
-    }: {
-      template: string;
-      title: string;
-    }) => {
-      useTitle(title);
-      useTitleTemplate(template);
-
-      return <p>hi</p>;
-    };
-
-    let rerender: any;
-
-    await act(async () => {
-      ({ rerender } = await render(
-        <MyComponent template="%s | Site" title="Super" />
-      ));
-    });
-
-    jest.runAllTimers();
-    expect(document.title).toEqual('Super | Site');
-
-    await act(async () => {
-      await rerender!(
-        <MyComponent title="itWorks" template="| ignoring the template" />
-      );
-    });
-    jest.runAllTimers();
-    expect(document.title).toEqual('itWorks');
+    expect(document.title).toEqual('| without replacement');
   });
 
   it('should restore the title', async () => {
