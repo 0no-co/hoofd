@@ -104,18 +104,25 @@ const createDispatcher = () => {
     _addToQueue: (type: HeadType, payload: MetaPayload | string): void => {
       processQueue();
 
-      if (type === 'title') {
-        titleQueue.splice(currentTitleIndex++, 0, payload as string);
-      } else if (type === 'meta') {
-        metaQueue.splice(currentMetaIndex++, 0, payload as MetaPayload);
-      } else if (type === 'titleTemplate') {
-        titleTemplateQueue.splice(
-          currentTitleTemplateIndex++,
-          0,
-          payload as string
-        );
-      } else {
-        linkQueue.push(payload);
+      switch (type) {
+        case 'title':
+          titleQueue.splice(currentTitleIndex++, 0, payload as string);
+          break;
+
+        case 'titleTemplate':
+          titleTemplateQueue.splice(
+            currentTitleTemplateIndex++,
+            0,
+            payload as string
+          );
+          break;
+
+        case 'meta':
+          metaQueue.splice(currentMetaIndex++, 0, payload as MetaPayload);
+          break;
+
+        default:
+          linkQueue.push(payload);
       }
     },
     _removeFromQueue: (type: HeadType, payload: MetaPayload | string) => {
