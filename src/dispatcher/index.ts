@@ -105,7 +105,9 @@ const createDispatcher = () => {
   })();
 
   return {
-    _setLang: (l: string) => (lang = l),
+    _setLang: (l: string) => {
+      lang = l;
+    },
     _addToQueue: (type: HeadType, payload: MetaPayload | string): void => {
       processQueue();
 
@@ -124,19 +126,12 @@ const createDispatcher = () => {
       }
     },
     _removeFromQueue: (type: HeadType, payload: MetaPayload | string) => {
-      if (type === TITLE) {
-        titleQueue.splice(titleQueue.indexOf(payload as string), 1);
-        if (!isServerSide)
-          document.title = applyTitleTemplate(
-            titleQueue[0] || '',
-            titleTemplateQueue[0]
-          );
-      } else if (type === TEMPLATE) {
-        titleTemplateQueue.splice(
-          titleTemplateQueue.indexOf(payload as string),
-          1
-        );
-        if (!isServerSide)
+      if (type === TITLE || type === TEMPLATE) {
+        const queue = type === TEMPLATE ? titleTemplateQueue : titleQueue;
+        const index = queue.indexOf(payload as string);
+        queue.splice(index, 1);
+
+        if (!isServerSide && index === 0)
           document.title = applyTitleTemplate(
             titleQueue[0] || '',
             titleTemplateQueue[0]
@@ -171,14 +166,15 @@ const createDispatcher = () => {
       prevPayload: string | MetaPayload,
       payload: any
     ) => {
-      if (type === TITLE) {
-        titleQueue[titleQueue.indexOf(prevPayload as string)] = payload;
-        if (!isServerSide)
-          document.title = applyTitleTemplate(payload, titleTemplateQueue[0]);
-      } else if (type === TEMPLATE) {
-        titleTemplateQueue[
-          titleTemplateQueue.indexOf(prevPayload as string)
-        ] = payload;
+      if (type === TITLE || type === TEMPLATE) {
+        const queue = type === TEMPLATE ? titleTemplateQueue : titleQueue;
+        queue[queue.indexOf(prevPayload as string)] = payload;
+        if (!isServerSide && queue.indexOf(payload) === 0) {
+          document.title = applyTitleTemplate(
+            queue[queue.indexOf(payload)],
+            titleTemplateQueue[0]
+          );
+        }
       } else {
         changeOrCreateMetaTag(
           (metaQueue[metaQueue.indexOf(prevPayload as MetaPayload)] = payload)
@@ -191,6 +187,8 @@ const createDispatcher = () => {
           () => {
             titleQueue = [];
             metaQueue = [];
+            linkQueue = [];
+            titleTemplateQueue = [];
           }
         : // istanbul ignore next
           undefined,
