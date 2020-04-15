@@ -22,7 +22,7 @@ export const useLink = (options: LinkOptions) => {
   }
 
   useEffect(() => {
-    if (hasMounted.current && !isServerSide) {
+    if (hasMounted.current) {
       Object.keys(options).forEach((key) => {
         // @ts-ignore
         (node.current as Element).setAttribute(key, options[key]);
@@ -37,19 +37,17 @@ export const useLink = (options: LinkOptions) => {
   ]);
 
   useEffect(() => {
-    if (!isServerSide) {
-      hasMounted.current = true;
-      node.current = document.createElement('link');
-      Object.keys(options).forEach((key) => {
-        // @ts-ignore
-        (node.current as Element).setAttribute(key, options[key]);
-      });
-      document.head.appendChild(node.current);
-    }
+    hasMounted.current = true;
+    node.current = document.createElement('link');
+    Object.keys(options).forEach((key) => {
+      // @ts-ignore
+      (node.current as Element).setAttribute(key, options[key]);
+    });
+    document.head.appendChild(node.current);
 
     return () => {
       hasMounted.current = false;
-      if (!isServerSide) document.head.removeChild(node.current as Element);
+      document.head.removeChild(node.current as Element);
     };
   }, []);
 };

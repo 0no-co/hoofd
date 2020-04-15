@@ -197,12 +197,11 @@ const createDispatcher = () => {
       //  Then do a similar for the meta's. (will also need to add links, and add a linkQueue). Note that both queues
       //  will need a reset to prevent memory leaks.
       const visited = new Set();
-      if (process.env.NODE_ENV !== 'test') {
-        titleQueue.reverse();
-        metaQueue.reverse();
-        titleTemplateQueue.reverse();
-      }
-      const title = applyTitleTemplate(titleQueue[0], titleTemplateQueue[0]);
+      const title = applyTitleTemplate(
+        titleQueue[titleQueue.length - 1],
+        titleTemplateQueue[titleTemplateQueue.length - 1]
+      );
+      metaQueue.reverse();
 
       const stringified = `
         <title>${title}</title>

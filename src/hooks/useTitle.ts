@@ -6,7 +6,7 @@ export const useTitle = (title: string, template?: boolean) => {
   const hasMounted = useRef(false);
   const prevTitle = useRef<string | undefined>();
 
-  if (isServerSide && !hasMounted.current && process.env.NODE_ENV !== 'test') {
+  if (isServerSide && !hasMounted.current) {
     dispatcher._addToQueue(template ? TEMPLATE : TITLE, title);
     hasMounted.current = true;
   }

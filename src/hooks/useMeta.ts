@@ -16,7 +16,7 @@ export const useMeta = (options: MetaOptions) => {
   const keyword = useRef<string | undefined>();
   const metaObject = useRef<MetaPayload>();
 
-  if (isServerSide && !hasMounted.current && process.env.NODE_ENV !== 'test') {
+  if (isServerSide && !hasMounted.current) {
     dispatcher._addToQueue(META, {
       keyword: keyword.current = options.charset
         ? 'charset'
