@@ -181,7 +181,7 @@ const createDispatcher = () => {
         );
       }
     },
-    reset:
+    _reset:
       process.env.NODE_ENV === 'test'
         ? // istanbul ignore next
           () => {
@@ -197,9 +197,11 @@ const createDispatcher = () => {
       //  Then do a similar for the meta's. (will also need to add links, and add a linkQueue). Note that both queues
       //  will need a reset to prevent memory leaks.
       const visited = new Set();
-      titleQueue.reverse();
-      metaQueue.reverse();
-      titleTemplateQueue.reverse();
+      if (process.env.NODE_ENV !== 'test') {
+        titleQueue.reverse();
+        metaQueue.reverse();
+        titleTemplateQueue.reverse();
+      }
       const title = applyTitleTemplate(titleQueue[0], titleTemplateQueue[0]);
 
       const stringified = `
@@ -219,7 +221,7 @@ const createDispatcher = () => {
             ''
           )}>`;
         }, '')}
-      `;
+      `.trim();
 
       titleQueue = [];
       titleTemplateQueue = [];
