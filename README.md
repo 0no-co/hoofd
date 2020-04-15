@@ -19,11 +19,16 @@ import {
 } from 'hooked-head';
 
 const App = () => {
+  // Will set <html lang="en">
   useLang('en');
+
+  // Will set title to "Welcome to hooked-head | 💭"
   useTitleTemplate('%s | 💭');
-  useTitle('welcome to hooked-head');
+  useTitle('Welcome to hooked-head');
+
   useMeta({ name: 'author', content: 'Jovi De Croock' });
   useLink({ rel: 'me', href: 'https://jovidecroock.com' });
+
   return <p>Hooked-Head</p>;
 };
 ```

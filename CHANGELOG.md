@@ -1,8 +1,12 @@
 # CHANGELOG
 
+## 0.3.0
+
+- Add `useTitleTemplate` hook
+
 ## 0.2.1
 
-- bundle size savings -100 bytes
+- Bundle size savings -100 bytes
 
 ## 0.2.0
 
