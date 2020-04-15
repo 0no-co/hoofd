@@ -73,6 +73,8 @@ base `<html>` tag. Every time this string gets updated this will be reflected in
 
 ## SSR
 
+WARNING: due to [`useEffect` not running on the server we currently have an issue](https://gist.github.com/gaearon/e7d97cdf38a2907924ea12e4ebdf3c85#option-1-convert-to-useeffect)
+
 ```js
 import { toString } from 'hooked-head';
 
@@ -103,7 +105,7 @@ const html = `
 - [x] Stricter typings
 - [x] Document the hooks
 - [x] Document the dispatcher
-- [x] SSR support
+- [ ] SSR support
 - [x] Consider moving from `doc.title = x` to inserting `<title>x</title>`
 - [x] Golf bytes
 - [ ] improve typings, there are probably missing possibilities in `types.ts`
