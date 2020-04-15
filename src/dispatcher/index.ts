@@ -21,29 +21,27 @@ const applyTitleTemplate = (title: string, template?: string) =>
   title && template ? template.replace(/%s/g, title) : title;
 
 const changeOrCreateMetaTag = (meta: MetaPayload) => {
-  if (!isServerSide) {
-    const result = document.head.querySelectorAll(
-      meta.charset
-        ? `meta[${meta.keyword}]`
-        : `meta[${meta.keyword}="${meta[meta.keyword]}"]`
-    );
+  const result = document.head.querySelectorAll(
+    meta.charset
+      ? `meta[${meta.keyword}]`
+      : `meta[${meta.keyword}="${meta[meta.keyword]}"]`
+  );
 
-    if (result[0]) {
-      if (meta.charset) {
-        result[0].setAttribute(meta.keyword, meta.charset);
-      } else {
-        result[0].setAttribute('content', meta.content as string);
-      }
+  if (result[0]) {
+    if (meta.charset) {
+      result[0].setAttribute(meta.keyword, meta.charset);
     } else {
-      const metaTag = document.createElement('meta');
-      if (meta.charset) {
-        metaTag.setAttribute(meta.keyword, meta.charset);
-      } else {
-        metaTag.setAttribute(meta.keyword, meta[meta.keyword] as string);
-        metaTag.setAttribute('content', meta.content as string);
-      }
-      document.head.appendChild(metaTag);
+      result[0].setAttribute('content', meta.content as string);
     }
+  } else {
+    const metaTag = document.createElement('meta');
+    if (meta.charset) {
+      metaTag.setAttribute(meta.keyword, meta.charset);
+    } else {
+      metaTag.setAttribute(meta.keyword, meta[meta.keyword] as string);
+      metaTag.setAttribute('content', meta.content as string);
+    }
+    document.head.appendChild(metaTag);
   }
 };
 
@@ -86,11 +84,11 @@ const createDispatcher = () => {
       timeout = setTimeout(() => {
         timeout = null;
         const visited = new Set();
-        if (!isServerSide)
-          document.title = applyTitleTemplate(
-            titleQueue[0],
-            titleTemplateQueue[0]
-          );
+
+        document.title = applyTitleTemplate(
+          titleQueue[0],
+          titleTemplateQueue[0]
+        );
 
         metaQueue.forEach((meta) => {
           if (!visited.has(meta.charset ? meta.keyword : meta[meta.keyword])) {
@@ -109,7 +107,7 @@ const createDispatcher = () => {
       lang = l;
     },
     _addToQueue: (type: HeadType, payload: MetaPayload | string): void => {
-      processQueue();
+      if (!isServerSide) processQueue();
 
       if (type === TITLE) {
         titleQueue.splice(currentTitleIndex++, 0, payload as string);
@@ -131,7 +129,7 @@ const createDispatcher = () => {
         const index = queue.indexOf(payload as string);
         queue.splice(index, 1);
 
-        if (!isServerSide && index === 0)
+        if (index === 0)
           document.title = applyTitleTemplate(
             titleQueue[0] || '',
             titleTemplateQueue[0]
@@ -149,7 +147,7 @@ const createDispatcher = () => {
 
           if (newMeta) {
             changeOrCreateMetaTag(newMeta);
-          } else if (!isServerSide) {
+          } else {
             const result = document.head.querySelectorAll(
               oldMeta.charset
                 ? `meta[${oldMeta.keyword}]`
@@ -169,7 +167,8 @@ const createDispatcher = () => {
       if (type === TITLE || type === TEMPLATE) {
         const queue = type === TEMPLATE ? titleTemplateQueue : titleQueue;
         queue[queue.indexOf(prevPayload as string)] = payload;
-        if (!isServerSide && queue.indexOf(payload) === 0) {
+
+        if (queue.indexOf(payload) === 0) {
           document.title = applyTitleTemplate(
             queue[queue.indexOf(payload)],
             titleTemplateQueue[0]
@@ -226,6 +225,8 @@ const createDispatcher = () => {
       titleTemplateQueue = [];
       metaQueue = [];
       linkQueue = [];
+      currentTitleIndex = currentTitleTemplateIndex = currentMetaIndex = 0;
+
       return { head: stringified, lang };
     },
   };
