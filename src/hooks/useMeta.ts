@@ -1,6 +1,6 @@
 import { useRef, useEffect } from 'react';
 import { Name, HttpEquiv, CharSet, Property } from '../types';
-import dispatcher, { MetaPayload } from '../dispatcher';
+import dispatcher, { MetaPayload, META } from '../dispatcher';
 
 export interface MetaOptions {
   name?: Name;
@@ -18,7 +18,7 @@ export const useMeta = (options: MetaOptions) => {
   useEffect(() => {
     if (hasMounted.current) {
       dispatcher._change(
-        'meta',
+        META,
         metaObject.current as MetaPayload,
         (metaObject.current = {
           keyword: keyword.current,
@@ -34,7 +34,7 @@ export const useMeta = (options: MetaOptions) => {
 
   useEffect(() => {
     dispatcher._addToQueue(
-      'meta',
+      META,
       (metaObject.current = {
         keyword: keyword.current = options.charset
           ? 'charset'
@@ -54,7 +54,7 @@ export const useMeta = (options: MetaOptions) => {
     hasMounted.current = true;
     return () => {
       hasMounted.current = false;
-      dispatcher._removeFromQueue('meta', metaObject.current as MetaPayload);
+      dispatcher._removeFromQueue(META, metaObject.current as MetaPayload);
     };
   }, []);
 };

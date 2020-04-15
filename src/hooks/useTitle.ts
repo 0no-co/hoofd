@@ -1,14 +1,14 @@
 import { useEffect, useRef } from 'react';
-import dispatcher from '../dispatcher';
+import dispatcher, { TEMPLATE, TITLE } from '../dispatcher';
 
-export const useTitle = (title: string) => {
+export const useTitle = (title: string, template?: boolean) => {
   const hasMounted = useRef(false);
   const prevTitle = useRef<string | undefined>();
 
   useEffect(() => {
     if (hasMounted.current) {
       dispatcher._change(
-        'title',
+        template ? TEMPLATE : TITLE,
         prevTitle.current as string,
         (prevTitle.current = title)
       );
@@ -17,10 +17,16 @@ export const useTitle = (title: string) => {
 
   useEffect(() => {
     hasMounted.current = true;
-    dispatcher._addToQueue('title', (prevTitle.current = title));
+    dispatcher._addToQueue(
+      template ? TEMPLATE : TITLE,
+      (prevTitle.current = title)
+    );
     return () => {
       hasMounted.current = false;
-      dispatcher._removeFromQueue('title', prevTitle.current as string);
+      dispatcher._removeFromQueue(
+        template ? TEMPLATE : TITLE,
+        prevTitle.current as string
+      );
     };
   }, []);
 };

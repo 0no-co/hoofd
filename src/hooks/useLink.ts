@@ -1,7 +1,7 @@
 import { Rel, As } from '../types';
 import { useEffect, useRef } from 'react';
 import { isServerSide } from '../utils';
-import dispatcher from '../dispatcher';
+import dispatcher, { LINK } from '../dispatcher';
 
 interface LinkOptions {
   rel: Rel;
@@ -33,7 +33,7 @@ export const useLink = (options: LinkOptions) => {
 
   useEffect(() => {
     if (isServerSide) {
-      dispatcher._addToQueue('link', options as any);
+      dispatcher._addToQueue(LINK, options as any);
     } else {
       hasMounted.current = true;
       node.current = document.createElement('link');
