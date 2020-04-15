@@ -191,7 +191,7 @@ const createDispatcher = () => {
           }
         : // istanbul ignore next
           undefined,
-    _toString: () => {
+    _static: () => {
       //  Will process the two arrays, taking the first title in the array and returning <title>{string}</title>
       //  Then do a similar for the meta's. (will also need to add links, and add a linkQueue). Note that both queues
       //  will need a reset to prevent memory leaks.
@@ -202,16 +202,20 @@ const createDispatcher = () => {
       );
       metaQueue.reverse();
 
+      // @ts-ignore
+      const metas = [...metaQueue].filter((meta) => {
+        if (!visited.has(meta.charset ? meta.keyword : meta[meta.keyword])) {
+          visited.add(meta.charset ? meta.keyword : meta[meta.keyword]);
+          return true;
+        }
+      });
+
       const stringified = `
         <title>${title}</title>
-        ${metaQueue.reduce((acc, meta) => {
-          if (!visited.has(meta.charset ? meta.keyword : meta[meta.keyword])) {
-            visited.add(meta.charset ? meta.keyword : meta[meta.keyword]);
-            return `${acc}<meta ${meta.keyword}="${meta[meta.keyword]}"${
-              meta.charset ? '' : ` content="${meta.content}"`
-            }>`;
-          }
-          return acc;
+        ${metas.reduce((acc, meta) => {
+          return `${acc}<meta ${meta.keyword}="${meta[meta.keyword]}"${
+            meta.charset ? '' : ` content="${meta.content}"`
+          }>`;
         }, '')}
         ${linkQueue.reduce((acc, link) => {
           return `${acc}<link${Object.keys(link).reduce(
@@ -221,13 +225,27 @@ const createDispatcher = () => {
         }, '')}
       `.trim();
 
+      const links = [...linkQueue];
       titleQueue = [];
       titleTemplateQueue = [];
       metaQueue = [];
       linkQueue = [];
       currentTitleIndex = currentTitleTemplateIndex = currentMetaIndex = 0;
 
-      return { head: stringified, lang };
+      return {
+        headString: stringified,
+        lang,
+        title,
+        links: links.map((link) => ({
+          ...link,
+          type: 'link',
+        })),
+        metas: metas.map((meta) => ({
+          type: 'meta',
+          [meta.keyword]: meta[meta.keyword],
+          content: meta.content,
+        })),
+      };
     },
   };
 };

@@ -5,7 +5,7 @@ jest.mock('../src/utils', () => {
 });
 
 import * as React from 'react';
-import { useTitle, useTitleTemplate, toString } from '../src';
+import { useTitle, useTitleTemplate, toStatic } from '../src';
 import { render } from '@testing-library/react';
 
 describe('ssr with a template', () => {
@@ -30,8 +30,9 @@ describe('ssr with a template', () => {
 
     render(<MyComponent />);
     jest.runAllTimers();
-    const { head, lang } = toString();
-    expect(head).toContain('<title>hi | you</title>');
+    const { headString, title } = toStatic();
+    expect(headString).toContain('<title>hi | you</title>');
+    expect(title).toEqual('hi | you');
   });
 
   it('should render to string (nested)', () => {
@@ -54,7 +55,8 @@ describe('ssr with a template', () => {
       </MyComponent>
     );
     jest.runAllTimers();
-    const { head } = toString();
-    expect(head).toContain('<title>bye | you</title>');
+    const { headString, title } = toStatic();
+    expect(headString).toContain('<title>bye | you</title>');
+    expect(title).toEqual('bye | you');
   });
 });

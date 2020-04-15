@@ -6,4 +6,4 @@ export * from './hooks/useMeta';
 export * from './hooks/useTitle';
 export * from './hooks/useTitleTemplate';
 export * from './types';
-export const toString = dispatcher._toString;
+export const toStatic = dispatcher._static;

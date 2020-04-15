@@ -4,7 +4,7 @@ jest.mock('../src/utils', () => {
   };
 });
 import * as React from 'react';
-import { useTitle, toString, useMeta, useLink, useLang } from '../src';
+import { useTitle, toStatic, useMeta, useLink, useLang } from '../src';
 import { render } from '@testing-library/react';
 
 describe('ssr', () => {
@@ -31,11 +31,16 @@ describe('ssr', () => {
 
     render(<MyComponent />);
     jest.runAllTimers();
-    const { head, lang } = toString();
-    expect(head).toContain('<title>hi</title>');
-    expect(head).toContain('<meta property="fb:admins" content="hi">');
-    expect(head).toContain('<link rel="stylesheet" href="x">');
+    const { headString, lang, title, metas, links } = toStatic();
+    expect(headString).toContain('<title>hi</title>');
+    expect(headString).toContain('<meta property="fb:admins" content="hi">');
+    expect(headString).toContain('<link rel="stylesheet" href="x">');
     expect(lang).toEqual('nl');
+    expect(title).toEqual('hi');
+    expect(metas).toEqual([
+      { type: 'meta', content: 'hi', property: 'fb:admins' },
+    ]);
+    expect(links).toEqual([{ rel: 'stylesheet', href: 'x', type: 'link' }]);
   });
 
   it('should render to string (nested)', () => {
@@ -60,9 +65,17 @@ describe('ssr', () => {
       </MyComponent>
     );
     jest.runAllTimers();
-    const { head } = toString();
-    expect(head).toContain('<title>bye</title>');
-    expect(head).toContain('<meta property="fb:admins" content="bye">');
-    expect(head).toContain('<link rel="stylesheet" href="y">');
+    const { headString, title, metas, links } = toStatic();
+    expect(headString).toContain('<title>bye</title>');
+    expect(headString).toContain('<meta property="fb:admins" content="bye">');
+    expect(headString).toContain('<link rel="stylesheet" href="y">');
+    expect(title).toEqual('bye');
+    expect(metas).toEqual([
+      { type: 'meta', content: 'bye', property: 'fb:admins' },
+    ]);
+    expect(links).toEqual([
+      { rel: 'stylesheet', href: 'x', type: 'link' },
+      { rel: 'stylesheet', href: 'y', type: 'link' },
+    ]);
   });
 });
