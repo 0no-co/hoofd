@@ -1,9 +1,15 @@
 import { useEffect, useRef } from 'react';
 import dispatcher, { TEMPLATE, TITLE } from '../dispatcher';
+import { isServerSide } from '../utils';
 
 export const useTitle = (title: string, template?: boolean) => {
   const hasMounted = useRef(false);
   const prevTitle = useRef<string | undefined>();
+
+  if (isServerSide && !hasMounted.current) {
+    dispatcher._addToQueue(template ? TEMPLATE : TITLE, title);
+    hasMounted.current = true;
+  }
 
   useEffect(() => {
     if (hasMounted.current) {

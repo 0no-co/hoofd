@@ -1,6 +1,7 @@
 import { useRef, useEffect } from 'react';
 import { Name, HttpEquiv, CharSet, Property } from '../types';
 import dispatcher, { MetaPayload, META } from '../dispatcher';
+import { isServerSide } from '../utils';
 
 export interface MetaOptions {
   name?: Name;
@@ -14,6 +15,24 @@ export const useMeta = (options: MetaOptions) => {
   const hasMounted = useRef(false);
   const keyword = useRef<string | undefined>();
   const metaObject = useRef<MetaPayload>();
+
+  if (isServerSide && !hasMounted.current) {
+    dispatcher._addToQueue(META, {
+      keyword: keyword.current = options.charset
+        ? 'charset'
+        : options.name
+        ? 'name'
+        : options.property
+        ? 'property'
+        : 'http-equiv',
+      name: options.name,
+      charset: options.charset,
+      'http-equiv': options.httpEquiv,
+      property: options.property,
+      content: options.content,
+    } as MetaPayload);
+    hasMounted.current = true;
+  }
 
   useEffect(() => {
     if (hasMounted.current) {
