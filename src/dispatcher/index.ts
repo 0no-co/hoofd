@@ -1,7 +1,12 @@
 import { Name, CharSet, HttpEquiv, Property } from '../types';
 import { isServerSide } from '../utils';
 
-type HeadType = 'title' | 'titleTemplate' | 'meta' | 'link';
+export const META = 'M';
+export const TITLE = 'T';
+export const LINK = 'L';
+export const TEMPLATE = 'P';
+
+type HeadType = 'T' | 'P' | 'M' | 'L';
 type MetaKeyword = 'name' | 'charset' | 'http-equiv' | 'property';
 export interface MetaPayload {
   keyword: MetaKeyword;
@@ -100,35 +105,33 @@ const createDispatcher = () => {
   })();
 
   return {
-    _setLang: (l: string) => (lang = l),
+    _setLang: (l: string) => {
+      lang = l;
+    },
     _addToQueue: (type: HeadType, payload: MetaPayload | string): void => {
       processQueue();
 
-      switch (type) {
-        case 'title':
-          titleQueue.splice(currentTitleIndex++, 0, payload as string);
-          break;
-
-        case 'titleTemplate':
-          titleTemplateQueue.splice(
-            currentTitleTemplateIndex++,
-            0,
-            payload as string
-          );
-          break;
-
-        case 'meta':
-          metaQueue.splice(currentMetaIndex++, 0, payload as MetaPayload);
-          break;
-
-        default:
-          linkQueue.push(payload);
+      if (type === TITLE) {
+        titleQueue.splice(currentTitleIndex++, 0, payload as string);
+      } else if (type === TEMPLATE) {
+        titleTemplateQueue.splice(
+          currentTitleTemplateIndex++,
+          0,
+          payload as string
+        );
+      } else if (type === META) {
+        metaQueue.splice(currentMetaIndex++, 0, payload as MetaPayload);
+      } else {
+        linkQueue.push(payload);
       }
     },
     _removeFromQueue: (type: HeadType, payload: MetaPayload | string) => {
-      if (type === 'title') {
-        titleQueue.splice(titleQueue.indexOf(payload as string), 1);
-        if (!isServerSide)
+      if (type === TITLE || type === TEMPLATE) {
+        const queue = type === TEMPLATE ? titleTemplateQueue : titleQueue;
+        const index = queue.indexOf(payload as string);
+        queue.splice(index, 1);
+
+        if (!isServerSide && index === 0)
           document.title = applyTitleTemplate(
             titleQueue[0] || '',
             titleTemplateQueue[0]
@@ -163,14 +166,15 @@ const createDispatcher = () => {
       prevPayload: string | MetaPayload,
       payload: any
     ) => {
-      if (type === 'title') {
-        titleQueue[titleQueue.indexOf(prevPayload as string)] = payload;
-        if (!isServerSide)
-          document.title = applyTitleTemplate(payload, titleTemplateQueue[0]);
-      } else if (type === 'titleTemplate') {
-        titleTemplateQueue[
-          titleTemplateQueue.indexOf(prevPayload as string)
-        ] = payload;
+      if (type === TITLE || type === TEMPLATE) {
+        const queue = type === TEMPLATE ? titleTemplateQueue : titleQueue;
+        queue[queue.indexOf(prevPayload as string)] = payload;
+        if (!isServerSide && queue.indexOf(payload) === 0) {
+          document.title = applyTitleTemplate(
+            queue[queue.indexOf(payload)],
+            titleTemplateQueue[0]
+          );
+        }
       } else {
         changeOrCreateMetaTag(
           (metaQueue[metaQueue.indexOf(prevPayload as MetaPayload)] = payload)
@@ -183,6 +187,8 @@ const createDispatcher = () => {
           () => {
             titleQueue = [];
             metaQueue = [];
+            linkQueue = [];
+            titleTemplateQueue = [];
           }
         : // istanbul ignore next
           undefined,
@@ -192,6 +198,7 @@ const createDispatcher = () => {
       //  will need a reset to prevent memory leaks.
       const visited = new Set();
       const title = applyTitleTemplate(titleQueue[0], titleTemplateQueue[0]);
+
       const stringified = `
         <title>${title}</title>
         ${metaQueue.reduce((acc, meta) => {
@@ -210,6 +217,7 @@ const createDispatcher = () => {
           )}>`;
         }, '')}
       `;
+
       titleQueue = [];
       titleTemplateQueue = [];
       metaQueue = [];
