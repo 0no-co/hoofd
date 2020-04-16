@@ -8,7 +8,7 @@
     "build": "rimraf dist && yarn build:preact && yarn build:react",
     "build:react": "microbundle --define process.env.NODE_ENV=production --external react --name hookedHead --no-compress --output dist/",
     "build:preact": "microbundle --define process.env.NODE_ENV=production --external preact --name hookedHead --no-compress --output preact/dist --alias react=preact/hooks",
-    "build:ci": "microbundle --define process.env.NODE_ENV=production --external react --name hookedHead --output prod/",
+    "build:ci": "microbundle --define process.env.NODE_ENV=production --external react --name hookedHead --output dist/",
     "test": "jest",
     "test:watch": "cross-env NODE_ENV=test yarn test -- --watch",
     "prepublishOnly": "yarn test && yarn lint && yarn build",

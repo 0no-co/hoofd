@@ -5,10 +5,21 @@ jest.mock('../src/utils', () => {
 });
 
 import * as React from 'react';
-import { useTitle, useTitleTemplate, toString } from '../src';
+import { useTitle, useTitleTemplate, toStatic } from '../src';
 import { render } from '@testing-library/react';
 
 describe('ssr with a template', () => {
+  let original: any;
+
+  beforeAll(() => {
+    original = React.useEffect;
+    (React as any).useEffect = jest.fn(() => {});
+  });
+
+  afterAll(() => {
+    (React as any).useEffect = original;
+  });
+
   it('should render to string (basic)', () => {
     jest.useFakeTimers();
     const MyComponent = () => {
@@ -19,8 +30,8 @@ describe('ssr with a template', () => {
 
     render(<MyComponent />);
     jest.runAllTimers();
-    const { head, lang } = toString();
-    expect(head).toContain('<title>hi | you</title>');
+    const { title } = toStatic();
+    expect(title).toEqual('hi | you');
   });
 
   it('should render to string (nested)', () => {
@@ -43,65 +54,7 @@ describe('ssr with a template', () => {
       </MyComponent>
     );
     jest.runAllTimers();
-    const { head } = toString();
-    expect(head).toContain('<title>bye | you</title>');
-  });
-
-  it('should render to string (updates)', () => {
-    jest.useFakeTimers();
-    const MyComponent = (props: any) => {
-      useTitleTemplate('%s | you');
-      useTitle('hi');
-      return props.children;
-    };
-
-    const MyNestedComponent = ({ content, template }: any) => {
-      useTitle(content);
-      useTitleTemplate(template);
-      return <p>hi</p>;
-    };
-
-    const { rerender } = render(
-      <MyComponent>
-        <MyNestedComponent content="bye" template="%s | you" />
-      </MyComponent>
-    );
-    jest.runAllTimers();
-
-    rerender(
-      <MyComponent>
-        <MyNestedComponent content="foo" template="%s | you" />
-      </MyComponent>
-    );
-    jest.runAllTimers();
-    const { head } = toString();
-    expect(head).toContain('<title>foo | you</title>');
-  });
-
-  it('should render to string (removal)', () => {
-    jest.useFakeTimers();
-    const MyComponent = (props: any) => {
-      useTitleTemplate('%s | you');
-      useTitle('hi');
-      return props.children || <p>hi</p>;
-    };
-
-    const MyNestedComponent = ({ content }: any) => {
-      useTitleTemplate('%s | you');
-      useTitle(content);
-      return <p>hi</p>;
-    };
-
-    const { rerender } = render(
-      <MyComponent>
-        <MyNestedComponent content="bye" template="%s | you" />
-      </MyComponent>
-    );
-    jest.runAllTimers();
-
-    rerender(<MyComponent />);
-    jest.runAllTimers();
-    const { head } = toString();
-    expect(head).toContain('<title>hi | you</title>');
+    const { title } = toStatic();
+    expect(title).toEqual('bye | you');
   });
 });

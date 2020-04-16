@@ -73,18 +73,55 @@ base `<html>` tag. Every time this string gets updated this will be reflected in
 
 ## SSR
 
-WARNING: due to [`useEffect` not running on the server we currently have an issue](https://gist.github.com/gaearon/e7d97cdf38a2907924ea12e4ebdf3c85#option-1-convert-to-useeffect)
+We expose a method called `toStatic` that will return the following properties:
+
+- title, the current `title` dictated by the deepest `useTitleTemplate` and `useTitle` combination
+- lang, the current `lang` dictated by the deepest `useLang`
+- metas, an array of unique metas by `keyword` (property, ...)
+- links, the links aggregated from the render pass.
+
+The reason we pass these as properties is to better support `gatsby`, ...
+
+If you need to stringify these you can use the following algo:
 
 ```js
-import { toString } from 'hooked-head';
+const stringify = (title, metas, links) => {
+  const visited = new Set();
+  return `
+    <title>${title}</title>
+
+    ${metaQueue.reduce((acc, meta) => {
+      if (!visited.has(meta.charset ? meta.keyword : meta[meta.keyword])) {
+        visited.add(meta.charset ? meta.keyword : meta[meta.keyword]);
+        return `${acc}<meta ${meta.keyword}="${meta[meta.keyword]}"${
+          meta.charset ? '' : ` content="${meta.content}"`
+        }>`;
+      }
+      return acc;
+    }, '')}
+
+    ${linkQueue.reduce((acc, link) => {
+      return `${acc}<link${Object.keys(link).reduce(
+        (properties, key) => `${properties} ${key}="${link[key]}"`,
+        ''
+      )}>`;
+    }, '')}
+  `;
+};
+```
+
+```js
+import { toStatic } from 'hooked-head';
 
 const reactStuff = renderToString();
-const { head, lang } = toString();
+const { metas, links, title, lang } = toStatic();
+const stringified = stringify(title, metas, links);
+
 const html = `
   <!doctype html>
     <html lang="${lang}">
       <head>
-        ${head}
+        ${stringified}
       </head>
       <body>
         <div id="content">
@@ -105,7 +142,7 @@ const html = `
 - [x] Stricter typings
 - [x] Document the hooks
 - [x] Document the dispatcher
-- [ ] SSR support
+- [x] SSR support
 - [x] Consider moving from `doc.title = x` to inserting `<title>x</title>`
 - [x] Golf bytes
 - [ ] improve typings, there are probably missing possibilities in `types.ts`

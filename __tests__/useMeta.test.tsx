@@ -7,7 +7,7 @@ import dispatcher from '../src/dispatcher';
 describe('useMeta', () => {
   afterEach(() => {
     cleanup();
-    dispatcher.reset!();
+    dispatcher._reset!();
   });
 
   it('should create and change http-equiv', async () => {
