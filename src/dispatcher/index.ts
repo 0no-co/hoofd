@@ -202,30 +202,15 @@ const createDispatcher = () => {
       );
       metaQueue.reverse();
 
+      const links = [...linkQueue];
       // @ts-ignore
-      const metas = [...metaQueue].filter((meta) => {
-        if (!visited.has(meta.charset ? meta.keyword : meta[meta.keyword])) {
-          visited.add(meta.charset ? meta.keyword : meta[meta.keyword]);
+      const metas = [...metaQueue].filter((m) => {
+        if (!visited.has(m.charset ? m.keyword : m[m.keyword])) {
+          visited.add(m.charset ? m.keyword : m[m.keyword]);
           return true;
         }
       });
 
-      const stringified = `
-        <title>${title}</title>
-        ${metas.reduce((acc, meta) => {
-          return `${acc}<meta ${meta.keyword}="${meta[meta.keyword]}"${
-            meta.charset ? '' : ` content="${meta.content}"`
-          }>`;
-        }, '')}
-        ${linkQueue.reduce((acc, link) => {
-          return `${acc}<link${Object.keys(link).reduce(
-            (properties, key) => `${properties} ${key}="${link[key]}"`,
-            ''
-          )}>`;
-        }, '')}
-      `.trim();
-
-      const links = [...linkQueue];
       titleQueue = [];
       titleTemplateQueue = [];
       metaQueue = [];
@@ -233,18 +218,14 @@ const createDispatcher = () => {
       currentTitleIndex = currentTitleTemplateIndex = currentMetaIndex = 0;
 
       return {
-        headString: stringified,
         lang,
         title,
-        links: links.map((link) => ({
-          ...link,
-          type: 'link',
-        })),
-        metas: metas.map((meta) => ({
-          type: 'meta',
-          [meta.keyword]: meta[meta.keyword],
-          content: meta.content,
-        })),
+        links,
+        metas: metas.map((m) =>
+          m.keyword === 'charset'
+            ? { [m.keyword]: m[m.keyword] }
+            : { [m.keyword]: m[m.keyword], content: m.content }
+        ),
       };
     },
   };
