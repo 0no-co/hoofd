@@ -73,12 +73,19 @@ base `<html>` tag. Every time this string gets updated this will be reflected in
 
 ## SSR
 
-```js
-import { toStatic } from 'hooked-head';
+We expose a method called `toStatic` that will return the following properties:
 
-const reactStuff = renderToString();
-const { metas, links, title, lang } = toStatic();
-const stringified = `
+- title, the current `title` dictated by the deepest `useTitleTemplate` and `useTitle` combination
+- lang, the current `lang` dictated by the deepest `useLang`
+- metas, an array of unique metas by `keyword` (property, ...)
+- links, the links aggregated from the render pass.
+
+The reason we pass these as properties is to better support `gatsby`, ...
+
+If you need to stringify these you can use the following algo:
+
+```js
+const stringify = (title, metas, links) => `
   <title>${title}</title>
   ${metaQueue.reduce((acc, meta) => {
     if (!visited.has(meta.charset ? meta.keyword : meta[meta.keyword])) {
@@ -96,6 +103,14 @@ const stringified = `
     )}>`;
   }, '')}
 `;
+```
+
+```js
+import { toStatic } from 'hooked-head';
+
+const reactStuff = renderToString();
+const { metas, links, title, lang } = toStatic();
+const stringified = stringify(title, metas, links);
 
 const html = `
   <!doctype html>
