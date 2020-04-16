@@ -31,10 +31,7 @@ describe('ssr', () => {
 
     render(<MyComponent />);
     jest.runAllTimers();
-    const { headString, lang, title, metas, links } = toStatic();
-    expect(headString).toContain('<title>hi</title>');
-    expect(headString).toContain('<meta property="fb:admins" content="hi">');
-    expect(headString).toContain('<link rel="stylesheet" href="x">');
+    const { lang, title, metas, links } = toStatic();
     expect(lang).toEqual('nl');
     expect(title).toEqual('hi');
     expect(metas).toEqual([
@@ -65,10 +62,7 @@ describe('ssr', () => {
       </MyComponent>
     );
     jest.runAllTimers();
-    const { headString, title, metas, links } = toStatic();
-    expect(headString).toContain('<title>bye</title>');
-    expect(headString).toContain('<meta property="fb:admins" content="bye">');
-    expect(headString).toContain('<link rel="stylesheet" href="y">');
+    const { title, metas, links } = toStatic();
     expect(title).toEqual('bye');
     expect(metas).toEqual([
       { type: 'meta', content: 'bye', property: 'fb:admins' },

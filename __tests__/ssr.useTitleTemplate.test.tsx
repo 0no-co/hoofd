@@ -30,8 +30,7 @@ describe('ssr with a template', () => {
 
     render(<MyComponent />);
     jest.runAllTimers();
-    const { headString, title } = toStatic();
-    expect(headString).toContain('<title>hi | you</title>');
+    const { title } = toStatic();
     expect(title).toEqual('hi | you');
   });
 
@@ -55,8 +54,7 @@ describe('ssr with a template', () => {
       </MyComponent>
     );
     jest.runAllTimers();
-    const { headString, title } = toStatic();
-    expect(headString).toContain('<title>bye | you</title>');
+    const { title } = toStatic();
     expect(title).toEqual('bye | you');
   });
 });
