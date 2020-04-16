@@ -77,12 +77,31 @@ base `<html>` tag. Every time this string gets updated this will be reflected in
 import { toStatic } from 'hooked-head';
 
 const reactStuff = renderToString();
-const { headString, lang } = toStatic();
+const { metas, links, title, lang } = toStatic();
+const stringified = `
+  <title>${title}</title>
+  ${metaQueue.reduce((acc, meta) => {
+    if (!visited.has(meta.charset ? meta.keyword : meta[meta.keyword])) {
+      visited.add(meta.charset ? meta.keyword : meta[meta.keyword]);
+      return `${acc}<meta ${meta.keyword}="${meta[meta.keyword]}"${
+        meta.charset ? '' : ` content="${meta.content}"`
+      }>`;
+    }
+    return acc;
+  }, '')}
+  ${linkQueue.reduce((acc, link) => {
+    return `${acc}<link${Object.keys(link).reduce(
+      (properties, key) => `${properties} ${key}="${link[key]}"`,
+      ''
+    )}>`;
+  }, '')}
+`;
+
 const html = `
   <!doctype html>
     <html lang="${lang}">
       <head>
-        ${head}
+        ${stringified}
       </head>
       <body>
         <div id="content">
