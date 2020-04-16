@@ -195,18 +195,18 @@ const createDispatcher = () => {
       //  Will process the two arrays, taking the first title in the array and returning <title>{string}</title>
       //  Then do a similar for the meta's. (will also need to add links, and add a linkQueue). Note that both queues
       //  will need a reset to prevent memory leaks.
-      const visited = new Set();
       const title = applyTitleTemplate(
         titleQueue[titleQueue.length - 1],
         titleTemplateQueue[titleTemplateQueue.length - 1]
       );
-      metaQueue.reverse();
 
+      const visited = new Set();
       const links = [...linkQueue];
+      metaQueue.reverse();
       // @ts-ignore
-      const metas = [...metaQueue].filter((m) => {
-        if (!visited.has(m.charset ? m.keyword : m[m.keyword])) {
-          visited.add(m.charset ? m.keyword : m[m.keyword]);
+      const metas = [...metaQueue].filter((meta) => {
+        if (!visited.has(meta.charset ? meta.keyword : meta[meta.keyword])) {
+          visited.add(meta.charset ? meta.keyword : meta[meta.keyword]);
           return true;
         }
       });
@@ -221,10 +221,15 @@ const createDispatcher = () => {
         lang,
         title,
         links,
-        metas: metas.map((m) =>
-          m.keyword === 'charset'
-            ? { [m.keyword]: m[m.keyword] }
-            : { [m.keyword]: m[m.keyword], content: m.content }
+        metas: metas.map((meta) =>
+          meta.keyword === 'charset'
+            ? {
+                charset: meta[meta.keyword],
+              }
+            : {
+                [meta.keyword]: meta[meta.keyword],
+                content: meta.content,
+              }
         ),
       };
     },
