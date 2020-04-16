@@ -85,24 +85,29 @@ The reason we pass these as properties is to better support `gatsby`, ...
 If you need to stringify these you can use the following algo:
 
 ```js
-const stringify = (title, metas, links) => `
-  <title>${title}</title>
-  ${metaQueue.reduce((acc, meta) => {
-    if (!visited.has(meta.charset ? meta.keyword : meta[meta.keyword])) {
-      visited.add(meta.charset ? meta.keyword : meta[meta.keyword]);
-      return `${acc}<meta ${meta.keyword}="${meta[meta.keyword]}"${
-        meta.charset ? '' : ` content="${meta.content}"`
-      }>`;
-    }
-    return acc;
-  }, '')}
-  ${linkQueue.reduce((acc, link) => {
-    return `${acc}<link${Object.keys(link).reduce(
-      (properties, key) => `${properties} ${key}="${link[key]}"`,
-      ''
-    )}>`;
-  }, '')}
-`;
+const stringify = (title, metas, links) => {
+  const visited = new Set();
+  return `
+    <title>${title}</title>
+
+    ${metaQueue.reduce((acc, meta) => {
+      if (!visited.has(meta.charset ? meta.keyword : meta[meta.keyword])) {
+        visited.add(meta.charset ? meta.keyword : meta[meta.keyword]);
+        return `${acc}<meta ${meta.keyword}="${meta[meta.keyword]}"${
+          meta.charset ? '' : ` content="${meta.content}"`
+        }>`;
+      }
+      return acc;
+    }, '')}
+
+    ${linkQueue.reduce((acc, link) => {
+      return `${acc}<link${Object.keys(link).reduce(
+        (properties, key) => `${properties} ${key}="${link[key]}"`,
+        ''
+      )}>`;
+    }, '')}
+  `;
+};
 ```
 
 ```js
