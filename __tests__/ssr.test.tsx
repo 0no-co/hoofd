@@ -34,10 +34,8 @@ describe('ssr', () => {
     const { lang, title, metas, links } = toStatic();
     expect(lang).toEqual('nl');
     expect(title).toEqual('hi');
-    expect(metas).toEqual([
-      { type: 'meta', content: 'hi', property: 'fb:admins' },
-    ]);
-    expect(links).toEqual([{ rel: 'stylesheet', href: 'x', type: 'link' }]);
+    expect(metas).toEqual([{ content: 'hi', property: 'fb:admins' }]);
+    expect(links).toEqual([{ rel: 'stylesheet', href: 'x' }]);
   });
 
   it('should render to string (nested)', () => {
@@ -64,12 +62,10 @@ describe('ssr', () => {
     jest.runAllTimers();
     const { title, metas, links } = toStatic();
     expect(title).toEqual('bye');
-    expect(metas).toEqual([
-      { type: 'meta', content: 'bye', property: 'fb:admins' },
-    ]);
+    expect(metas).toEqual([{ content: 'bye', property: 'fb:admins' }]);
     expect(links).toEqual([
-      { rel: 'stylesheet', href: 'x', type: 'link' },
-      { rel: 'stylesheet', href: 'y', type: 'link' },
+      { rel: 'stylesheet', href: 'x' },
+      { rel: 'stylesheet', href: 'y' },
     ]);
   });
 });
