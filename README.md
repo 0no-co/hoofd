@@ -9,6 +9,12 @@ client-side alterations it's important to support a fallback model for our `<hea
 library will always make a queue of how we should fallback, ... This way we'll always have some information to give to a
 visiting crawler.
 
+```sh
+npm i --save hooked-head
+## OR
+yarn add hooked-head
+```
+
 ```jsx
 import {
   useMeta,
