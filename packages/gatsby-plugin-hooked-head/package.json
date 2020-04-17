@@ -1,6 +1,6 @@
 {
   "name": "gatsby-plugin-hooked-head",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "Gatsby plugin to add support for hooked-head",
   "author": "jdecroock <decroockjovi@gmail.com> (https://twitter.com/JoviDeC)",
   "license": "MIT",
