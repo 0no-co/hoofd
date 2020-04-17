@@ -4,7 +4,7 @@ import { toStatic } from 'hooked-head';
 export const onRenderBody = ({ setHeadComponents, setHtmlAttributes }) => {
   const { title, metas, lang } = toStatic();
 
-  if (lang && setHtmlAttributes) {
+  if (lang) {
     setHtmlAttributes({ lang });
   }
 
