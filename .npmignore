@@ -5,6 +5,7 @@ example
 yarn.lock
 .rpt2_cache
 coverage
+packages
 typings.d.ts
 Dockerfile
 mangle.json

@@ -1,0 +1,33 @@
+{
+  "name": "gatsby-plugin-hooked-head",
+  "version": "0.1.1",
+  "description": "Gatsby plugin to add support for hooked-head",
+  "author": "jdecroock <decroockjovi@gmail.com> (https://twitter.com/JoviDeC)",
+  "license": "MIT",
+  "main": "index.js",
+  "scripts": {},
+  "keywords": [
+    "hooked-head",
+    "gatsby",
+    "gatsby-plugin",
+    "head",
+    "seo"
+  ],
+  "files": [
+    "gatsby-ssr.js",
+    "index.js",
+    "package.json",
+    "README.md"
+  ],
+  "dependencies": {},
+  "devDependencies": {},
+  "peerDependencies": {
+    "hooked-head": "^0.4.0",
+    "gatsby": "^2.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JoviDeCroock/hooked-head.git",
+    "directory": "packages/gatsby-plugin-hooked-head"
+  }
+}

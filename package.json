@@ -33,7 +33,8 @@
     "meta",
     "link",
     "html",
-    "language"
+    "language",
+    "seo"
   ],
   "main": "./dist/hooked-head.js",
   "browser": "./dist/hooked-head.umd.js",
