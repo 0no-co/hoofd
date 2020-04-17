@@ -1,7 +1,7 @@
 # gatsby-plugin-hooked-head
 
 A [Gatsby](https://github.com/gatsbyjs/gatsby) plugin for
-[🥜goober](https://github.com/JoviDeCroock/hooked-head) with ssr-support.
+[Hooked-head](https://github.com/JoviDeCroock/hooked-head) with ssr-support.
 
 ## Install
 
