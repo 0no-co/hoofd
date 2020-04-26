@@ -43,6 +43,11 @@ const App = () => {
 
 If you need support for [Preact](https://preactjs.com/) you can import from `hooked-head/preact` instead.
 
+## Gatsby
+
+There's a plugin that hooks in with [Gatsby](https://www.npmjs.com/package/gatsby-plugin-hooked-head) and that
+will fill in the `meta`, ... in your build process.
+
 ## Hooks
 
 This package exports `useTitle`, `useTitleTemplate`, `useMeta`, `useLink` and `useLang`. These hooks
