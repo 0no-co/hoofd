@@ -4,11 +4,11 @@ import dispatcher, { MetaPayload, META } from '../dispatcher';
 import { isServerSide } from '../utils';
 
 export interface MetaOptions {
-  name?: Name;
-  httpEquiv?: HttpEquiv;
+  name?: Name | string;
+  httpEquiv?: HttpEquiv | string;
   charset?: CharSet;
   content?: string;
-  property?: Property;
+  property?: Property | string;
 }
 
 export const useMeta = (options: MetaOptions) => {

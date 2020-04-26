@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.4.1
+
+- Make types less strict
+
 ## 0.4.0
 
 **BREAKING**

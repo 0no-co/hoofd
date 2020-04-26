@@ -10,10 +10,10 @@ type HeadType = 'T' | 'P' | 'M' | 'L';
 type MetaKeyword = 'name' | 'charset' | 'http-equiv' | 'property';
 export interface MetaPayload {
   keyword: MetaKeyword;
-  name: Name;
+  name: Name | string;
   charset: CharSet;
-  'http-equiv': HttpEquiv;
-  property: Property;
+  'http-equiv': HttpEquiv | string;
+  property: Property | string;
   content: string;
 }
 
