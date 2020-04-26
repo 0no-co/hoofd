@@ -10,6 +10,7 @@ interface LinkOptions {
   href?: string;
   sizes?: string;
   crossorigin?: 'anonymous' | 'use-credentials';
+  type?: string;
 }
 
 export const useLink = (options: LinkOptions) => {
