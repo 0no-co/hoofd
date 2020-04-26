@@ -35,6 +35,7 @@ export const useLink = (options: LinkOptions) => {
     options.as,
     options.rel,
     options.crossorigin,
+    options.type,
   ]);
 
   useEffect(() => {
