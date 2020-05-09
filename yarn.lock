@@ -4872,10 +4872,10 @@ merge2@^1.2.3, merge2@^1.3.0:
   resolved "https://registry.yarnpkg.com/merge2/-/merge2-1.3.0.tgz#5b366ee83b2f1582c48f87e47cf1a9352103ca81"
   integrity sha512-2j4DAdlBOkiSZIsaXk4mTE3sRS02yBHAtfy127xRV3bQUFqXkjHCHLW6Scv7DwNRbIWNHH8zpnz9zMaKXIdvYw==
 
-microbundle@0.12.0-next.9:
-  version "0.12.0-next.9"
-  resolved "https://registry.yarnpkg.com/microbundle/-/microbundle-0.12.0-next.9.tgz#23588c6f0491f66a5724b8c04ab2f93629364c97"
-  integrity sha512-A00l1YVEVvASsPAm06x7jtdFWz3b0D6BdQSljM4YaVQQRyco5T1Da34xkKy2EdgQdoVyaLtjUwonmM4zs7Y4YA==
+microbundle@0.12.0:
+  version "0.12.0"
+  resolved "https://registry.yarnpkg.com/microbundle/-/microbundle-0.12.0.tgz#d3d531c4d7553ea2f38688e3076f8e4d70adcc65"
+  integrity sha512-wi4azdcbZ/caGHp+NsPmaGph3k3adZmsTYypRtUaiwC0d2ZY9xwVJGam4jwZWX0nhNLRXH9+aIkruso/XvfJ0g==
   dependencies:
     "@babel/core" "^7.8.7"
     "@babel/plugin-proposal-class-properties" "7.7.4"
