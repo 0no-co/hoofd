@@ -76,7 +76,7 @@
     "jest": "^25.2.6",
     "jest-cli": "^25.2.6",
     "lint-staged": "9.5.0",
-    "microbundle": "0.12.0-next.9",
+    "microbundle": "0.12.0",
     "preact": "^10.3.4",
     "prettier": "^2.0.2",
     "react": "^16.13.1",
