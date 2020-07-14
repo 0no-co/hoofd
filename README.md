@@ -2,7 +2,7 @@
 
 [![npm version](https://badgen.net/npm/v/hooked-head)](https://www.npmjs.com/package/hooked-head)
 [![Bundle size](https://badgen.net/bundlephobia/minzip/hooked-head)](https://badgen.net/bundlephobia/minzip/hooked-head)
-[![codecov](https://codecov.io/gh/JoviDeCroock/hooked-head/branch/master/graph/badge.svg)](https://codecov.io/gh/JoviDeCroock/hooked-head)
+[![codecov](https://codecov.io/gh/JoviDeCroock/hooked-head/branch/main/graph/badge.svg)](https://codecov.io/gh/JoviDeCroock/hooked-head)
 
 This project aims at providing a set of hooks to populate `<meta>`, ... for each page. With crawlers now supporting
 client-side alterations it's important to support a fallback model for our `<head>` tags. The dispatcher located in this
