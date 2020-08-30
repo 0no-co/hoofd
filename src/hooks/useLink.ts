@@ -3,7 +3,7 @@ import { useEffect, useRef } from 'react';
 import { isServerSide } from '../utils';
 import dispatcher, { LINK } from '../dispatcher';
 
-interface LinkOptions {
+export interface LinkOptions {
   rel: Rel;
   as?: As;
   media?: string;
@@ -19,7 +19,6 @@ export const useLink = (options: LinkOptions) => {
 
   if (isServerSide && !hasMounted.current) {
     dispatcher._addToQueue(LINK, options as any);
-    hasMounted.current = true;
   }
 
   useEffect(() => {

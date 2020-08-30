@@ -31,7 +31,6 @@ export const useMeta = (options: MetaOptions) => {
 
   if (isServerSide && !hasMounted.current) {
     dispatcher._addToQueue(META, metaObject.current);
-    hasMounted.current = true;
   }
 
   useEffect(() => {

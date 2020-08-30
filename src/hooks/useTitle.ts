@@ -8,7 +8,6 @@ export const useTitle = (title: string, template?: boolean) => {
 
   if (isServerSide && !hasMounted.current) {
     dispatcher._addToQueue(template ? TEMPLATE : TITLE, title);
-    hasMounted.current = true;
   }
 
   useEffect(() => {
