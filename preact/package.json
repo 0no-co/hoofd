@@ -1,23 +1,23 @@
 {
-  "name": "hooked-head",
-  "version": "0.1.0",
+  "name": "hoofd",
+  "version": "1.0.0",
   "description": "Hooks to populate the html head.",
   "scripts": {},
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/JoviDeCroock/hooked-head.git"
+    "url": "git+https://github.com/JoviDeCroock/hoofd.git"
   },
   "author": "",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/JoviDeCroock/hooked-head/issues"
+    "url": "https://github.com/JoviDeCroock/hoofd/issues"
   },
-  "homepage": "https://github.com/JoviDeCroock/hooked-head#readme",
-  "main": "./dist/hooked-head.js",
-  "browser": "./dist/hooked-head.umd.js",
-  "umd:main": "./dist/hooked-head.umd.js",
-  "jsnext:main": "./dist/hooked-head.modern.js",
-  "module": "./dist/hooked-head.module.js",
+  "homepage": "https://github.com/JoviDeCroock/hoofd#readme",
+  "main": "./dist/hoofd.js",
+  "browser": "./dist/hoofd.umd.js",
+  "umd:main": "./dist/hoofd.umd.js",
+  "jsnext:main": "./dist/hoofd.modern.js",
+  "module": "./dist/hoofd.module.js",
   "source": "./src/index.ts",
   "types": "./dist/index.d.ts",
   "typings": "./dist/index.d.ts"

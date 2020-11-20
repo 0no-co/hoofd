@@ -8,6 +8,7 @@ export const useLang = (language: string) => {
   }
 
   useEffect(() => {
-    document.getElementsByTagName('html')[0].setAttribute('lang', language);
+    if (typeof document !== 'undefined')
+      document.getElementsByTagName('html')[0].setAttribute('lang', language);
   }, [language]);
 };
