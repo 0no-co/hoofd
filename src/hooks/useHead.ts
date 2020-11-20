@@ -98,7 +98,7 @@ export const useHead = ({ title, metas }: HeadObject) => {
       addedMetas.current = added;
       prevMetas.current = memoizedMetas;
     }
-  }, [...memoizedMetas]);
+  }, [memoizedMetas]);
 
   useEffect(() => {
     memoizedMetas.forEach((meta) => {

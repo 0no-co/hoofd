@@ -74,15 +74,9 @@ describe('useMeta', () => {
   it('should deeply utilize head', async () => {
     jest.useFakeTimers();
 
-    const MyChild = ({ description }: any) => {
-      React.useEffect(() => {
-        return () => {
-          console.log('unmounting myChild');
-        };
-      }, []);
-
+    const MyChild = ({ description, title }: any) => {
       useHead({
-        title: 'Ohaio world',
+        title: title ? 'Ohaio world' : undefined,
         metas: [
           { charset: 'utf-8' },
           { name: 'description', content: description },
@@ -95,12 +89,6 @@ describe('useMeta', () => {
     };
 
     const MyComponent = ({ description, children, twitter }: any) => {
-      React.useEffect(() => {
-        return () => {
-          console.log('unmounting myComponent');
-        };
-      }, []);
-
       useHead({
         title: 'Hello world',
         // @ts-ignore
@@ -121,13 +109,34 @@ describe('useMeta', () => {
     await act(async () => {
       ({ rerender } = await render(
         <MyComponent description="This is a test">
-          <MyChild description="This is a child" />
+          <MyChild title description="This is a child" />
         </MyComponent>
       ));
     });
 
     jest.runAllTimers();
     expect(document.title).toEqual('Ohaio world');
+    expect(document.head.innerHTML).toContain('<meta charset="utf-8">');
+    expect(document.head.innerHTML).toContain(
+      '<meta name="description" content="This is a child">'
+    );
+    expect(document.head.innerHTML).toContain(
+      '<meta property="og:description" content="This is a child">'
+    );
+    expect(document.head.innerHTML).toContain(
+      '<meta http-equiv="refresh" content="60">'
+    );
+
+    await act(async () => {
+      await rerender(
+        <MyComponent description="This is a test">
+          <MyChild description="This is a child" />
+        </MyComponent>
+      );
+    });
+
+    jest.runAllTimers();
+    expect(document.title).toEqual('Hello world');
     expect(document.head.innerHTML).toContain('<meta charset="utf-8">');
     expect(document.head.innerHTML).toContain(
       '<meta name="description" content="This is a child">'
