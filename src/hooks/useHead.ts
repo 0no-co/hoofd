@@ -5,10 +5,11 @@ import { MetaOptions } from './useMeta';
 
 interface HeadObject {
   title?: string;
+  language?: string;
   metas?: MetaOptions[];
 }
 
-export const useHead = ({ title, metas }: HeadObject) => {
+export const useHead = ({ title, metas, language }: HeadObject) => {
   const hasMounted = useRef(false);
   const prevTitle = useRef<string | undefined>();
   const prevMetas = useRef<MetaPayload[]>();
@@ -53,6 +54,7 @@ export const useHead = ({ title, metas }: HeadObject) => {
 
   if (isServerSide && !hasMounted.current) {
     if (title) dispatcher._addToQueue(TITLE, title);
+    if (language) dispatcher._setLang(language);
 
     memoizedMetas.forEach((meta) => {
       dispatcher._addToQueue(META, meta);
@@ -133,4 +135,9 @@ export const useHead = ({ title, metas }: HeadObject) => {
         dispatcher._removeFromQueue(TITLE, prevTitle.current as string);
     };
   }, []);
+
+  useEffect(() => {
+    if (language)
+      document.getElementsByTagName('html')[0].setAttribute('lang', language);
+  }, [language]);
 };
