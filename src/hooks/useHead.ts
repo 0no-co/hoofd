@@ -54,15 +54,8 @@ export const useHead = ({ title, metas }: HeadObject) => {
   if (isServerSide && !hasMounted.current) {
     if (title) dispatcher._addToQueue(TITLE, title);
 
-    (metas || []).forEach((meta) => {
-      dispatcher._addToQueue(META, {
-        keyword: 'charset',
-        name: meta.name!,
-        charset: meta.charset!,
-        'http-equiv': meta.httpEquiv!,
-        property: meta.property!,
-        content: meta.content!,
-      });
+    memoizedMetas.forEach((meta) => {
+      dispatcher._addToQueue(META, meta);
     });
   }
 

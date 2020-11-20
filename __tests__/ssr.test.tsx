@@ -4,7 +4,7 @@ jest.mock('../src/utils', () => {
   };
 });
 import * as React from 'react';
-import { useTitle, toStatic, useMeta, useLink, useLang } from '../src';
+import { useTitle, toStatic, useMeta, useLink, useLang, useHead } from '../src';
 import { render } from '@testing-library/react';
 
 describe('ssr', () => {
@@ -19,7 +19,7 @@ describe('ssr', () => {
     (React as any).useEffect = original;
   });
 
-  it('should render to string (basic)', () => {
+  it('should render to string (basic-individual)', () => {
     jest.useFakeTimers();
     const MyComponent = () => {
       useTitle('hi');
@@ -38,7 +38,24 @@ describe('ssr', () => {
     expect(links).toEqual([{ rel: 'stylesheet', href: 'x' }]);
   });
 
-  it('should render to string (nested)', () => {
+  it('should render to string (basic-useHead)', () => {
+    jest.useFakeTimers();
+    const MyComponent = () => {
+      useHead({
+        title: 'hi',
+        metas: [{ property: 'fb:admins', content: 'hi' }],
+      });
+      return <p>hi</p>;
+    };
+
+    render(<MyComponent />);
+    jest.runAllTimers();
+    const { title, metas } = toStatic();
+    expect(title).toEqual('hi');
+    expect(metas).toEqual([{ content: 'hi', property: 'fb:admins' }]);
+  });
+
+  it('should render to string (nested-individual)', () => {
     jest.useFakeTimers();
     const MyComponent = (props: any) => {
       useTitle('hi');
@@ -67,5 +84,34 @@ describe('ssr', () => {
       { rel: 'stylesheet', href: 'x' },
       { rel: 'stylesheet', href: 'y' },
     ]);
+  });
+
+  it('should render to string (nested-useHead)', () => {
+    jest.useFakeTimers();
+    const MyComponent = (props: any) => {
+      useHead({
+        title: 'hi',
+        metas: [{ property: 'fb:admins', content: 'hi' }],
+      });
+      return props.children;
+    };
+
+    const MyNestedComponent = () => {
+      useHead({
+        title: 'bye',
+        metas: [{ property: 'fb:admins', content: 'bye' }],
+      });
+      return <p>hi</p>;
+    };
+
+    render(
+      <MyComponent>
+        <MyNestedComponent />
+      </MyComponent>
+    );
+    jest.runAllTimers();
+    const { title, metas } = toStatic();
+    expect(title).toEqual('bye');
+    expect(metas).toEqual([{ content: 'bye', property: 'fb:admins' }]);
   });
 });
