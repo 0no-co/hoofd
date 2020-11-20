@@ -1,8 +1,8 @@
-# Hooked-Head
+# Hoofd
 
-[![npm version](https://badgen.net/npm/v/hooked-head)](https://www.npmjs.com/package/hooked-head)
-[![Bundle size](https://badgen.net/bundlephobia/minzip/hooked-head)](https://badgen.net/bundlephobia/minzip/hooked-head)
-[![codecov](https://codecov.io/gh/JoviDeCroock/hooked-head/branch/main/graph/badge.svg)](https://codecov.io/gh/JoviDeCroock/hooked-head)
+[![npm version](https://badgen.net/npm/v/hoofd)](https://www.npmjs.com/package/hoofd)
+[![Bundle size](https://badgen.net/bundlephobia/minzip/hoofd)](https://badgen.net/bundlephobia/minzip/hoofd)
+[![codecov](https://codecov.io/gh/JoviDeCroock/hoofd/branch/main/graph/badge.svg)](https://codecov.io/gh/JoviDeCroock/hoofd)
 
 This project aims at providing a set of hooks to populate `<meta>`, ... for each page. With crawlers now supporting
 client-side alterations it's important to support a fallback model for our `<head>` tags. The dispatcher located in this
@@ -10,42 +10,36 @@ library will always make a queue of how we should fallback, ... This way we'll a
 visiting crawler.
 
 ```sh
-npm i --save hooked-head
+npm i --save hoofd
 ## OR
-yarn add hooked-head
+yarn add hoofd
 ```
 
 ```jsx
-import {
-  useMeta,
-  useLink,
-  useLang,
-  useTitle,
-  useTitleTemplate,
-} from 'hooked-head';
+import { useMeta, useLink, useLang, useTitle, useTitleTemplate } from 'hoofd';
 
 const App = () => {
   // Will set <html lang="en">
   useLang('en');
 
-  // Will set title to "Welcome to hooked-head | 💭"
+  // Will set title to "Welcome to hoofd | 💭"
   useTitleTemplate('%s | 💭');
-  useTitle('Welcome to hooked-head');
+  useTitle('Welcome to hoofd');
 
   useMeta({ name: 'author', content: 'Jovi De Croock' });
   useLink({ rel: 'me', href: 'https://jovidecroock.com' });
 
-  return <p>Hooked-Head</p>;
+  return <p>hoofd</p>;
 };
 ```
 
 ## Preact
 
-If you need support for [Preact](https://preactjs.com/) you can import from `hooked-head/preact` instead.
+If you need support for [Preact](https://preactjs.com/) you can import from `hoofd/preact` instead.
 
 ## Gatsby
 
-There's a plugin that hooks in with [Gatsby](https://www.npmjs.com/package/gatsby-plugin-hooked-head) and that
+There's a plugin that hooks in with [Gatsby](https://www.npmjs.com/package/gatsby-plugin-hoofd) and that
 will fill in the `meta`, ... in your build process.
 
 ## Hooks
@@ -122,7 +116,7 @@ const stringify = (title, metas, links) => {
 ```
 
 ```js
-import { toStatic } from 'hooked-head';
+import { toStatic } from 'hoofd';
 
 const reactStuff = renderToString();
 const { metas, links, title, lang } = toStatic();

@@ -1,14 +1,14 @@
 {
-  "name": "hooked-head",
-  "version": "0.4.1",
+  "name": "hoofd",
+  "version": "1.0.0",
   "description": "Hooks to populate the html head.",
   "author": "jdecroock <decroockjovi@gmail.com> (https://twitter.com/JoviDeC)",
   "private": false,
   "scripts": {
     "build": "rimraf dist && yarn build:preact && yarn build:react",
-    "build:react": "microbundle --define process.env.NODE_ENV=production --external react --name hookedHead --no-compress --output dist/",
-    "build:preact": "microbundle --define process.env.NODE_ENV=production --external preact --name hookedHead --no-compress --output preact/dist --alias react=preact/hooks",
-    "build:ci": "microbundle --define process.env.NODE_ENV=production --external react --name hookedHead --output dist/",
+    "build:react": "microbundle --define process.env.NODE_ENV=production --external react --name hoofd --no-compress --output dist/",
+    "build:preact": "microbundle --define process.env.NODE_ENV=production --external preact --name hoofd --no-compress --output preact/dist --alias react=preact/hooks",
+    "build:ci": "microbundle --define process.env.NODE_ENV=production --external preact --name hoofd --output dist/",
     "test": "jest",
     "test:watch": "cross-env NODE_ENV=test yarn test -- --watch",
     "prepublishOnly": "yarn test && yarn lint && yarn build",
@@ -16,15 +16,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/JoviDeCroock/hooked-head.git"
+    "url": "git+https://github.com/JoviDeCroock/hoofd.git"
   },
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/JoviDeCroock/hooked-head/issues"
+    "url": "https://github.com/JoviDeCroock/hoofd/issues"
   },
-  "homepage": "https://github.com/JoviDeCroock/hooked-head#readme",
+  "homepage": "https://github.com/JoviDeCroock/hoofd#readme",
   "keywords": [
-    "hooked-head",
+    "hoofd",
     "react",
     "preact",
     "document",
@@ -36,26 +36,26 @@
     "language",
     "seo"
   ],
-  "main": "./dist/hooked-head.js",
-  "browser": "./dist/hooked-head.umd.js",
-  "umd:main": "./dist/hooked-head.umd.js",
-  "jsnext:main": "./dist/hooked-head.modern.js",
-  "module": "./dist/hooked-head.module.js",
+  "main": "./dist/hoofd.js",
+  "browser": "./dist/hoofd.umd.js",
+  "umd:main": "./dist/hoofd.umd.js",
+  "jsnext:main": "./dist/hoofd.modern.js",
+  "module": "./dist/hoofd.module.js",
   "source": "./src/index.ts",
   "types": "./dist/index.d.ts",
   "typings": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "browser": "./dist/hooked-head.module.js",
-      "umd": "./dist/hooked-head.umd.js",
-      "import": "./dist/hooked-head.module.js",
-      "require": "./dist/hooked-head.js"
+      "browser": "./dist/hoofd.module.js",
+      "umd": "./dist/hoofd.umd.js",
+      "import": "./dist/hoofd.module.js",
+      "require": "./dist/hoofd.js"
     },
     "./preact": {
-      "browser": "./preact/dist/hooked-head.module.js",
-      "umd": "./preact/dist/hooked-head.umd.js",
-      "import": "./preact/dist/hooked-head.module.js",
-      "require": "./preact/dist/hooked-head.js"
+      "browser": "./preact/dist/hoofd.module.js",
+      "umd": "./preact/dist/hoofd.umd.js",
+      "import": "./preact/dist/hoofd.module.js",
+      "require": "./preact/dist/hoofd.js"
     }
   },
   "dependencies": {},
@@ -73,16 +73,16 @@
     "eslint-config-prettier": "6.7.0",
     "eslint-plugin-react": "7.17.0",
     "husky": "3.1.0",
-    "jest": "^25.2.6",
-    "jest-cli": "^25.2.6",
+    "jest": "^26.6.3",
+    "jest-cli": "^26.6.3",
     "lint-staged": "9.5.0",
-    "microbundle": "0.12.0",
-    "preact": "^10.3.4",
+    "microbundle": "0.12.4",
+    "preact": "^10.5.7",
     "prettier": "^2.0.2",
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1",
+    "react": "^17.0.0",
+    "react-dom": "^17.0.0",
     "rimraf": "^3.0.2",
-    "ts-jest": "^25.3.0",
+    "ts-jest": "^26.4.4",
     "tslib": "^1.11.1",
     "typescript": "^3.8.3"
   },

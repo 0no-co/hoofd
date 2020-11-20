@@ -3,7 +3,7 @@
 ## 0.4.1
 
 - Make types less strict
-- Add `type` to `linkOptions` [#11](https://github.com/JoviDeCroock/hooked-head/pull/11)
+- Add `type` to `linkOptions` [#11](https://github.com/JoviDeCroock/hoofd/pull/11)
 
 ## 0.4.0
 
