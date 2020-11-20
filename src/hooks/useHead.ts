@@ -115,11 +115,18 @@ export const useHead = ({ title, metas }: HeadObject) => {
 
   useEffect(() => {
     if (hasMounted.current && title) {
-      dispatcher._change(
-        TITLE,
-        prevTitle.current as string,
-        (prevTitle.current = title)
-      );
+      if (prevTitle.current != null) {
+        dispatcher._change(
+          TITLE,
+          prevTitle.current as string,
+          (prevTitle.current = title)
+        );
+      } else {
+        dispatcher._addToQueue(TITLE, (prevTitle.current = title));
+      }
+    } else if (hasMounted.current && prevTitle.current) {
+      dispatcher._removeFromQueue(TITLE, prevTitle.current as string);
+      prevTitle.current = undefined;
     }
   }, [title]);
 
@@ -129,7 +136,8 @@ export const useHead = ({ title, metas }: HeadObject) => {
 
     return () => {
       hasMounted.current = false;
-      dispatcher._removeFromQueue(TITLE, prevTitle.current as string);
+      if (prevTitle.current != null)
+        dispatcher._removeFromQueue(TITLE, prevTitle.current as string);
     };
   }, []);
 };

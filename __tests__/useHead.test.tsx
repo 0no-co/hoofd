@@ -94,7 +94,7 @@ describe('useMeta', () => {
       return <p>hi</p>;
     };
 
-    const MyComponent = ({ description, children }: any) => {
+    const MyComponent = ({ description, children, twitter }: any) => {
       React.useEffect(() => {
         return () => {
           console.log('unmounting myComponent');
@@ -103,12 +103,14 @@ describe('useMeta', () => {
 
       useHead({
         title: 'Hello world',
+        // @ts-ignore
         metas: [
           { charset: 'utf-8' },
           { name: 'description', content: description },
           { property: 'og:description', content: description },
           { httpEquiv: 'refresh', content: '30' },
-        ],
+          twitter && { property: 'twitter:description', content: description },
+        ].filter(Boolean),
       });
 
       return <div>{children}</div>;
@@ -138,7 +140,7 @@ describe('useMeta', () => {
     );
 
     await act(async () => {
-      await rerender(<MyComponent description="This is not a test" />);
+      await rerender(<MyComponent twitter description="This is not a test" />);
     });
 
     jest.runAllTimers();
@@ -149,6 +151,9 @@ describe('useMeta', () => {
     );
     expect(document.head.innerHTML).toContain(
       '<meta property="og:description" content="This is not a test">'
+    );
+    expect(document.head.innerHTML).toContain(
+      '<meta property="twitter:description" content="This is not a test">'
     );
     expect(document.head.innerHTML).toContain(
       '<meta http-equiv="refresh" content="30">'
