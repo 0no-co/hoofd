@@ -16,6 +16,7 @@ export interface LinkOptions {
 export const useLink = (options: LinkOptions) => {
   const hasMounted = useRef(false);
   const node = useRef<Element | undefined>();
+  const originalOptions = useRef<LinkOptions | undefined>();
 
   if (isServerSide && !hasMounted.current) {
     dispatcher._addToQueue(LINK, options as any);
@@ -39,7 +40,6 @@ export const useLink = (options: LinkOptions) => {
 
   useEffect(() => {
     hasMounted.current = true;
-    let hasExisting = false;
     const preExistingElements = document.querySelectorAll(
       `link[rel="${options.rel}"]`
     );
@@ -54,11 +54,17 @@ export const useLink = (options: LinkOptions) => {
       });
 
       if (found) {
-        (node.current = x), (hasExisting = true);
+        node.current = x;
       }
     });
 
-    if (!node.current) {
+    if (node.current) {
+      originalOptions.current = Object.keys(options).reduce((acc, key) => {
+        // @ts-ignore
+        acc[key] = node.current!.getAttribute(key);
+        return acc;
+      }, {} as LinkOptions);
+    } else {
       node.current = document.createElement('link');
       Object.keys(options).forEach((key) => {
         // @ts-ignore
@@ -69,8 +75,15 @@ export const useLink = (options: LinkOptions) => {
 
     return () => {
       hasMounted.current = false;
-      // TODO: if it has existing should we restore to the former properties?
-      if (!hasExisting) {
+      if (originalOptions.current) {
+        Object.keys(originalOptions.current).forEach((key) => {
+          // @ts-ignore
+          (node.current as Element).setAttribute(
+            key,
+            originalOptions.current[key]
+          );
+        });
+      } else {
         document.head.removeChild(node.current as Element);
       }
     };

@@ -3,12 +3,12 @@ import * as React from 'react';
 import { act, render, cleanup } from '@testing-library/react';
 import { useLink } from '../src';
 
-describe('useLanguage', () => {
+describe('useLink', () => {
   afterEach(() => {
     cleanup();
   });
 
-  it('should fill in the language', () => {
+  it('should fill in the link', () => {
     const MyComponent = ({ media }: { media: string }) => {
       useLink({
         crossorigin: 'anonymous',
@@ -90,7 +90,7 @@ describe('useLanguage', () => {
       rerender!(<p>hi</p>);
     });
     expect(document.head.innerHTML).toContain(
-      '<link crossorigin="anonymous" as="audio" href="htt://yow" media="nl" rel="prefetch" sizes="x">'
+      '<link crossorigin="anonymous" as="audio" href="htt://yow" media="en" rel="prefetch" sizes="x">'
     );
   });
 
