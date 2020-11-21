@@ -77,9 +77,9 @@ export const useLink = (options: LinkOptions) => {
       hasMounted.current = false;
       if (originalOptions.current) {
         Object.keys(originalOptions.current).forEach((key) => {
-          // @ts-ignore
           (node.current as Element).setAttribute(
             key,
+            // @ts-ignore
             originalOptions.current[key]
           );
         });
