@@ -9,6 +9,16 @@ interface HeadObject {
   metas?: MetaOptions[];
 }
 
+export function extractKeyword(meta: MetaOptions) {
+  return meta.charset
+    ? 'charset'
+    : meta.name
+    ? 'name'
+    : meta.property
+    ? 'property'
+    : 'http-equiv';
+}
+
 export const useHead = ({ title, metas, language }: HeadObject) => {
   const hasMounted = useRef(false);
   const prevTitle = useRef<string | undefined>();
@@ -17,13 +27,7 @@ export const useHead = ({ title, metas, language }: HeadObject) => {
 
   const memoizedMetas = useMemo(() => {
     const calculatedMetas: MetaPayload[] = (metas || []).map((meta) => {
-      const keyword = meta.charset
-        ? 'charset'
-        : meta.name
-        ? 'name'
-        : meta.property
-        ? 'property'
-        : 'http-equiv';
+      const keyword = extractKeyword(meta);
 
       if (prevMetas.current) {
         const found = prevMetas.current.find(
