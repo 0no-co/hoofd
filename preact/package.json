@@ -13,6 +13,7 @@
     "url": "https://github.com/JoviDeCroock/hoofd/issues"
   },
   "homepage": "https://github.com/JoviDeCroock/hoofd#readme",
+  "sideEffects": false,
   "main": "./dist/hoofd.js",
   "browser": "./dist/hoofd.umd.js",
   "umd:main": "./dist/hoofd.umd.js",

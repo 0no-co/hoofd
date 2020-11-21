@@ -2,6 +2,7 @@ import { useRef, useEffect } from 'react';
 import { Name, HttpEquiv, CharSet, Property } from '../types';
 import dispatcher, { MetaPayload, META } from '../dispatcher';
 import { isServerSide } from '../utils';
+import { extractKeyword } from './useHead';
 
 export interface MetaOptions {
   name?: Name | string;
@@ -15,13 +16,7 @@ export const useMeta = (options: MetaOptions) => {
   const hasMounted = useRef(false);
   const keyword = useRef<string | undefined>();
   const metaObject = useRef<MetaPayload>({
-    keyword: keyword.current = options.charset
-      ? 'charset'
-      : options.name
-      ? 'name'
-      : options.property
-      ? 'property'
-      : 'http-equiv',
+    keyword: keyword.current = extractKeyword(options),
     name: options.name,
     charset: options.charset,
     'http-equiv': options.httpEquiv,
