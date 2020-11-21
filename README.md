@@ -33,6 +33,23 @@ const App = () => {
 };
 ```
 
+Or you can choose to
+
+```jsx
+import { useHead, useLink } from 'hoofd';
+
+const App = () => {
+  useHead({
+    title: 'Welcome to hoofd | 💭',
+    language: 'en',
+    metas: [{ name: 'author', content: 'Jovi De Croock' }],
+  });
+  useLink({ rel: 'me', href: 'https://jovidecroock.com' });
+
+  return <p>hoofd</p>;
+};
+```
+
 ## Preact
 
 If you need support for [Preact](https://preactjs.com/) you can import from `hoofd/preact` instead.

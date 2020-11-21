@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.0.0
+
+- add `useHead`
+
 ## 0.4.1
 
 - Make types less strict
