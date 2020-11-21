@@ -39,16 +39,40 @@ export const useLink = (options: LinkOptions) => {
 
   useEffect(() => {
     hasMounted.current = true;
-    node.current = document.createElement('link');
-    Object.keys(options).forEach((key) => {
-      // @ts-ignore
-      (node.current as Element).setAttribute(key, options[key]);
+    let hasExisting = false;
+    const preExistingElements = document.querySelectorAll(
+      `link[rel="${options.rel}"]`
+    );
+
+    preExistingElements.forEach((x) => {
+      let found = true;
+      Object.keys(options).forEach((key) => {
+        // @ts-ignore
+        if (x.getAttribute(key) !== options[key]) {
+          found = false;
+        }
+      });
+
+      if (found) {
+        (node.current = x), (hasExisting = true);
+      }
     });
-    document.head.appendChild(node.current);
+
+    if (!node.current) {
+      node.current = document.createElement('link');
+      Object.keys(options).forEach((key) => {
+        // @ts-ignore
+        (node.current as Element).setAttribute(key, options[key]);
+      });
+      document.head.appendChild(node.current);
+    }
 
     return () => {
       hasMounted.current = false;
-      document.head.removeChild(node.current as Element);
+      // TODO: if it has existing should we restore to the former properties?
+      if (!hasExisting) {
+        document.head.removeChild(node.current as Element);
+      }
     };
   }, []);
 };
