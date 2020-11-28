@@ -7,6 +7,7 @@ interface HeadObject {
   title?: string;
   language?: string;
   metas?: MetaOptions[];
+  amp?: boolean;
 }
 
 export function extractKeyword(meta: MetaOptions) {
@@ -19,7 +20,7 @@ export function extractKeyword(meta: MetaOptions) {
     : 'http-equiv';
 }
 
-export const useHead = ({ title, metas, language }: HeadObject) => {
+export const useHead = ({ title, metas, language, amp }: HeadObject) => {
   const hasMounted = useRef(false);
   const prevTitle = useRef<string | undefined>();
   const prevMetas = useRef<MetaPayload[]>();
@@ -57,6 +58,7 @@ export const useHead = ({ title, metas, language }: HeadObject) => {
   }, [metas]);
 
   if (isServerSide && !hasMounted.current) {
+    if (amp) dispatcher._setAmp();
     if (title) dispatcher._addToQueue(TITLE, title);
     if (language) dispatcher._setLang(language);
 
@@ -100,6 +102,10 @@ export const useHead = ({ title, metas, language }: HeadObject) => {
   }, [memoizedMetas]);
 
   useEffect(() => {
+    if (amp) {
+      document.getElementsByTagName('html')[0].setAttribute('amp', '');
+    }
+
     memoizedMetas.forEach((meta) => {
       dispatcher._addToQueue(META, meta);
     });

@@ -2,10 +2,10 @@ import { createElement } from 'react';
 import { toStatic } from 'hoofd';
 
 export const onRenderBody = ({ setHeadComponents, setHtmlAttributes }) => {
-  const { title, metas, lang, links } = toStatic();
+  const { title, metas, lang, links, amp } = toStatic();
 
   if (lang) {
-    setHtmlAttributes({ lang });
+    setHtmlAttributes({ lang, amp });
   }
 
   setHeadComponents(

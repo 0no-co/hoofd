@@ -65,6 +65,7 @@ const changeOrCreateMetaTag = (meta: MetaPayload) => {
  */
 const createDispatcher = () => {
   let lang: string;
+  let amp: boolean;
   let linkQueue: any[] = [];
   let titleQueue: string[] = [];
   let titleTemplateQueue: string[] = [];
@@ -122,6 +123,9 @@ const createDispatcher = () => {
       } else {
         linkQueue.push(payload);
       }
+    },
+    _setAmp: () => {
+      amp = true;
     },
     _removeFromQueue: (type: HeadType, payload: MetaPayload | string) => {
       if (type === TITLE || type === TEMPLATE) {
@@ -218,6 +222,7 @@ const createDispatcher = () => {
       currentTitleIndex = currentTitleTemplateIndex = currentMetaIndex = 0;
 
       return {
+        amp,
         lang,
         title,
         links,
