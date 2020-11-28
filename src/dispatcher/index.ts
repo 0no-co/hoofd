@@ -1,5 +1,5 @@
 import { Name, CharSet, HttpEquiv, Property } from '../types';
-import { isServerSide } from '../utils';
+import { isServerSide, ampScriptSrc } from '../utils';
 
 export const META = 'M';
 export const TITLE = 'T';
@@ -223,7 +223,7 @@ const createDispatcher = () => {
 
       return {
         amp,
-        ampScript: 'https://cdn.ampproject.org/v0.js',
+        ampScript: amp && ampScriptSrc,
         lang,
         title,
         links,

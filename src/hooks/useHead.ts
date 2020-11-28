@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef } from 'react';
 import dispatcher, { META, MetaPayload, TITLE } from '../dispatcher';
-import { isServerSide } from '../utils';
+import { isServerSide, ampScriptSrc } from '../utils';
 import { MetaOptions } from './useMeta';
 
 interface HeadObject {
@@ -104,12 +104,12 @@ export const useHead = ({ title, metas, language, amp }: HeadObject) => {
   useEffect(() => {
     if (amp) {
       const nodeList = document.querySelectorAll(
-        'script[src="https://cdn.ampproject.org/v0.js"]'
+        `script[src="${ampScriptSrc}"]`
       );
       document.getElementsByTagName('html')[0].setAttribute('amp', '');
       if (!nodeList[0]) {
         const ampScript = document.createElement('script');
-        ampScript.src = 'https://cdn.ampproject.org/v0.js';
+        ampScript.src = ampScriptSrc;
         ampScript.async = true;
         document.head.insertBefore(ampScript, document.head.firstChild);
       }

@@ -2,7 +2,7 @@ import { createElement } from 'react';
 import { toStatic } from 'hoofd';
 
 export const onRenderBody = ({ setHeadComponents, setHtmlAttributes }) => {
-  const { title, metas, lang, links, amp } = toStatic();
+  const { title, metas, lang, links, amp, ampScript } = toStatic();
 
   if (lang) {
     setHtmlAttributes({ lang, amp });
@@ -12,7 +12,7 @@ export const onRenderBody = ({ setHeadComponents, setHtmlAttributes }) => {
     [
       amp && createElement('script', {
         async: true,
-        src: 'https://cdn.ampproject.org/v0.js'
+        src: ampScript
       }),
       title && createElement('title', null, title),
       ...metas.map((meta) => createElement('meta', meta, null)),
