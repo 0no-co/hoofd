@@ -102,13 +102,10 @@ export const useHead = ({ title, metas, language, amp }: HeadObject) => {
   }, [memoizedMetas]);
 
   useEffect(() => {
-    if (amp) {
-      document.getElementsByTagName('html')[0].setAttribute('amp', '');
-    }
-
     memoizedMetas.forEach((meta) => {
       dispatcher._addToQueue(META, meta);
     });
+
     prevMetas.current = addedMetas.current = memoizedMetas;
 
     return () => {

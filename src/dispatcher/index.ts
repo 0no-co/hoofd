@@ -223,6 +223,7 @@ const createDispatcher = () => {
 
       return {
         amp,
+        ampScript: 'https://cdn.ampproject.org/v0.js',
         lang,
         title,
         links,
