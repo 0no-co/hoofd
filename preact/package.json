@@ -20,6 +20,6 @@
   "jsnext:main": "./dist/hoofd.modern.js",
   "module": "./dist/hoofd.module.js",
   "source": "./src/index.ts",
-  "types": "./dist/index.d.ts",
-  "typings": "./dist/index.d.ts"
+  "types": "../dist/index.d.ts",
+  "typings": "../dist/index.d.ts"
 }
