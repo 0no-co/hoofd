@@ -18,7 +18,7 @@ export const useTitle = (title: string, template?: boolean) => {
         (prevTitle.current = title)
       );
     }
-  }, [title]);
+  }, [title, template]);
 
   useEffect(() => {
     hasMounted.current = true;
@@ -34,5 +34,5 @@ export const useTitle = (title: string, template?: boolean) => {
         prevTitle.current as string
       );
     };
-  }, []);
+  }, [template]);
 };
