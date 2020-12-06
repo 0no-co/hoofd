@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## 1.0.2
+
+- fix: `useTitle` now correctly detects the `template` argument changing [#27](https://github.com/JoviDeCroock/hoofd/commit/c6493ff5f4a58da178066d742b0c974e5eda0839)
+- fix: Preact types are now picked up correctly
+
+## 1.0.1
+
+- Detect already injected links correctly and reuse them when possible.
+
 ## 1.0.0
 
 - add `useHead`
