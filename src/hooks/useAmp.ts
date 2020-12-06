@@ -1,5 +1,5 @@
-import dispatcher from '../dispatcher';
-import { isServerSide, ampScriptSrc } from '../utils';
+import dispatcher, { ampScriptSrc } from '../dispatcher';
+import { isServerSide } from '../utils';
 import { useEffect } from 'react';
 
 export const useAmp = (isModule: boolean, disabled?: boolean) => {

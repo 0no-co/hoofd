@@ -1,5 +1,7 @@
 import { Name, CharSet, HttpEquiv, Property } from '../types';
-import { isServerSide, ampScriptSrc } from '../utils';
+import { isServerSide } from '../utils';
+
+export const ampScriptSrc = 'https://cdn.ampproject.org/v0';
 
 export const META = 'M';
 export const TITLE = 'T';
@@ -223,9 +225,9 @@ const createDispatcher = () => {
 
       let ampScript;
       if (amp && amp === 'module') {
-        ampScript = 'https://cdn.ampproject.org/v0.mjs';
+        ampScript = ampScriptSrc + '.mjs';
       } else if (amp) {
-        ampScript = 'https://cdn.ampproject.org/v0.js';
+        ampScript = ampScriptSrc + '.js';
       }
 
       return {

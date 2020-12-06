@@ -12,7 +12,8 @@ export const onRenderBody = ({ setHeadComponents, setHtmlAttributes }) => {
     [
       amp && createElement('script', {
         async: true,
-        src: ampScript
+        src: ampScript,
+        type: ampScript.endsWith('mjs') ? 'module' : undefined,
       }),
       title && createElement('title', null, title),
       ...metas.map((meta) => createElement('meta', meta, null)),
