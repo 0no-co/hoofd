@@ -65,7 +65,7 @@ const changeOrCreateMetaTag = (meta: MetaPayload) => {
  */
 const createDispatcher = () => {
   let lang: string;
-  let amp: boolean;
+  let amp: 'module' | 'nomodule' | undefined;
   let linkQueue: any[] = [];
   let titleQueue: string[] = [];
   let titleTemplateQueue: string[] = [];
@@ -124,8 +124,8 @@ const createDispatcher = () => {
         linkQueue.push(payload);
       }
     },
-    _setAmp: () => {
-      amp = true;
+    _setAmp: (isModule: boolean) => {
+      amp = isModule ? 'module' : 'nomodule';
     },
     _removeFromQueue: (type: HeadType, payload: MetaPayload | string) => {
       if (type === TITLE || type === TEMPLATE) {
@@ -221,9 +221,16 @@ const createDispatcher = () => {
       linkQueue = [];
       currentTitleIndex = currentTitleTemplateIndex = currentMetaIndex = 0;
 
+      let ampScript;
+      if (amp && amp === 'module') {
+        ampScript = 'https://cdn.ampproject.org/v0.mjs';
+      } else if (amp) {
+        ampScript = 'https://cdn.ampproject.org/v0.js';
+      }
+
       return {
         amp,
-        ampScript: amp && ampScriptSrc,
+        ampScript,
         lang,
         title,
         links,

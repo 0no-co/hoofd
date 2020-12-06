@@ -1,13 +1,14 @@
 import { useEffect, useMemo, useRef } from 'react';
 import dispatcher, { META, MetaPayload, TITLE } from '../dispatcher';
-import { isServerSide, ampScriptSrc } from '../utils';
+import { isServerSide } from '../utils';
 import { MetaOptions } from './useMeta';
+import { useAmp } from './useAmp';
 
 interface HeadObject {
   title?: string;
   language?: string;
   metas?: MetaOptions[];
-  amp?: boolean;
+  amp?: 'module' | 'nomodule';
 }
 
 export function extractKeyword(meta: MetaOptions) {
@@ -25,6 +26,8 @@ export const useHead = ({ title, metas, language, amp }: HeadObject) => {
   const prevTitle = useRef<string | undefined>();
   const prevMetas = useRef<MetaPayload[]>();
   const addedMetas = useRef<MetaPayload[]>();
+
+  useAmp(amp === 'module', !amp);
 
   const memoizedMetas = useMemo(() => {
     const calculatedMetas: MetaPayload[] = (metas || []).map((meta) => {
@@ -58,7 +61,6 @@ export const useHead = ({ title, metas, language, amp }: HeadObject) => {
   }, [metas]);
 
   if (isServerSide && !hasMounted.current) {
-    if (amp) dispatcher._setAmp();
     if (title) dispatcher._addToQueue(TITLE, title);
     if (language) dispatcher._setLang(language);
 
@@ -102,19 +104,6 @@ export const useHead = ({ title, metas, language, amp }: HeadObject) => {
   }, [memoizedMetas]);
 
   useEffect(() => {
-    if (amp) {
-      const nodeList = document.querySelectorAll(
-        `script[src="${ampScriptSrc}"]`
-      );
-      document.getElementsByTagName('html')[0].setAttribute('amp', '');
-      if (!nodeList[0]) {
-        const ampScript = document.createElement('script');
-        ampScript.src = ampScriptSrc;
-        ampScript.async = true;
-        document.head.insertBefore(ampScript, document.head.firstChild);
-      }
-    }
-
     memoizedMetas.forEach((meta) => {
       dispatcher._addToQueue(META, meta);
     });

@@ -93,6 +93,12 @@ This will update within the same `useLink` but will never go outside
 This hook accepts a string that will be used to set the `lang` property on the
 base `<html>` tag. Every time this string gets updated this will be reflected in the dom.
 
+### useAmp
+
+You can call `useAmp` to inject `html.amp = true` and the `ampScript`, depending on the first
+attribute the hook will decide whether or not you want a module, when passing `true` to the first
+argument the script will be injected as `script type module`.
+
 ## SSR
 
 We expose a method called `toStatic` that will return the following properties:
@@ -107,10 +113,18 @@ The reason we pass these as properties is to better support `gatsby`, ...
 If you need to stringify these you can use the following algo:
 
 ```js
-const stringify = (title, metas, links) => {
+const stringify = (title, metas, links, ampScript) => {
   const visited = new Set();
   return `
     <title>${title}</title>
+
+    ${
+      ampScript
+        ? `<script src={ampScript} async ${
+            ampScript.endsWith('mjs') ? 'type="module"' : ''
+          } />`
+        : ''
+    }
 
     ${metaQueue.reduce((acc, meta) => {
       if (!visited.has(meta.charset ? meta.keyword : meta[meta.keyword])) {
@@ -136,12 +150,12 @@ const stringify = (title, metas, links) => {
 import { toStatic } from 'hoofd';
 
 const reactStuff = renderToString();
-const { metas, links, title, lang } = toStatic();
-const stringified = stringify(title, metas, links);
+const { metas, links, title, lang, amp, ampScript } = toStatic();
+const stringified = stringify(title, metas, links, ampScript);
 
 const html = `
   <!doctype html>
-    <html lang="${lang}">
+    <html ${lang ? `lang="${lang}"` : ''} ${amp ? `amp` : ''}>
       <head>
         ${stringified}
       </head>

@@ -44,13 +44,16 @@ describe('ssr', () => {
       useHead({
         title: 'hi',
         metas: [{ property: 'fb:admins', content: 'hi' }],
+        amp: 'nomodule',
       });
       return <p>hi</p>;
     };
 
     render(<MyComponent />);
     jest.runAllTimers();
-    const { title, metas } = toStatic();
+    const { title, metas, amp, ampScript } = toStatic();
+    expect(amp).toBeTruthy();
+    expect(ampScript).toEqual('https://cdn.ampproject.org/v0.js');
     expect(title).toEqual('hi');
     expect(metas).toEqual([{ content: 'hi', property: 'fb:admins' }]);
   });
@@ -91,6 +94,7 @@ describe('ssr', () => {
     const MyComponent = (props: any) => {
       useHead({
         title: 'hi',
+        amp: 'module',
         metas: [{ property: 'fb:admins', content: 'hi' }],
       });
       return props.children;
@@ -110,7 +114,9 @@ describe('ssr', () => {
       </MyComponent>
     );
     jest.runAllTimers();
-    const { title, metas } = toStatic();
+    const { title, metas, amp, ampScript } = toStatic();
+    expect(amp).toBeTruthy();
+    expect(ampScript).toEqual('https://cdn.ampproject.org/v0.mjs');
     expect(title).toEqual('bye');
     expect(metas).toEqual([{ content: 'bye', property: 'fb:admins' }]);
   });
