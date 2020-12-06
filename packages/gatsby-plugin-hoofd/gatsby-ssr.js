@@ -4,7 +4,7 @@ import { toStatic } from 'hoofd';
 export const onRenderBody = ({ setHeadComponents, setHtmlAttributes }) => {
   const { title, metas, lang, links, amp, ampScript } = toStatic();
 
-  if (lang) {
+  if (lang || amp) {
     setHtmlAttributes({ lang, amp });
   }
 
