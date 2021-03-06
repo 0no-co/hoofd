@@ -20,7 +20,7 @@ export interface MetaPayload {
 }
 
 const applyTitleTemplate = (title: string, template?: string) =>
-  title && template ? template.replace(/%s/g, title) : title;
+  template ? template.replace(/%s/g, title  || '') : title;
 
 const changeOrCreateMetaTag = (meta: MetaPayload) => {
   const result = document.head.querySelectorAll(

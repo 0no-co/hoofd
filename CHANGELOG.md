@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.1.0
+
+- `useTitleTemplate` will fallback to removing the `%s` rather than inserting it when no title has been provided [#33](https://github.com/JoviDeCroock/hoofd/pull/33)
+
 ## 1.0.2
 
 - fix: `useTitle` now correctly detects the `template` argument changing [#27](https://github.com/JoviDeCroock/hoofd/commit/c6493ff5f4a58da178066d742b0c974e5eda0839)
