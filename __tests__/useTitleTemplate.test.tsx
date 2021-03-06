@@ -10,6 +10,22 @@ describe('useTitle', () => {
     dispatcher._reset!();
   });
 
+  it('should remove the template string when there is no title provided', async () => {
+    jest.useFakeTimers();
+    const MyComponent = ({ template }: { template: string }) => {
+      useTitleTemplate(template);
+
+      return <p>hi</p>;
+    };
+
+    await act(async () => {
+      await render(<MyComponent template="Site%s" />);
+    });
+
+    jest.runAllTimers();
+    expect(document.title).toEqual('Site');
+  });
+
   it('should fill in the title based on the template', async () => {
     jest.useFakeTimers();
     const MyComponent = ({
