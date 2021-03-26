@@ -3,6 +3,7 @@
 ## 1.2.0
 
 - Support context API [#35](https://github.com/JoviDeCroock/hoofd/pull/35)
+- Add `useScript` [#31](https://github.com/JoviDeCroock/hoofd/pull/31)
 
 ## 1.1.0
 
