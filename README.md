@@ -168,6 +168,30 @@ const html = `
 `;
 ```
 
+### Context API
+
+By default this package relies on a statically-initialized context provider to accumulate and
+dispatch `<head>` and `<meta>` changes. In cases where you may want to control the Dispatcher
+instance used, this module exports a `HoofdProvider` context provider and `createDispatcher`
+function for creating valid context instances.
+
+```jsx
+import { createDispatcher, HoofdProvider } from 'hoofd';
+
+function ssr(App) {
+  const dispatcher = createDispatcher();
+  const wrappedApp = (
+    <HoofdProvider value={dispatcher}>
+      <App />
+    </HoofdProvider>
+  );
+  const markup = renderToString(wrappedApp);
+  const { metas, links, title, lang, amp, ampScript } = dispatcher.toStatic();
+
+  // See example above for potential method to consume these static results.
+}
+```
+
 ## Goals
 
 - [x] React support
