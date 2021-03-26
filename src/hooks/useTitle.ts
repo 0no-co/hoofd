@@ -1,8 +1,9 @@
-import { useEffect, useRef } from 'react';
-import dispatcher, { TEMPLATE, TITLE } from '../dispatcher';
+import { useContext, useEffect, useRef } from 'react';
+import { DispatcherContext, TEMPLATE, TITLE } from '../dispatcher';
 import { isServerSide } from '../utils';
 
 export const useTitle = (title: string, template?: boolean) => {
+  const dispatcher = useContext(DispatcherContext);
   const hasMounted = useRef(false);
   const prevTitle = useRef<string | undefined>();
 

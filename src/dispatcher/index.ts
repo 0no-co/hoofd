@@ -1,3 +1,4 @@
+import { createContext } from 'react';
 import { Name, CharSet, HttpEquiv, Property } from '../types';
 import { isServerSide } from '../utils';
 
@@ -20,7 +21,7 @@ export interface MetaPayload {
 }
 
 const applyTitleTemplate = (title: string, template?: string) =>
-  template ? template.replace(/%s/g, title  || '') : title;
+  template ? template.replace(/%s/g, title || '') : title;
 
 const changeOrCreateMetaTag = (meta: MetaPayload) => {
   const result = document.head.querySelectorAll(
@@ -65,7 +66,7 @@ const changeOrCreateMetaTag = (meta: MetaPayload) => {
  * would get switched out for Child2, this is a new batch and will be put in front of the
  * queue.
  */
-const createDispatcher = () => {
+export const createDispatcher = () => {
   let lang: string;
   let amp: 'module' | 'nomodule' | undefined;
   let linkQueue: any[] = [];
@@ -197,7 +198,7 @@ const createDispatcher = () => {
           }
         : // istanbul ignore next
           undefined,
-    _static: () => {
+    toStatic: () => {
       //  Will process the two arrays, taking the first title in the array and returning <title>{string}</title>
       //  Then do a similar for the meta's. (will also need to add links, and add a linkQueue). Note that both queues
       //  will need a reset to prevent memory leaks.
@@ -251,4 +252,7 @@ const createDispatcher = () => {
   };
 };
 
-export default createDispatcher();
+const defaultDispatcher = createDispatcher();
+
+export default defaultDispatcher;
+export const DispatcherContext = createContext(defaultDispatcher);

@@ -1,6 +1,6 @@
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useContext } from 'react';
 import { Name, HttpEquiv, CharSet, Property } from '../types';
-import dispatcher, { MetaPayload, META } from '../dispatcher';
+import { MetaPayload, META, DispatcherContext } from '../dispatcher';
 import { isServerSide } from '../utils';
 import { extractKeyword } from './useHead';
 
@@ -13,6 +13,7 @@ export interface MetaOptions {
 }
 
 export const useMeta = (options: MetaOptions) => {
+  const dispatcher = useContext(DispatcherContext);
   const hasMounted = useRef(false);
   const keyword = useRef<string | undefined>();
   const metaObject = useRef<MetaPayload>({
