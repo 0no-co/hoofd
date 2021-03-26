@@ -198,7 +198,7 @@ export const createDispatcher = () => {
           }
         : // istanbul ignore next
           undefined,
-    _static: () => {
+    toStatic: () => {
       //  Will process the two arrays, taking the first title in the array and returning <title>{string}</title>
       //  Then do a similar for the meta's. (will also need to add links, and add a linkQueue). Note that both queues
       //  will need a reset to prevent memory leaks.

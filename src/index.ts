@@ -9,4 +9,5 @@ export * from './hooks/useTitle';
 export * from './hooks/useTitleTemplate';
 export { useHead } from './hooks/useHead';
 export * from './types';
+export const toStatic = dispatcher.toStatic;
 export const HoofdProvider = DispatcherContext.Provider;
