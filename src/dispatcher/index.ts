@@ -2,8 +2,6 @@ import { createContext } from 'react';
 import { Name, CharSet, HttpEquiv, Property } from '../types';
 import { isServerSide } from '../utils';
 
-export const ampScriptSrc = 'https://cdn.ampproject.org/v0';
-
 export const META = 'M';
 export const TITLE = 'T';
 export const LINK = 'L';
@@ -68,7 +66,6 @@ const changeOrCreateMetaTag = (meta: MetaPayload) => {
  */
 export const createDispatcher = () => {
   let lang: string;
-  let amp: 'module' | 'nomodule' | undefined;
   let linkQueue: any[] = [];
   let titleQueue: string[] = [];
   let titleTemplateQueue: string[] = [];
@@ -126,9 +123,6 @@ export const createDispatcher = () => {
       } else {
         linkQueue.push(payload);
       }
-    },
-    _setAmp: (isModule: boolean) => {
-      amp = isModule ? 'module' : 'nomodule';
     },
     _removeFromQueue: (type: HeadType, payload: MetaPayload | string) => {
       if (type === TITLE || type === TEMPLATE) {
@@ -224,16 +218,7 @@ export const createDispatcher = () => {
       linkQueue = [];
       currentTitleIndex = currentTitleTemplateIndex = currentMetaIndex = 0;
 
-      let ampScript;
-      if (amp && amp === 'module') {
-        ampScript = ampScriptSrc + '.mjs';
-      } else if (amp) {
-        ampScript = ampScriptSrc + '.js';
-      }
-
       return {
-        amp,
-        ampScript,
         lang,
         title,
         links,
