@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useRef } from 'react';
-import dispatcher, { META, MetaPayload, TITLE } from '../dispatcher';
+import { useContext, useEffect, useMemo, useRef } from 'react';
+import { DispatcherContext, META, MetaPayload, TITLE } from '../dispatcher';
 import { isServerSide } from '../utils';
 import { MetaOptions } from './useMeta';
 import { useAmp } from './useAmp';
@@ -22,6 +22,7 @@ export function extractKeyword(meta: MetaOptions) {
 }
 
 export const useHead = ({ title, metas, language, amp }: HeadObject) => {
+  const dispatcher = useContext(DispatcherContext);
   const hasMounted = useRef(false);
   const prevTitle = useRef<string | undefined>();
   const prevMetas = useRef<MetaPayload[]>();

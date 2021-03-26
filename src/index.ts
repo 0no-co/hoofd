@@ -1,5 +1,6 @@
 import dispatcher from './dispatcher';
 
+export { DispatcherContext, createDispatcher } from './dispatcher';
 export * from './hooks/useLang';
 export * from './hooks/useLink';
 export * from './hooks/useMeta';

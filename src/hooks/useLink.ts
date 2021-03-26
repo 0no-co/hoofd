@@ -1,7 +1,7 @@
 import { Rel, As } from '../types';
-import { useEffect, useRef } from 'react';
+import { useContext, useEffect, useRef } from 'react';
 import { isServerSide } from '../utils';
-import dispatcher, { LINK } from '../dispatcher';
+import { DispatcherContext, LINK } from '../dispatcher';
 
 export interface LinkOptions {
   rel: Rel;
@@ -14,6 +14,7 @@ export interface LinkOptions {
 }
 
 export const useLink = (options: LinkOptions) => {
+  const dispatcher = useContext(DispatcherContext);
   const hasMounted = useRef(false);
   const node = useRef<Element | undefined>();
   const originalOptions = useRef<LinkOptions | undefined>();
