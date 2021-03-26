@@ -93,12 +93,6 @@ This will update within the same `useLink` but will never go outside
 This hook accepts a string that will be used to set the `lang` property on the
 base `<html>` tag. Every time this string gets updated this will be reflected in the dom.
 
-### useAmp
-
-You can call `useAmp` to inject `html.amp = true` and the `ampScript`, depending on the first
-attribute the hook will decide whether or not you want a module, when passing `true` to the first
-argument the script will be injected as `script type module`.
-
 ## SSR
 
 We expose a method called `toStatic` that will return the following properties:
@@ -113,18 +107,10 @@ The reason we pass these as properties is to better support `gatsby`, ...
 If you need to stringify these you can use the following algo:
 
 ```js
-const stringify = (title, metas, links, ampScript) => {
+const stringify = (title, metas, links) => {
   const visited = new Set();
   return `
     <title>${title}</title>
-
-    ${
-      ampScript
-        ? `<script src={ampScript} async ${
-            ampScript.endsWith('mjs') ? 'type="module"' : ''
-          } />`
-        : ''
-    }
 
     ${metaQueue.reduce((acc, meta) => {
       if (!visited.has(meta.charset ? meta.keyword : meta[meta.keyword])) {
@@ -150,12 +136,12 @@ const stringify = (title, metas, links, ampScript) => {
 import { toStatic } from 'hoofd';
 
 const reactStuff = renderToString();
-const { metas, links, title, lang, amp, ampScript } = toStatic();
-const stringified = stringify(title, metas, links, ampScript);
+const { metas, links, title, lang } = toStatic();
+const stringified = stringify(title, metas, links);
 
 const html = `
   <!doctype html>
-    <html ${lang ? `lang="${lang}"` : ''} ${amp ? `amp` : ''}>
+    <html ${lang ? `lang="${lang}"` : ''}>
       <head>
         ${stringified}
       </head>
@@ -186,23 +172,8 @@ function ssr(App) {
     </HoofdProvider>
   );
   const markup = renderToString(wrappedApp);
-  const { metas, links, title, lang, amp, ampScript } = dispatcher.toStatic();
+  const { metas, links, title, lang } = dispatcher.toStatic();
 
   // See example above for potential method to consume these static results.
 }
 ```
-
-## Goals
-
-- [x] React support
-- [x] Add majority of types for meta and link.
-- [x] Concurrent friendly
-- [x] Preact support
-- [x] Support `<link>`
-- [x] Stricter typings
-- [x] Document the hooks
-- [x] Document the dispatcher
-- [x] SSR support
-- [x] Consider moving from `doc.title = x` to inserting `<title>x</title>`
-- [x] Golf bytes
-- [ ] improve typings, there are probably missing possibilities in `types.ts`

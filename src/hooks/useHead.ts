@@ -2,13 +2,11 @@ import { useContext, useEffect, useMemo, useRef } from 'react';
 import { DispatcherContext, META, MetaPayload, TITLE } from '../dispatcher';
 import { isServerSide } from '../utils';
 import { MetaOptions } from './useMeta';
-import { useAmp } from './useAmp';
 
 interface HeadObject {
   title?: string;
   language?: string;
   metas?: MetaOptions[];
-  amp?: 'module' | 'nomodule';
 }
 
 export function extractKeyword(meta: MetaOptions) {
@@ -21,14 +19,12 @@ export function extractKeyword(meta: MetaOptions) {
     : 'http-equiv';
 }
 
-export const useHead = ({ title, metas, language, amp }: HeadObject) => {
+export const useHead = ({ title, metas, language }: HeadObject) => {
   const dispatcher = useContext(DispatcherContext);
   const hasMounted = useRef(false);
   const prevTitle = useRef<string | undefined>();
   const prevMetas = useRef<MetaPayload[]>();
   const addedMetas = useRef<MetaPayload[]>();
-
-  useAmp(amp === 'module', !amp);
 
   const memoizedMetas = useMemo(() => {
     const calculatedMetas: MetaPayload[] = (metas || []).map((meta) => {

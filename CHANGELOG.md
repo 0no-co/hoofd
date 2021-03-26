@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.2.0
+
+- Support context API [#35](https://github.com/JoviDeCroock/hoofd/pull/35)
+
 ## 1.1.0
 
 - `useTitleTemplate` will fallback to removing the `%s` rather than inserting it when no title has been provided [#33](https://github.com/JoviDeCroock/hoofd/pull/33)
