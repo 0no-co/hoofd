@@ -1,10 +1,10 @@
-import { useEffect } from 'react';
+import { useContext, useEffect } from 'react';
 import { isServerSide } from '../utils';
-import dispatcher, { SCRIPT } from '../dispatcher';
+import { DispatcherContext, SCRIPT } from '../dispatcher';
 
 export interface ScriptOptions {
   src: string;
-  type: string;
+  type?: string;
   async?: boolean;
   defer?: boolean;
   module?: boolean;
@@ -13,6 +13,8 @@ export interface ScriptOptions {
 }
 
 export const useScript = (options: ScriptOptions) => {
+  const dispatcher = useContext(DispatcherContext);
+
   if (isServerSide) {
     dispatcher._addToQueue(SCRIPT, options as any);
   }
@@ -27,7 +29,7 @@ export const useScript = (options: ScriptOptions) => {
     if (!preExistingElements[0] && options.src) {
       const script = document.createElement('script');
 
-      script.type = options.type;
+      if (options.type) script.type = options.type;
       if (options.module) script.type = 'module';
 
       if (options.integrity)
