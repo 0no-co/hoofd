@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.2.1
+
+- Adjust useScript to use context API [#37](https://github.com/JoviDeCroock/hoofd/pull/37)
+
 ## 1.2.0
 
 - Support context API [#35](https://github.com/JoviDeCroock/hoofd/pull/35)
