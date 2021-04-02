@@ -2,7 +2,7 @@
 
 ## 1.2.2
 
-- fix Preact [#38](https://github.com/JoviDeCroock/hoofd/pull/38)
+- fix Preact [#40](https://github.com/JoviDeCroock/hoofd/pull/40)
 
 ## 1.2.1
 
