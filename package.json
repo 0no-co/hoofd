@@ -7,7 +7,7 @@
   "scripts": {
     "build": "rimraf dist && yarn build:preact && yarn build:react",
     "build:react": "microbundle --define process.env.NODE_ENV=production --external react --name hoofd --no-compress --output dist/",
-    "build:preact": "microbundle --define process.env.NODE_ENV=production --external preact --name hoofd --no-compress --output preact/dist --alias react=preact/hooks",
+    "build:preact": "microbundle --define process.env.NODE_ENV=production --external preact --name hoofd --no-compress --output preact/dist --alias react=./preact/preact.ts",
     "build:ci": "microbundle --define process.env.NODE_ENV=production --external preact --name hoofd --output dist/",
     "test": "jest",
     "test:watch": "cross-env NODE_ENV=test yarn test -- --watch",
