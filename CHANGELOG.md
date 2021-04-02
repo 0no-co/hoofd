@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.2.2
+
+- fix Preact [#40](https://github.com/JoviDeCroock/hoofd/pull/40)
+
 ## 1.2.1
 
 - Adjust useScript to use context API [#37](https://github.com/JoviDeCroock/hoofd/pull/37)
