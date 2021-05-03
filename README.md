@@ -93,6 +93,19 @@ This will update within the same `useLink` but will never go outside
 This hook accepts a string that will be used to set the `lang` property on the
 base `<html>` tag. Every time this string gets updated this will be reflected in the dom.
 
+### useScript
+
+This hook accepts a few arguments and will lead to an injection of a script tag into the dispatcher (during ssr)
+or the DOM (during csr).
+
+- src: this can be a location where the script lives, for example `public/x.js` or an inline script for example `data:application/javascript,alert("yolo")`.
+- type?: this sets the `type` attribute on the script tag.
+- async?: this sets the `async` attribute on the script tag.
+- defer?: this sets the `defer` attribute on the script tag.
+- module?: this property will override the `type` atrribute on the script tag with a value of `module`. 
+- crossorigin?: 'anonymous' | 'use-credentials';
+- integrity?: string;
+
 ## SSR
 
 We expose a method called `toStatic` that will return the following properties:
