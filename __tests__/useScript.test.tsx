@@ -57,4 +57,23 @@ describe('useScript', () => {
       '<script type="application/javascript" crossorigin="anonymous" async="true" src="test.js"></script>'
     );
   });
+
+  it('should fill in the script with text', () => {
+    const MyComponent = () => {
+      useScript({
+        text: '{"key":"value"}',
+        type: 'application/ld+json',
+        id: 'rich-text',
+      });
+      return <p>hi</p>;
+    };
+
+    act(() => {
+      render(<MyComponent />);
+    });
+
+    expect(document.head.innerHTML).toContain(
+      '<script type="application/ld+json" id="rich-text">{"key":"value"}</script>'
+    );
+  });
 });

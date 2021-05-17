@@ -3,7 +3,9 @@ import { isServerSide } from '../utils';
 import { DispatcherContext, SCRIPT } from '../dispatcher';
 
 export interface ScriptOptions {
-  src: string;
+  src?: string;
+  id?: string;
+  text?: string;
   type?: string;
   async?: boolean;
   defer?: boolean;
@@ -20,13 +22,13 @@ export const useScript = (options: ScriptOptions) => {
   }
 
   useEffect(() => {
-    const preExistingElements = document.querySelectorAll(
-      `script[src="${options.src}"]`
-    );
+    const preExistingElements = options.id
+      ? document.querySelectorAll(`script[id="${options.id}"]`)
+      : document.querySelectorAll(`script[src="${options.src}"]`);
 
     let script: HTMLScriptElement;
 
-    if (!preExistingElements[0] && options.src) {
+    if (!preExistingElements[0] && (options.src || options.id)) {
       const script = document.createElement('script');
 
       if (options.type) script.type = options.type;
@@ -39,7 +41,12 @@ export const useScript = (options: ScriptOptions) => {
       if (options.defer) script.setAttribute('defer', 'true');
       else if (options.async) script.setAttribute('async', 'true');
 
-      script.src = options.src;
+      if (options.id) script.id = options.id;
+
+      if (options.src) script.src = options.src;
+
+      if (options.text) script.text = options.text;
+
       document.head.appendChild(script);
     } else if (preExistingElements[0]) {
       script = preExistingElements[0] as HTMLScriptElement;
