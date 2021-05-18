@@ -76,4 +76,34 @@ describe('useScript', () => {
       '<script type="application/ld+json" id="rich-text">{"key":"value"}</script>'
     );
   });
+
+  it('should reuse an existing tag to fill text', () => {
+    const MyComponent = () => {
+      useScript({
+        text: '{"key":"value"}',
+        type: 'application/ld+json',
+        id: 'rich-text',
+      });
+      return <p>hi</p>;
+    };
+
+    const node = document.createElement('script');
+    const options = {
+      type: 'application/ld+json',
+      id: 'rich-text',
+    };
+    Object.keys(options).forEach((key) => {
+      // @ts-ignore
+      (node as Element).setAttribute(key, options[key]);
+    });
+    document.head.appendChild(node);
+
+    act(() => {
+      render(<MyComponent />);
+    });
+
+    expect(document.head.innerHTML).toContain(
+      '<script type="application/ld+json" id="rich-text">{"key":"value"}</script>'
+    );
+  });
 });
