@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.3.0
+
+- Add support for `id` and `text` in `useScript` [#44](https://github.com/JoviDeCroock/hoofd/pull/44)
+
 ## 1.2.2
 
 - fix Preact [#40](https://github.com/JoviDeCroock/hoofd/pull/40)
