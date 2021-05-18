@@ -4,7 +4,15 @@ jest.mock('../src/utils', () => {
   };
 });
 import * as React from 'react';
-import { useTitle, toStatic, useMeta, useLink, useLang, useHead } from '../src';
+import {
+  useTitle,
+  toStatic,
+  useMeta,
+  useLink,
+  useLang,
+  useHead,
+  useScript,
+} from '../src';
 import { render } from '@testing-library/react';
 
 describe('ssr', () => {
@@ -26,16 +34,41 @@ describe('ssr', () => {
       useLang('nl');
       useMeta({ property: 'fb:admins', content: 'hi' });
       useLink({ rel: 'stylesheet', href: 'x' });
+      useScript({
+        crossorigin: 'anonymous',
+        type: 'application/javascript',
+        src: 'test.js',
+        async: true,
+      });
+      useScript({
+        text: '{"key":"value"}',
+        type: 'application/ld+json',
+        id: 'rich-text',
+      });
       return <p>hi</p>;
     };
 
     render(<MyComponent />);
     jest.runAllTimers();
-    const { lang, title, metas, links } = toStatic();
+    const { lang, title, metas, links, scripts } = toStatic();
+
     expect(lang).toEqual('nl');
     expect(title).toEqual('hi');
     expect(metas).toEqual([{ content: 'hi', property: 'fb:admins' }]);
     expect(links).toEqual([{ rel: 'stylesheet', href: 'x' }]);
+    expect(scripts).toEqual([
+      {
+        crossorigin: 'anonymous',
+        type: 'application/javascript',
+        src: 'test.js',
+        async: true,
+      },
+      {
+        text: '{"key":"value"}',
+        type: 'application/ld+json',
+        id: 'rich-text',
+      },
+    ]);
   });
 
   it('should render to string (basic-useHead)', () => {
@@ -61,6 +94,13 @@ describe('ssr', () => {
       useTitle('hi');
       useMeta({ property: 'fb:admins', content: 'hi' });
       useLink({ rel: 'stylesheet', href: 'x' });
+      useScript({
+        crossorigin: 'anonymous',
+        type: 'application/javascript',
+        src: 'test.js',
+        async: true,
+      });
+
       return props.children;
     };
 
@@ -68,6 +108,12 @@ describe('ssr', () => {
       useTitle('bye');
       useMeta({ property: 'fb:admins', content: 'bye' });
       useLink({ rel: 'stylesheet', href: 'y' });
+      useScript({
+        text: '{"key":"value"}',
+        type: 'application/ld+json',
+        id: 'rich-text',
+      });
+
       return <p>hi</p>;
     };
 
@@ -77,12 +123,25 @@ describe('ssr', () => {
       </MyComponent>
     );
     jest.runAllTimers();
-    const { title, metas, links } = toStatic();
+    const { title, metas, links, scripts } = toStatic();
     expect(title).toEqual('bye');
     expect(metas).toEqual([{ content: 'bye', property: 'fb:admins' }]);
     expect(links).toEqual([
       { rel: 'stylesheet', href: 'x' },
       { rel: 'stylesheet', href: 'y' },
+    ]);
+    expect(scripts).toEqual([
+      {
+        crossorigin: 'anonymous',
+        type: 'application/javascript',
+        src: 'test.js',
+        async: true,
+      },
+      {
+        text: '{"key":"value"}',
+        type: 'application/ld+json',
+        id: 'rich-text',
+      },
     ]);
   });
 

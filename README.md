@@ -98,11 +98,13 @@ base `<html>` tag. Every time this string gets updated this will be reflected in
 This hook accepts a few arguments and will lead to an injection of a script tag into the dispatcher (during ssr)
 or the DOM (during csr).
 
-- src: this can be a location where the script lives, for example `public/x.js` or an inline script for example `data:application/javascript,alert("yolo")`.
+- src?: this can be a location where the script lives, for example `public/x.js` or an inline script for example `data:application/javascript,alert("yolo")`.
+- id?: a unique identifier used for querying the script tag. Atleast one among `src` and `id` prop is mandatory.
+- text?: this sets the inner `text` on the script tag. Can be used for adding [embedded data](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/script#embedding_data_in_html), [rich text data](https://developers.google.com/search/docs/guides/intro-structured-data).
 - type?: this sets the `type` attribute on the script tag.
 - async?: this sets the `async` attribute on the script tag.
 - defer?: this sets the `defer` attribute on the script tag.
-- module?: this property will override the `type` atrribute on the script tag with a value of `module`. 
+- module?: this property will override the `type` atrribute on the script tag with a value of `module`.
 - crossorigin?: 'anonymous' | 'use-credentials';
 - integrity?: string;
 
