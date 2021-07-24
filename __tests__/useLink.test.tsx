@@ -17,6 +17,7 @@ describe('useLink', () => {
         media,
         rel: 'prefetch',
         sizes: 'x',
+        hreflang: 'en-us',
       });
       return <p>hi</p>;
     };
@@ -26,21 +27,21 @@ describe('useLink', () => {
       ({ rerender } = render(<MyComponent media="en" />));
     });
     expect(document.head.innerHTML).toContain(
-      '<link crossorigin="anonymous" as="audio" href="htt://yow" media="en" rel="prefetch" sizes="x">'
+      '<link crossorigin="anonymous" as="audio" href="htt://yow" media="en" rel="prefetch" sizes="x" hreflang="en-us">'
     );
 
     act(() => {
       rerender!(<MyComponent media="nl" />);
     });
     expect(document.head.innerHTML).toContain(
-      '<link crossorigin="anonymous" as="audio" href="htt://yow" media="nl" rel="prefetch" sizes="x">'
+      '<link crossorigin="anonymous" as="audio" href="htt://yow" media="nl" rel="prefetch" sizes="x" hreflang="en-us">'
     );
 
     act(() => {
       rerender!(<p>hi</p>);
     });
     expect(document.head.innerHTML).not.toContain(
-      '<link crossorigin="anonymous" as="audio" href="htt://yow" media="nl" rel="prefetch" sizes="x">'
+      '<link crossorigin="anonymous" as="audio" href="htt://yow" media="nl" rel="prefetch" sizes="x" hreflang="en-us">'
     );
   });
 
