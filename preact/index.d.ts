@@ -1,6 +1,6 @@
 /// <reference types="preact" />
 
-export { createDispatcher } from '../dist/dispatcher';
+export { createDispatcher } from './dispatcher';
 export * from '../dist/hooks/useLang';
 export * from '../dist/hooks/useLink';
 export * from '../dist/hooks/useScript';
