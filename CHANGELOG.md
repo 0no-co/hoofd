@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.4.0
+
+- Add specialized types for `hoofd/preact` [#54](https://github.com/JoviDeCroock/hoofd/pull/54)
+
 ## 1.3.0
 
 - Add support for `id` and `text` in `useScript` [#44](https://github.com/JoviDeCroock/hoofd/pull/44)
