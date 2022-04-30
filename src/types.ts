@@ -69,6 +69,7 @@ export type Rel =
   | 'canonical'
   | 'preload'
   | 'prefetch'
+  | 'dns-prefetch'
   | 'preconnect'
   | 'modulepreload';
 
