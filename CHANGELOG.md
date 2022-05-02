@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.4.1
+
+- Add `dns-prefetch` to rel type [#62](https://github.com/JoviDeCroock/hoofd/pull/62)
+
 ## 1.4.0
 
 - Add specialized types for `hoofd/preact` [#54](https://github.com/JoviDeCroock/hoofd/pull/54)
