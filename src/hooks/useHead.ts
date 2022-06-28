@@ -3,7 +3,7 @@ import { DispatcherContext, META, MetaPayload, TITLE } from '../dispatcher';
 import { isServerSide } from '../utils';
 import { MetaOptions } from './useMeta';
 
-interface HeadObject {
+export interface HeadObject {
   title?: string;
   language?: string;
   metas?: MetaOptions[];
