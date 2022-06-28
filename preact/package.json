@@ -16,10 +16,17 @@
   "sideEffects": false,
   "main": "./dist/hoofd.js",
   "browser": "./dist/hoofd.umd.js",
-  "umd:main": "./dist/hoofd.umd.js",
-  "jsnext:main": "./dist/hoofd.modern.js",
   "module": "./dist/hoofd.module.js",
   "source": "./src/index.ts",
   "types": "../dist/index.d.ts",
-  "typings": "./index.d.ts"
+  "typings": "./index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "browser": "./dist/hoofd.module.js",
+      "umd": "./dist/hoofd.umd.js",
+      "import": "./dist/hoofd.mojs",
+      "require": "./dist/hoofd.js"
+    }
+  }
 }
