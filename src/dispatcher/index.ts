@@ -1,4 +1,6 @@
 import { createContext } from 'react';
+import { LinkOptions } from '../hooks/useLink';
+import { ScriptOptions } from '../hooks/useScript';
 import { Name, CharSet, HttpEquiv, Property } from '../types';
 import { isServerSide } from '../utils';
 
@@ -196,7 +198,7 @@ export const createDispatcher = () => {
           }
         : // istanbul ignore next
           undefined,
-    toStatic: () => {
+    toStatic: (): StaticPayload => {
       //  Will process the two arrays, taking the first title in the array and returning <title>{string}</title>
       //  Then do a similar for the meta's. (will also need to add links, and add a linkQueue). Note that both queues
       //  will need a reset to prevent memory leaks.
@@ -242,6 +244,16 @@ export const createDispatcher = () => {
       };
     },
   };
+};
+
+export type StaticPayload = {
+  lang?: string;
+  title?: string;
+  links?: Array<LinkOptions>;
+  scripts?: Array<ScriptOptions>;
+  metas?: Array<
+    { charset: string } | { [key: string]: string; content: string }
+  >;
 };
 
 const defaultDispatcher = createDispatcher();
