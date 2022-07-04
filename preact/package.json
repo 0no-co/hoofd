@@ -25,7 +25,7 @@
       "types": "./dist/index.d.ts",
       "browser": "./dist/hoofd.module.js",
       "umd": "./dist/hoofd.umd.js",
-      "import": "./dist/hoofd.mojs",
+      "import": "./dist/hoofd.mjs",
       "require": "./dist/hoofd.js"
     }
   }
