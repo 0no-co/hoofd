@@ -1,6 +1,6 @@
 {
   "name": "hoofd",
-  "version": "1.5.1",
+  "version": "1.5.2",
   "description": "Hooks to populate the html head.",
   "author": "jdecroock <decroockjovi@gmail.com> (https://twitter.com/JoviDeC)",
   "private": false,
@@ -55,7 +55,7 @@
       "types": "./preact/dist/index.d.ts",
       "browser": "./preact/dist/hoofd.module.js",
       "umd": "./preact/dist/hoofd.umd.js",
-      "import": "./preact/dist/hoofd.mojs",
+      "import": "./preact/dist/hoofd.mjs",
       "require": "./preact/dist/hoofd.js"
     }
   },
