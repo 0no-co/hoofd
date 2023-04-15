@@ -123,23 +123,19 @@ If you need to stringify these you can use the following algo:
 
 ```js
 const stringify = (title, metas, links) => {
-  const visited = new Set();
+  const stringifyTag = (tagName, tags) =>
+    tags.reduce((acc, tag) => {
+      `${acc}<${tagName}${Object.keys(tag).reduce(
+        (properties, key) => `${properties} ${key}="${tag[key]}"`,
+        ''
+      )}>`
+    }, '')
+
   return `
     <title>${title}</title>
 
-    ${metas.reduce((acc, meta) => {
-      return `${acc}<meta${Object.keys(meta).reduce(
-        (properties, key) => `${properties} ${key}="${meta[key]}"`,
-        ''
-      )}>`
-    }, '')}
-
-    ${links.reduce((acc, link) => {
-      return `${acc}<link${Object.keys(link).reduce(
-        (properties, key) => `${properties} ${key}="${link[key]}"`,
-        ''
-      )}>`;
-    }, '')}
+    ${stringifyTag('meta', metas)}
+    ${stringifyTag('link', links)}
   `;
 };
 ```
