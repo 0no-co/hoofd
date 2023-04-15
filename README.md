@@ -127,14 +127,14 @@ const stringify = (title, metas, links) => {
   return `
     <title>${title}</title>
 
-    ${metaQueue.reduce((acc, meta) => {
+    ${metas.reduce((acc, meta) => {
       return `${acc}<meta${Object.keys(meta).reduce(
         (properties, key) => `${properties} ${key}="${meta[key]}"`,
         ''
       )}>`
     }, '')}
 
-    ${linkQueue.reduce((acc, link) => {
+    ${links.reduce((acc, link) => {
       return `${acc}<link${Object.keys(link).reduce(
         (properties, key) => `${properties} ${key}="${link[key]}"`,
         ''
