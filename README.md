@@ -128,13 +128,10 @@ const stringify = (title, metas, links) => {
     <title>${title}</title>
 
     ${metaQueue.reduce((acc, meta) => {
-      if (!visited.has(meta.charset ? meta.keyword : meta[meta.keyword])) {
-        visited.add(meta.charset ? meta.keyword : meta[meta.keyword]);
-        return `${acc}<meta ${meta.keyword}="${meta[meta.keyword]}"${
-          meta.charset ? '' : ` content="${meta.content}"`
-        }>`;
-      }
-      return acc;
+      return `${acc}<meta${Object.keys(meta).reduce(
+        (properties, key) => `${properties} ${key}="${meta[key]}"`,
+        ''
+      )}>`
     }, '')}
 
     ${linkQueue.reduce((acc, link) => {
