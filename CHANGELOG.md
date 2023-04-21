@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.5.3
+
+- Guard against no meta tags being returned in React Concurrent Mode [#76](https://github.com/0no-co/hoofd/pull/76)
+
 ## 1.4.1
 
 - Add `dns-prefetch` to rel type [#62](https://github.com/JoviDeCroock/hoofd/pull/62)
