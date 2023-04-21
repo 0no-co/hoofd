@@ -161,7 +161,9 @@ export const createDispatcher = () => {
                 : `meta[${oldMeta.keyword}="${oldMeta[oldMeta.keyword]}"]`
             );
 
-            document.head.removeChild(result[0]);
+            if (result[0]) {
+              document.head.removeChild(result[0]);
+            }
           }
         }
       }
