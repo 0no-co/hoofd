@@ -269,7 +269,7 @@ export const createDispatcher = () => {
       return {
         lang,
         title,
-        links,
+        links: links.map((x) => ({ ...x, ['data-hoofd']: '1' })),
         scripts,
         metas: metas.map((meta) =>
           meta.keyword === 'charset'

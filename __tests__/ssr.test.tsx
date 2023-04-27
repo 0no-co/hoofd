@@ -55,7 +55,9 @@ describe('ssr', () => {
     expect(lang).toEqual('nl');
     expect(title).toEqual('hi');
     expect(metas).toEqual([{ content: 'hi', property: 'fb:admins' }]);
-    expect(links).toEqual([{ rel: 'stylesheet', href: 'x' }]);
+    expect(links).toEqual([
+      { 'data-hoofd': '1', rel: 'stylesheet', href: 'x' },
+    ]);
     expect(scripts).toEqual([
       {
         crossorigin: 'anonymous',
@@ -145,8 +147,8 @@ describe('ssr', () => {
     expect(title).toEqual('bye');
     expect(metas).toEqual([{ content: 'bye', property: 'fb:admins' }]);
     expect(links).toEqual([
-      { rel: 'stylesheet', href: 'x' },
-      { rel: 'stylesheet', href: 'y' },
+      { 'data-hoofd': '1', rel: 'stylesheet', href: 'x' },
+      { 'data-hoofd': '1', rel: 'stylesheet', href: 'y' },
     ]);
     expect(scripts).toEqual([
       {
