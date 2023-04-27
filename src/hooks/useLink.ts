@@ -31,7 +31,16 @@ export const useLink = (options: LinkOptions) => {
         (node.current as Element).setAttribute(key, options[key]);
       });
     }
-  }, [JSON.stringify(options)]);
+  }, [
+    options.href,
+    options.media,
+    options.as,
+    options.rel,
+    options.crossorigin,
+    options.type,
+    options.hreflang,
+    options.sizes,
+  ]);
 
   useEffect(() => {
     hasMounted.current = true;
