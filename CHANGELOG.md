@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.5.4
+
+- Escape the `content` property in meta tags [#76](https://github.com/0no-co/hoofd/pull/78)
+
 ## 1.5.3
 
 - Guard against no meta tags being returned in React Concurrent Mode [#76](https://github.com/0no-co/hoofd/pull/76)
