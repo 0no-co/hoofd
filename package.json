@@ -5,13 +5,13 @@
   "author": "jdecroock <decroockjovi@gmail.com> (https://twitter.com/JoviDeC)",
   "private": false,
   "scripts": {
-    "build": "rimraf dist && yarn build:preact && yarn build:react",
+    "build": "rimraf dist && pnpm build:preact && pnpm build:react",
     "build:react": "microbundle --define process.env.NODE_ENV=production --external react --name hoofd --no-compress --output dist/ && cp ./dist/hoofd.module.js ./dist/hoofd.mjs",
     "build:preact": "microbundle --define process.env.NODE_ENV=production --external preact --name hoofd --no-compress --output preact/dist --alias react=./preact/preact.ts  && cp ./preact/dist/hoofd.module.js ./preact/dist/hoofd.mjs",
     "build:ci": "microbundle --define process.env.NODE_ENV=production --external preact --name hoofd --output dist/",
     "test": "jest",
-    "test:watch": "cross-env NODE_ENV=test yarn test -- --watch",
-    "prepublishOnly": "yarn test && yarn lint && yarn build",
+    "test:watch": "cross-env NODE_ENV=test pnpm test -- --watch",
+    "prepublishOnly": "pnpm test && pnpm lint && pnpm build",
     "lint": "eslint . --ext .ts,.tsx"
   },
   "repository": {
