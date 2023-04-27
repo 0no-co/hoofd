@@ -71,6 +71,24 @@ describe('ssr', () => {
     ]);
   });
 
+  it('should escape meta-content', () => {
+    jest.useFakeTimers();
+    const MyComponent = () => {
+      useMeta({ property: 'fb:admins', content: "''<>&" });
+      useMeta({ property: 'fb:something', content: '""' });
+      return <p>hi</p>;
+    };
+
+    render(<MyComponent />);
+    jest.runAllTimers();
+    const { metas } = toStatic();
+
+    expect(metas).toEqual([
+      { content: '&quot;&quot;', property: 'fb:something' },
+      { content: '&#39;&#39;&lt;&gt;&amp;', property: 'fb:admins' },
+    ]);
+  });
+
   it('should render to string (basic-useHead)', () => {
     jest.useFakeTimers();
     const MyComponent = () => {

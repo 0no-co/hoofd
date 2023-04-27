@@ -201,6 +201,44 @@ export const createDispatcher = () => {
         : // istanbul ignore next
           undefined,
     toStatic: (): StaticPayload => {
+      const ESCAPED_CHARS = /['"&<>]/;
+
+      function escape(str: string) {
+        if (str.length === 0 || ESCAPED_CHARS.test(str) === false) return str;
+
+        let last = 0,
+          i = 0,
+          out = '',
+          ch = '';
+
+        for (; i < str.length; i++) {
+          switch (str.charCodeAt(i)) {
+            case 34:
+              ch = '&quot;';
+              break;
+            case 38:
+              ch = '&amp;';
+              break;
+            case 39:
+              ch = '&#39;';
+              break;
+            case 60:
+              ch = '&lt;';
+              break;
+            case 62:
+              ch = '&gt;';
+              break;
+            default:
+              continue;
+          }
+
+          if (i !== last) out += str.slice(last, i);
+          out += ch;
+          last = i + 1;
+        }
+        if (i !== last) out += str.slice(last, i);
+        return out;
+      }
       //  Will process the two arrays, taking the first title in the array and returning <title>{string}</title>
       //  Then do a similar for the meta's. (will also need to add links, and add a linkQueue). Note that both queues
       //  will need a reset to prevent memory leaks.
@@ -240,7 +278,7 @@ export const createDispatcher = () => {
               }
             : {
                 [meta.keyword]: meta[meta.keyword],
-                content: meta.content,
+                content: escape(meta.content),
               }
         ),
       };
