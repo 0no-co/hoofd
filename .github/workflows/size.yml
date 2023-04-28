@@ -6,10 +6,12 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2-beta
-      with:
-        fetch-depth: 1
-    - uses: preactjs/compressed-size-action@v1
-      with:
-        repo-token: "${{ secrets.GITHUB_TOKEN }}"
-        build-script: "build:ci"
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - uses: preactjs/compressed-size-action@v1
+        with:
+          repo-token: "${{ secrets.GITHUB_TOKEN }}"
+          build-script: "build:ci"

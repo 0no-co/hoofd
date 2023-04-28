@@ -4,6 +4,7 @@ example
 .editorconfig
 .gitignore
 yarn.lock
+pnpm-lock.yaml
 .rpt2_cache
 coverage
 packages
