@@ -9,8 +9,7 @@
     "build:react": "microbundle --define process.env.NODE_ENV=production --external react --name hoofd --no-compress --output dist/ && cp ./dist/hoofd.module.js ./dist/hoofd.mjs",
     "build:preact": "microbundle --define process.env.NODE_ENV=production --external preact --name hoofd --no-compress --output preact/dist --alias react=./preact/preact.ts  && cp ./preact/dist/hoofd.module.js ./preact/dist/hoofd.mjs",
     "build:ci": "microbundle --define process.env.NODE_ENV=production --external preact --name hoofd --output dist/",
-    "test": "jest",
-    "test:watch": "cross-env NODE_ENV=test pnpm test -- --watch",
+    "test": "vitest",
     "prepublishOnly": "pnpm test && pnpm lint && pnpm build",
     "prepare": "husky install"
   },
@@ -66,8 +65,6 @@
     "@types/node": "^18.16.1",
     "@types/react": "^18.0.0",
     "@types/react-dom": "^18.0.0",
-    "codecov": "3.7.1",
-    "cross-env": "^7.0.3",
     "dotenv": "^16.0.3",
     "husky": "^8.0.3",
     "lint-staged": "^13.2.0",
@@ -104,18 +101,5 @@
     "hooks": {
       "pre-commit": "lint-staged"
     }
-  },
-  "jest": {
-    "preset": "ts-jest",
-    "coverageDirectory": "./coverage/",
-    "collectCoverage": true,
-    "testMatch": [
-      "<rootDir>/__tests__/**/*.(test|spec).ts?(x)"
-    ],
-    "moduleFileExtensions": [
-      "ts",
-      "tsx",
-      "js"
-    ]
   }
 }
