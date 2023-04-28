@@ -20,11 +20,11 @@ devDependencies:
     specifier: ^18.16.1
     version: 18.16.1
   '@types/react':
-    specifier: 16.9.16
-    version: 16.9.16
+    specifier: ^18.0.0
+    version: 18.0.0
   '@types/react-dom':
-    specifier: 16.9.4
-    version: 16.9.4
+    specifier: ^18.0.0
+    version: 18.2.1
   codecov:
     specifier: 3.7.1
     version: 3.7.1
@@ -1937,36 +1937,28 @@ packages:
     resolution: {integrity: sha512-ce5d3q03Ex0sy4R14722Rmt6MT07Ua+k4FwDfdcToYJcMKNtRVQvJ6JCAPdAmAnbRb6CsX6aYb9m96NGod9uTw==}
     dev: true
 
-  /@types/react-dom@16.9.4:
-    resolution: {integrity: sha512-fya9xteU/n90tda0s+FtN5Ym4tbgxpq/hb/Af24dvs6uYnYn+fspaxw5USlw0R8apDNwxsqumdRoCoKitckQqw==}
-    dependencies:
-      '@types/react': 16.9.34
-    dev: true
-
   /@types/react-dom@18.2.1:
     resolution: {integrity: sha512-8QZEV9+Kwy7tXFmjJrp3XUKQSs9LTnE0KnoUb0YCguWBiNW0Yfb2iBMYZ08WPg35IR6P3Z0s00B15SwZnO26+w==}
     dependencies:
-      '@types/react': 16.9.16
+      '@types/react': 18.0.0
     dev: true
 
-  /@types/react@16.9.16:
-    resolution: {integrity: sha512-dQ3wlehuBbYlfvRXfF5G+5TbZF3xqgkikK7DWAsQXe2KnzV+kjD4W2ea+ThCrKASZn9h98bjjPzoTYzfRqyBkw==}
+  /@types/react@18.0.0:
+    resolution: {integrity: sha512-7+K7zEQYu7NzOwQGLR91KwWXXDzmTFODRVizJyIALf6RfLv2GDpqpknX64pvRVILXCpXi7O/pua8NGk44dLvJw==}
     dependencies:
       '@types/prop-types': 15.7.3
-      csstype: 2.6.10
-    dev: true
-
-  /@types/react@16.9.34:
-    resolution: {integrity: sha512-8AJlYMOfPe1KGLKyHpflCg5z46n0b5DbRfqDksxBLBTUpB75ypDBAO9eCUcjNwE6LCUslwTz00yyG/X9gaVtow==}
-    dependencies:
-      '@types/prop-types': 15.7.3
-      csstype: 2.6.10
+      '@types/scheduler': 0.16.3
+      csstype: 3.1.2
     dev: true
 
   /@types/resolve@0.0.8:
     resolution: {integrity: sha512-auApPaJf3NPfe18hSoJkp8EbZzer2ISk7o8mCC3M9he/a04+gbMF97NkpD2S8riMGvm4BMRI59/SZQSaLTKpsQ==}
     dependencies:
       '@types/node': 18.16.1
+    dev: true
+
+  /@types/scheduler@0.16.3:
+    resolution: {integrity: sha512-5cJ8CB4yAx7BH1oMvdU0Jh9lrEXyPkar6F9G/ERswkCuvP4KQZfZkSjcMbAICCpQTN4OuZn8tz0HiKv9TGZgrQ==}
     dev: true
 
   /@types/semver@6.2.3:
@@ -3065,8 +3057,8 @@ packages:
       cssom: 0.3.8
     dev: true
 
-  /csstype@2.6.10:
-    resolution: {integrity: sha512-D34BqZU4cIlMCY93rZHbrq9pjTAQJ3U8S8rfBqjwHxkGPThWFjzZDQpgMJY0QViLxth6ZKYiwFBo14RdN44U/w==}
+  /csstype@3.1.2:
+    resolution: {integrity: sha512-I7K1Uu0MBPzaFKg4nI5Q7Vs2t+3gWWW648spaF+Rg7pI9ds18Ugn+lvg4SHczUdKlHI5LWBXyqfS8+DufyBsgQ==}
     dev: true
 
   /csv-generate@3.4.3:
