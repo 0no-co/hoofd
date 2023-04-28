@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 1.6.0
+
+### Minor Changes
+
+- Make `useLink` concurrent safe by only re-using `link` tags carrying `data-hoofd="1"`, these would come from hydration as hoofd will add these to the static export
+  Submitted by [@JoviDeCroock](https://github.com/JoviDeCroock) (See [#79](https://github.com/0no-co/hoofd/pull/79))
+
 ## 1.5.4
 
 - Escape the `content` property in meta tags [#76](https://github.com/0no-co/hoofd/pull/78)
