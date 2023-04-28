@@ -6,7 +6,6 @@ example
 yarn.lock
 pnpm-lock.yaml
 .rpt2_cache
-coverage
 packages
 typings.d.ts
 Dockerfile
@@ -17,7 +16,6 @@ docker-compose.yml
 .eslintrc.json
 .prettierignore
 /website
-jest.preact.config.json
 /docs
 .rts2_cache_es
 .rts2_cache_umd
