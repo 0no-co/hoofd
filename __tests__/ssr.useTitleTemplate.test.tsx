@@ -1,41 +1,32 @@
-jest.mock('../src/utils', () => {
+import { expect, describe, it, vi } from 'vitest';
+
+vi.mock('../src/utils', () => {
   return {
     isServerSide: true,
   };
 });
 
 import * as React from 'react';
+import * as ReactDom from 'react-dom/server';
 import { useTitle, useTitleTemplate, toStatic } from '../src';
-import { render } from '@testing-library/react';
 
 describe('ssr with a template', () => {
-  let original: any;
-
-  beforeAll(() => {
-    original = React.useEffect;
-    (React as any).useEffect = jest.fn(() => {});
-  });
-
-  afterAll(() => {
-    (React as any).useEffect = original;
-  });
-
   it('should render to string (basic)', () => {
-    jest.useFakeTimers();
+    vi.useFakeTimers();
     const MyComponent = () => {
       useTitleTemplate('%s | you');
       useTitle('hi');
       return <p>hi</p>;
     };
 
-    render(<MyComponent />);
-    jest.runAllTimers();
+    ReactDom.renderToString(<MyComponent />);
+    vi.runAllTimers();
     const { title } = toStatic();
     expect(title).toEqual('hi | you');
   });
 
   it('should render to string (nested)', () => {
-    jest.useFakeTimers();
+    vi.useFakeTimers();
     const MyComponent = (props: any) => {
       useTitleTemplate('%s | you');
       useTitle('hi');
@@ -48,12 +39,12 @@ describe('ssr with a template', () => {
       return <p>hi</p>;
     };
 
-    render(
+    ReactDom.renderToString(
       <MyComponent>
         <MyNestedComponent />
       </MyComponent>
     );
-    jest.runAllTimers();
+    vi.runAllTimers();
     const { title } = toStatic();
     expect(title).toEqual('bye | you');
   });

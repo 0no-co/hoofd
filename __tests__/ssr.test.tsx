@@ -1,9 +1,12 @@
-jest.mock('../src/utils', () => {
+import { expect, describe, it, vi } from 'vitest';
+
+vi.mock('../src/utils', () => {
   return {
     isServerSide: true,
   };
 });
 import * as React from 'react';
+import * as ReactDom from 'react-dom/server';
 import {
   useTitle,
   toStatic,
@@ -13,22 +16,12 @@ import {
   useHead,
   useScript,
 } from '../src';
-import { render } from '@testing-library/react';
+
+const render = ReactDom.renderToString;
 
 describe('ssr', () => {
-  let original: any;
-
-  beforeAll(() => {
-    original = React.useEffect;
-    (React as any).useEffect = jest.fn(() => {});
-  });
-
-  afterAll(() => {
-    (React as any).useEffect = original;
-  });
-
   it('should render to string (basic-individual)', () => {
-    jest.useFakeTimers();
+    vi.useFakeTimers();
     const MyComponent = () => {
       useTitle('hi');
       useLang('nl');
@@ -49,7 +42,7 @@ describe('ssr', () => {
     };
 
     render(<MyComponent />);
-    jest.runAllTimers();
+    vi.runAllTimers();
     const { lang, title, metas, links, scripts } = toStatic();
 
     expect(lang).toEqual('nl');
@@ -74,7 +67,7 @@ describe('ssr', () => {
   });
 
   it('should escape meta-content', () => {
-    jest.useFakeTimers();
+    vi.useFakeTimers();
     const MyComponent = () => {
       useMeta({ property: 'fb:admins', content: "''<>&" });
       useMeta({ property: 'fb:something', content: '""' });
@@ -82,7 +75,7 @@ describe('ssr', () => {
     };
 
     render(<MyComponent />);
-    jest.runAllTimers();
+    vi.runAllTimers();
     const { metas } = toStatic();
 
     expect(metas).toEqual([
@@ -92,7 +85,7 @@ describe('ssr', () => {
   });
 
   it('should render to string (basic-useHead)', () => {
-    jest.useFakeTimers();
+    vi.useFakeTimers();
     const MyComponent = () => {
       useHead({
         title: 'hi',
@@ -102,14 +95,14 @@ describe('ssr', () => {
     };
 
     render(<MyComponent />);
-    jest.runAllTimers();
+    vi.runAllTimers();
     const { title, metas } = toStatic();
     expect(title).toEqual('hi');
     expect(metas).toEqual([{ content: 'hi', property: 'fb:admins' }]);
   });
 
   it('should render to string (nested-individual)', () => {
-    jest.useFakeTimers();
+    vi.useFakeTimers();
     const MyComponent = (props: any) => {
       useTitle('hi');
       useMeta({ property: 'fb:admins', content: 'hi' });
@@ -142,7 +135,7 @@ describe('ssr', () => {
         <MyNestedComponent />
       </MyComponent>
     );
-    jest.runAllTimers();
+    vi.runAllTimers();
     const { title, metas, links, scripts } = toStatic();
     expect(title).toEqual('bye');
     expect(metas).toEqual([{ content: 'bye', property: 'fb:admins' }]);
@@ -166,7 +159,7 @@ describe('ssr', () => {
   });
 
   it('should render to string (nested-useHead)', () => {
-    jest.useFakeTimers();
+    vi.useFakeTimers();
     const MyComponent = (props: any) => {
       useHead({
         title: 'hi',
@@ -188,7 +181,7 @@ describe('ssr', () => {
         <MyNestedComponent />
       </MyComponent>
     );
-    jest.runAllTimers();
+    vi.runAllTimers();
     const { title, metas } = toStatic();
     expect(title).toEqual('bye');
     expect(metas).toEqual([{ content: 'bye', property: 'fb:admins' }]);

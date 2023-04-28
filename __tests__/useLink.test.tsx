@@ -1,6 +1,10 @@
-import '@testing-library/jest-dom';
+/**
+ * @vitest-environment jsdom
+ */
 import * as React from 'react';
 import { act, render, cleanup } from '@testing-library/react';
+import { expect, describe, afterEach, it } from 'vitest';
+
 import { useLink } from '../src';
 
 describe('useLink', () => {
@@ -68,7 +72,7 @@ describe('useLink', () => {
       rel: 'prefetch',
       sizes: 'x',
     };
-    Object.keys(options).forEach((key) => {
+    Object.keys(options).forEach(key => {
       // @ts-ignore
       (node as Element).setAttribute(key, options[key]);
     });
@@ -118,7 +122,7 @@ describe('useLink', () => {
       rel: 'prefetch',
       sizes: 'x',
     };
-    Object.keys(options).forEach((key) => {
+    Object.keys(options).forEach(key => {
       // @ts-ignore
       (node as Element).setAttribute(key, options[key]);
     });

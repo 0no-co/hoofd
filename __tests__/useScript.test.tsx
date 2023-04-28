@@ -1,6 +1,10 @@
-import '@testing-library/jest-dom';
+/**
+ * @vitest-environment jsdom
+ */
 import * as React from 'react';
 import { act, render, cleanup } from '@testing-library/react';
+import { expect, describe, afterEach, it } from 'vitest';
+
 import { useScript } from '../src';
 
 describe('useScript', () => {
@@ -44,7 +48,7 @@ describe('useScript', () => {
       src: 'test.js',
       async: true,
     };
-    Object.keys(options).forEach((key) => {
+    Object.keys(options).forEach(key => {
       // @ts-ignore
       (node as Element).setAttribute(key, options[key]);
     });
@@ -92,7 +96,7 @@ describe('useScript', () => {
       type: 'application/ld+json',
       id: 'rich-text',
     };
-    Object.keys(options).forEach((key) => {
+    Object.keys(options).forEach(key => {
       // @ts-ignore
       (node as Element).setAttribute(key, options[key]);
     });

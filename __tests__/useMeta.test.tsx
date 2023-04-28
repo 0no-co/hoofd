@@ -1,6 +1,10 @@
-import '@testing-library/jest-dom';
+/**
+ * @vitest-environment jsdom
+ */
 import * as React from 'react';
 import { act, render, cleanup } from '@testing-library/react';
+import { expect, describe, afterEach, it, vi } from 'vitest';
+
 import { useMeta } from '../src';
 import dispatcher from '../src/dispatcher';
 
@@ -12,7 +16,7 @@ describe('useMeta', () => {
 
   it('should create and change http-equiv', async () => {
     let rerender: any;
-    jest.useFakeTimers();
+    vi.useFakeTimers();
     const Component = ({ content }: any) => {
       useMeta({ httpEquiv: 'refresh', content });
       return <p>hi</p>;
@@ -21,7 +25,7 @@ describe('useMeta', () => {
     await act(async () => {
       ({ rerender } = await render(<Component content="60" />));
     });
-    jest.runAllTimers();
+    vi.runAllTimers();
     expect(document.head.innerHTML).toContain(
       '<meta http-equiv="refresh" content="60">'
     );
@@ -29,7 +33,7 @@ describe('useMeta', () => {
     await act(async () => {
       await rerender(<Component content="30" />);
     });
-    jest.runAllTimers();
+    vi.runAllTimers();
     expect(document.head.innerHTML).not.toContain(
       '<meta http-equiv="refresh" content="60">'
     );
@@ -40,7 +44,7 @@ describe('useMeta', () => {
 
   it('should create and change property', async () => {
     let rerender: any;
-    jest.useFakeTimers();
+    vi.useFakeTimers();
     const Component = ({ content }: any) => {
       useMeta({ property: 'fb:admins', content });
       return <p>hi</p>;
@@ -49,7 +53,7 @@ describe('useMeta', () => {
     await act(async () => {
       ({ rerender } = await render(<Component content="60" />));
     });
-    jest.runAllTimers();
+    vi.runAllTimers();
     expect(document.head.innerHTML).toContain(
       '<meta property="fb:admins" content="60">'
     );
@@ -57,7 +61,7 @@ describe('useMeta', () => {
     await act(async () => {
       await rerender(<Component content="30" />);
     });
-    jest.runAllTimers();
+    vi.runAllTimers();
     expect(document.head.innerHTML).not.toContain(
       '<meta property="fb:admins" content="60">'
     );
@@ -68,7 +72,7 @@ describe('useMeta', () => {
 
   it('should create and change name', async () => {
     let rerender: any;
-    jest.useFakeTimers();
+    vi.useFakeTimers();
     const Component = ({ content }: any) => {
       useMeta({ name: 'generator', content });
       return <p>hi</p>;
@@ -77,7 +81,7 @@ describe('useMeta', () => {
     await act(async () => {
       ({ rerender } = await render(<Component content="60" />));
     });
-    jest.runAllTimers();
+    vi.runAllTimers();
     expect(document.head.innerHTML).toContain(
       '<meta name="generator" content="60">'
     );
@@ -85,7 +89,7 @@ describe('useMeta', () => {
     await act(async () => {
       await rerender(<Component content="30" />);
     });
-    jest.runAllTimers();
+    vi.runAllTimers();
     expect(document.head.innerHTML).not.toContain(
       '<meta name="generator" content="60">'
     );
@@ -95,7 +99,7 @@ describe('useMeta', () => {
   });
 
   it('should use meta tags', async () => {
-    jest.useFakeTimers();
+    vi.useFakeTimers();
     const MyComponent = ({ description }: any) => {
       useMeta({ charset: 'utf-8' });
       useMeta({ name: 'description', content: description });
@@ -111,7 +115,7 @@ describe('useMeta', () => {
         <MyComponent description="This is a test" />
       ));
     });
-    jest.runAllTimers();
+    vi.runAllTimers();
     expect(document.head.innerHTML).toContain('<meta charset="utf-8">');
     expect(document.head.innerHTML).toContain(
       '<meta name="description" content="This is a test">'
@@ -126,7 +130,7 @@ describe('useMeta', () => {
     await act(async () => {
       await rerender(<MyComponent description="This is not a test" />);
     });
-    jest.runAllTimers();
+    vi.runAllTimers();
     expect(document.head.innerHTML).toContain('<meta charset="utf-8">');
     expect(document.head.innerHTML).toContain(
       '<meta name="description" content="This is not a test">'
@@ -146,7 +150,7 @@ describe('useMeta', () => {
   });
 
   it('should deeply use meta-tags', async () => {
-    jest.useFakeTimers();
+    vi.useFakeTimers();
     const MyComponent = ({ children }: any) => {
       useMeta({ charset: 'utf-8' });
       useMeta({ name: 'description', content: 'This is a test' });
@@ -174,7 +178,7 @@ describe('useMeta', () => {
         </MyComponent>
       ));
     });
-    jest.runAllTimers();
+    vi.runAllTimers();
     expect(document.head.innerHTML).toContain('<meta charset="utf-2">');
     expect(document.head.innerHTML).toContain(
       '<meta name="description" content="This is not a test">'
@@ -206,7 +210,7 @@ describe('useMeta', () => {
         </MyComponent>
       );
     });
-    jest.runAllTimers();
+    vi.runAllTimers();
     expect(document.head.innerHTML).toContain('<meta charset="utf-8">');
     expect(document.head.innerHTML).toContain(
       '<meta http-equiv="refresh" content="30">'
@@ -233,7 +237,7 @@ describe('useMeta', () => {
   });
 
   it('should deeply replace meta-tags', async () => {
-    jest.useFakeTimers();
+    vi.useFakeTimers();
     const MyComponent = ({ children }: any) => children;
     const MyPage = () => {
       // @ts-ignore
@@ -264,7 +268,7 @@ describe('useMeta', () => {
         </MyComponent>
       ));
     });
-    jest.runAllTimers();
+    vi.runAllTimers();
     expect(document.head.innerHTML).toContain('<meta charset="utf-2">');
     expect(document.head.innerHTML).toContain(
       '<meta name="description" content="This is not a test">'
@@ -296,7 +300,7 @@ describe('useMeta', () => {
         </MyComponent>
       );
     });
-    jest.runAllTimers();
+    vi.runAllTimers();
     expect(document.head.innerHTML).toContain('<meta charset="utf-3">');
     expect(document.head.innerHTML).toContain(
       '<meta name="description" content="This is not a test 2">'
