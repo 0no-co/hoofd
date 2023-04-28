@@ -16,9 +16,9 @@ export interface LinkOptions {
 
 export const useLink = (options: LinkOptions) => {
   const dispatcher = useContext(DispatcherContext);
+
   const hasMounted = useRef(false);
   const node = useRef<Element | undefined>();
-  const originalOptions = useRef<LinkOptions | undefined>();
 
   if (isServerSide && !hasMounted.current) {
     dispatcher._addToQueue(LINK, options as any);
@@ -39,14 +39,16 @@ export const useLink = (options: LinkOptions) => {
     options.crossorigin,
     options.type,
     options.hreflang,
+    options.sizes,
   ]);
 
   useEffect(() => {
     hasMounted.current = true;
     const preExistingElements = document.querySelectorAll(
-      `link[rel="${options.rel}"]`
+      `link[data-hoofd="1"]`
     );
 
+    // We should be able to recover from SSR like this
     preExistingElements.forEach((x) => {
       let found = true;
       Object.keys(options).forEach((key) => {
@@ -61,13 +63,7 @@ export const useLink = (options: LinkOptions) => {
       }
     });
 
-    if (node.current) {
-      originalOptions.current = Object.keys(options).reduce((acc, key) => {
-        // @ts-ignore
-        acc[key] = node.current!.getAttribute(key);
-        return acc;
-      }, {} as LinkOptions);
-    } else {
+    if (!node.current) {
       node.current = document.createElement('link');
       Object.keys(options).forEach((key) => {
         // @ts-ignore
@@ -78,16 +74,9 @@ export const useLink = (options: LinkOptions) => {
 
     return () => {
       hasMounted.current = false;
-      if (originalOptions.current) {
-        Object.keys(originalOptions.current).forEach((key) => {
-          (node.current as Element).setAttribute(
-            key,
-            // @ts-ignore
-            originalOptions.current[key]
-          );
-        });
-      } else {
+      if (node.current) {
         document.head.removeChild(node.current as Element);
+        node.current = undefined;
       }
     };
   }, []);
