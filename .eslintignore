@@ -1,7 +1,0 @@
-dist
-examples/**/*
-lib
-docs
-website
-__tests__
-coverage
