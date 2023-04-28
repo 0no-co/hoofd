@@ -60,6 +60,8 @@
     }
   },
   "devDependencies": {
+    "@changesets/cli": "^2.26.1",
+    "@changesets/get-github-info": "^0.5.2",
     "@testing-library/jest-dom": "^5.3.0",
     "@testing-library/react": "^14.0.0",
     "@types/jest": "24.0.23",
@@ -70,6 +72,7 @@
     "@typescript-eslint/parser": "2.11.0",
     "codecov": "3.7.1",
     "cross-env": "^7.0.2",
+    "dotenv": "^16.0.3",
     "eslint": "6.7.2",
     "eslint-config-prettier": "6.7.0",
     "eslint-plugin-react": "7.17.0",
@@ -89,6 +92,9 @@
   },
   "peerDependencies": {
     "react": ">= 16.8.0"
+  },
+  "publishConfig": {
+    "provenance": true
   },
   "mangle": {
     "regex": "^_"
