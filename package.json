@@ -2,7 +2,7 @@
   "name": "hoofd",
   "version": "1.6.0",
   "description": "Hooks to populate the html head.",
-  "author": "jdecroock <decroockjovi@gmail.com> (https://twitter.com/JoviDeC)",
+  "author": "0no.co <hi@0no.co>",
   "private": false,
   "scripts": {
     "build": "rimraf dist && pnpm build:preact && pnpm build:react",
@@ -16,13 +16,13 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/JoviDeCroock/hoofd.git"
+    "url": "git+https://github.com/0no-co/hoofd.git"
   },
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/JoviDeCroock/hoofd/issues"
+    "url": "https://github.com/0no-co/hoofd/issues"
   },
-  "homepage": "https://github.com/JoviDeCroock/hoofd#readme",
+  "homepage": "https://github.com/0no-co/hoofd#readme",
   "keywords": [
     "hoofd",
     "react",
