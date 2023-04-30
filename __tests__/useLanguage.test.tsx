@@ -1,6 +1,10 @@
-import '@testing-library/jest-dom';
+/**
+ * @vitest-environment jsdom
+ */
 import * as React from 'react';
 import { act, render, cleanup } from '@testing-library/react';
+import { expect, describe, afterEach, it } from 'vitest';
+
 import { useLang } from '../src';
 
 describe('useLang', () => {

@@ -2,7 +2,6 @@
 
 [![npm version](https://badgen.net/npm/v/hoofd)](https://www.npmjs.com/package/hoofd)
 [![Bundle size](https://badgen.net/bundlephobia/minzip/hoofd)](https://badgen.net/bundlephobia/minzip/hoofd)
-[![codecov](https://codecov.io/gh/JoviDeCroock/hoofd/branch/main/graph/badge.svg)](https://codecov.io/gh/JoviDeCroock/hoofd)
 
 This project aims at providing a set of hooks to populate `<meta>`, ... for each page. With crawlers now supporting
 client-side alterations it's important to support a fallback model for our `<head>` tags. The dispatcher located in this
@@ -128,8 +127,8 @@ const stringify = (title, metas, links) => {
       `${acc}<${tagName}${Object.keys(tag).reduce(
         (properties, key) => `${properties} ${key}="${tag[key]}"`,
         ''
-      )}>`
-    }, '')
+      )}>`;
+    }, '');
 
   return `
     <title>${title}</title>

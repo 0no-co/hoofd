@@ -1,6 +1,10 @@
-import '@testing-library/jest-dom';
+/**
+ * @vitest-environment jsdom
+ */
 import * as React from 'react';
 import { act, render, cleanup } from '@testing-library/react';
+import { expect, describe, afterEach, it, vi } from 'vitest';
+
 import { useHead } from '../src';
 import dispatcher from '../src/dispatcher';
 
@@ -11,7 +15,7 @@ describe('useMeta', () => {
   });
 
   it('should use full head', async () => {
-    jest.useFakeTimers();
+    vi.useFakeTimers();
     const MyComponent = ({ description }: any) => {
       useHead({
         title: 'Hello world',
@@ -34,7 +38,7 @@ describe('useMeta', () => {
       ));
     });
 
-    jest.runAllTimers();
+    vi.runAllTimers();
     expect(document.title).toEqual('Hello world');
     expect(document.head.innerHTML).toContain('<meta charset="utf-8">');
     expect(document.head.innerHTML).toContain(
@@ -51,7 +55,7 @@ describe('useMeta', () => {
       await rerender(<MyComponent description="This is not a test" />);
     });
 
-    jest.runAllTimers();
+    vi.runAllTimers();
     expect(document.title).toEqual('Hello world');
     expect(document.head.innerHTML).toContain('<meta charset="utf-8">');
     expect(document.head.innerHTML).toContain(
@@ -72,7 +76,7 @@ describe('useMeta', () => {
   });
 
   it('should deeply utilize head', async () => {
-    jest.useFakeTimers();
+    vi.useFakeTimers();
 
     const MyChild = ({ description, title }: any) => {
       useHead({
@@ -114,7 +118,7 @@ describe('useMeta', () => {
       ));
     });
 
-    jest.runAllTimers();
+    vi.runAllTimers();
     expect(
       document.getElementsByTagName('html')[0].getAttribute('lang')
     ).toEqual('en');
@@ -138,7 +142,7 @@ describe('useMeta', () => {
       );
     });
 
-    jest.runAllTimers();
+    vi.runAllTimers();
     expect(document.title).toEqual('Hello world');
     expect(document.head.innerHTML).toContain('<meta charset="utf-8">');
     expect(document.head.innerHTML).toContain(
@@ -159,7 +163,7 @@ describe('useMeta', () => {
       );
     });
 
-    jest.runAllTimers();
+    vi.runAllTimers();
     expect(document.title).toEqual('Ohaio world');
     expect(document.head.innerHTML).toContain('<meta charset="utf-8">');
     expect(document.head.innerHTML).toContain(
@@ -176,7 +180,7 @@ describe('useMeta', () => {
       await rerender(<MyComponent twitter description="This is not a test" />);
     });
 
-    jest.runAllTimers();
+    vi.runAllTimers();
     expect(document.title).toEqual('Hello world');
     expect(document.head.innerHTML).toContain('<meta charset="utf-8">');
     expect(document.head.innerHTML).toContain(

@@ -1,6 +1,10 @@
-import '@testing-library/jest-dom';
+/**
+ * @vitest-environment jsdom
+ */
 import * as React from 'react';
+import { expect, describe, afterEach, it, vi } from 'vitest';
 import { act, render, cleanup } from '@testing-library/react';
+
 import { useTitle, useTitleTemplate } from '../src';
 import dispatcher from '../src/dispatcher';
 
@@ -11,7 +15,7 @@ describe('useTitle', () => {
   });
 
   it('should remove the template string when there is no title provided', async () => {
-    jest.useFakeTimers();
+    vi.useFakeTimers();
     const MyComponent = ({ template }: { template: string }) => {
       useTitleTemplate(template);
 
@@ -22,12 +26,12 @@ describe('useTitle', () => {
       await render(<MyComponent template="Site%s" />);
     });
 
-    jest.runAllTimers();
+    vi.runAllTimers();
     expect(document.title).toEqual('Site');
   });
 
   it('should fill in the title based on the template', async () => {
-    jest.useFakeTimers();
+    vi.useFakeTimers();
     const MyComponent = ({
       template,
       title,
@@ -49,7 +53,7 @@ describe('useTitle', () => {
       ));
     });
 
-    jest.runAllTimers();
+    vi.runAllTimers();
     expect(document.title).toEqual('Super | Site');
 
     await act(async () => {
@@ -57,12 +61,12 @@ describe('useTitle', () => {
         <MyComponent title="itWorks" template="| without replacement" />
       );
     });
-    jest.runAllTimers();
+    vi.runAllTimers();
     expect(document.title).toEqual('| without replacement');
   });
 
   it('should restore the title', async () => {
-    jest.useFakeTimers();
+    vi.useFakeTimers();
     const MyComponent = ({
       title,
       template,
@@ -83,19 +87,19 @@ describe('useTitle', () => {
       ));
     });
 
-    jest.runAllTimers();
+    vi.runAllTimers();
     expect(document.title).toEqual('coolStory | Bruh');
 
     await act(async () => {
       await rerender!(<p>hi</p>);
     });
 
-    jest.runAllTimers();
+    vi.runAllTimers();
     expect(document.title).toEqual('');
   });
 
   it('should deeply fill in the title', async () => {
-    jest.useFakeTimers();
+    vi.useFakeTimers();
     const MyComponent = ({
       children,
       title,
@@ -125,7 +129,7 @@ describe('useTitle', () => {
       ));
     });
 
-    jest.runAllTimers();
+    vi.runAllTimers();
     expect(document.title).toEqual('resetted | Bruh');
 
     await act(async () => {
@@ -136,12 +140,12 @@ describe('useTitle', () => {
       );
     });
 
-    jest.runAllTimers();
+    vi.runAllTimers();
     expect(document.title).toEqual('coolStory | Bruh');
   });
 
   it('should keep the templates deeply in order', async () => {
-    jest.useFakeTimers();
+    vi.useFakeTimers();
     const MyComponent = ({
       children,
       title,
@@ -197,7 +201,7 @@ describe('useTitle', () => {
       ));
     });
 
-    jest.runAllTimers();
+    vi.runAllTimers();
     expect(document.title).toEqual('innerStory | Sis');
 
     await act(async () => {
@@ -210,7 +214,7 @@ describe('useTitle', () => {
       ));
     });
 
-    jest.runAllTimers();
+    vi.runAllTimers();
     expect(document.title).toEqual('innerStory | Bro');
   });
 });

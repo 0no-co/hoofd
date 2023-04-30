@@ -1,6 +1,10 @@
-import '@testing-library/jest-dom';
+/**
+ * @vitest-environment jsdom
+ */
 import * as React from 'react';
+import { expect, describe, afterEach, it, vi } from 'vitest';
 import { act, render, cleanup } from '@testing-library/react';
+
 import { useTitle } from '../src';
 import dispatcher from '../src/dispatcher';
 
@@ -11,7 +15,7 @@ describe('useTitle', () => {
   });
 
   it('should fill in the title', async () => {
-    jest.useFakeTimers();
+    vi.useFakeTimers();
     const MyComponent = ({ title }: { title: string }) => {
       useTitle(title);
       return <p>hi</p>;
@@ -21,18 +25,18 @@ describe('useTitle', () => {
     await act(async () => {
       ({ rerender } = await render(<MyComponent title="coolStoryBruh" />));
     });
-    jest.runAllTimers();
+    vi.runAllTimers();
     expect(document.title).toEqual('coolStoryBruh');
 
     await act(async () => {
       await rerender!(<MyComponent title="itWorks" />);
     });
-    jest.runAllTimers();
+    vi.runAllTimers();
     expect(document.title).toEqual('itWorks');
   });
 
   it('should restore the title', async () => {
-    jest.useFakeTimers();
+    vi.useFakeTimers();
     const MyComponent = ({ title }: { title: string }) => {
       useTitle(title);
       return <p>hi</p>;
@@ -43,18 +47,18 @@ describe('useTitle', () => {
     await act(async () => {
       ({ rerender } = await render(<MyComponent title="coolStoryBruh" />));
     });
-    jest.runAllTimers();
+    vi.runAllTimers();
     expect(document.title).toEqual('coolStoryBruh');
 
     await act(async () => {
       await rerender!(<p>hi</p>);
     });
-    jest.runAllTimers();
+    vi.runAllTimers();
     expect(document.title).toEqual('');
   });
 
   it('should deeply fill in the title', async () => {
-    jest.useFakeTimers();
+    vi.useFakeTimers();
     const MyComponent = ({
       children,
       title,
@@ -80,7 +84,7 @@ describe('useTitle', () => {
         </MyComponent>
       ));
     });
-    jest.runAllTimers();
+    vi.runAllTimers();
     expect(document.title).toEqual('resettedBruv');
 
     await act(async () => {
@@ -90,7 +94,7 @@ describe('useTitle', () => {
         </MyComponent>
       );
     });
-    jest.runAllTimers();
+    vi.runAllTimers();
     expect(document.title).toEqual('coolStoryBruh');
   });
 
@@ -124,7 +128,7 @@ describe('useTitle', () => {
         </MyComponent>
       ));
     });
-    jest.runAllTimers();
+    vi.runAllTimers();
     expect(document.title).toEqual('Bruv');
 
     await act(async () => {
@@ -134,7 +138,7 @@ describe('useTitle', () => {
         </MyComponent>
       );
     });
-    jest.runAllTimers();
+    vi.runAllTimers();
     expect(document.title).toEqual('Bruh');
   });
 });
