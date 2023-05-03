@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 1.7.0
+
+### Minor Changes
+
+- Escape single quotes via x27 instead of 39
+  Submitted by [@tazsingh](https://github.com/tazsingh) (See [#88](https://github.com/0no-co/hoofd/pull/88))
+
 ## 1.6.0
 
 ### Minor Changes

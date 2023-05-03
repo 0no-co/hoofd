@@ -1,6 +1,6 @@
 {
   "name": "hoofd",
-  "version": "1.6.0",
+  "version": "1.7.0",
   "description": "Hooks to populate the html head.",
   "author": "0no.co <hi@0no.co>",
   "private": false,
