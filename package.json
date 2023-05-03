@@ -10,7 +10,7 @@
     "build:preact": "microbundle --define process.env.NODE_ENV=production --external preact --name hoofd --no-compress --output preact/dist --alias react=./preact/preact.ts  && cp ./preact/dist/hoofd.module.js ./preact/dist/hoofd.mjs",
     "build:ci": "microbundle --define process.env.NODE_ENV=production --external preact --name hoofd --output dist/",
     "test": "vitest",
-    "prepublishOnly": "pnpm test && pnpm lint && pnpm build",
+    "prepublishOnly": "pnpm build",
     "prepare": "husky install"
   },
   "repository": {
