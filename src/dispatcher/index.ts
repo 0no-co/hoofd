@@ -220,7 +220,7 @@ export const createDispatcher = () => {
               ch = '&amp;';
               break;
             case 39:
-              ch = '&#39;';
+              ch = '&#x27;';
               break;
             case 60:
               ch = '&lt;';
