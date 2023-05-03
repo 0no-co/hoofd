@@ -80,7 +80,7 @@ describe('ssr', () => {
 
     expect(metas).toEqual([
       { content: '&quot;&quot;', property: 'fb:something' },
-      { content: '&#39;&#39;&lt;&gt;&amp;', property: 'fb:admins' },
+      { content: '&#x27;&#x27;&lt;&gt;&amp;', property: 'fb:admins' },
     ]);
   });
 
