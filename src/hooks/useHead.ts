@@ -22,17 +22,17 @@ export function extractKeyword(meta: MetaOptions) {
 export const useHead = ({ title, metas, language }: HeadObject) => {
   const dispatcher = useContext(DispatcherContext);
   const hasMounted = useRef(false);
-  const prevTitle = useRef<string | undefined>();
+  const prevTitle = useRef<{ payload: string } | undefined>();
   const prevMetas = useRef<MetaPayload[]>();
   const addedMetas = useRef<MetaPayload[]>();
 
   const memoizedMetas = useMemo(() => {
-    const calculatedMetas: MetaPayload[] = (metas || []).map((meta) => {
+    const calculatedMetas: MetaPayload[] = (metas || []).map(meta => {
       const keyword = extractKeyword(meta);
 
       if (prevMetas.current) {
         const found = prevMetas.current.find(
-          (x) =>
+          x =>
             x.keyword === keyword &&
             x.name === meta.name &&
             x.charset === meta.charset &&
@@ -58,10 +58,10 @@ export const useHead = ({ title, metas, language }: HeadObject) => {
   }, [metas]);
 
   if (isServerSide && !hasMounted.current) {
-    if (title) dispatcher._addToQueue(TITLE, title);
+    if (title) dispatcher._addToQueue(TITLE, { payload: title });
     if (language) dispatcher._setLang(language);
 
-    memoizedMetas.forEach((meta) => {
+    memoizedMetas.forEach(meta => {
       dispatcher._addToQueue(META, meta);
     });
   }
@@ -71,13 +71,13 @@ export const useHead = ({ title, metas, language }: HeadObject) => {
       const previousMetas = [...prevMetas.current];
       const added: MetaPayload[] = [];
 
-      memoizedMetas.forEach((meta) => {
+      memoizedMetas.forEach(meta => {
         added.push(meta);
         if (previousMetas.includes(meta)) {
           previousMetas.splice(previousMetas.indexOf(meta), 1);
         } else {
           const previousIteration = previousMetas.find(
-            (x) =>
+            x =>
               x.keyword === meta.keyword &&
               meta[meta.keyword] === x[meta.keyword]
           );
@@ -90,7 +90,7 @@ export const useHead = ({ title, metas, language }: HeadObject) => {
       });
 
       if (previousMetas.length) {
-        previousMetas.forEach((meta) => {
+        previousMetas.forEach(meta => {
           dispatcher._removeFromQueue(META, meta);
         });
       }
@@ -101,14 +101,14 @@ export const useHead = ({ title, metas, language }: HeadObject) => {
   }, [memoizedMetas]);
 
   useEffect(() => {
-    memoizedMetas.forEach((meta) => {
+    memoizedMetas.forEach(meta => {
       dispatcher._addToQueue(META, meta);
     });
 
     prevMetas.current = addedMetas.current = memoizedMetas;
 
     return () => {
-      (addedMetas.current || []).forEach((meta) => {
+      (addedMetas.current || []).forEach(meta => {
         dispatcher._removeFromQueue(META, meta);
       });
     };
@@ -119,26 +119,26 @@ export const useHead = ({ title, metas, language }: HeadObject) => {
       if (prevTitle.current != null) {
         dispatcher._change(
           TITLE,
-          prevTitle.current as string,
-          (prevTitle.current = title)
+          prevTitle.current,
+          (prevTitle.current = { payload: title })
         );
       } else {
-        dispatcher._addToQueue(TITLE, (prevTitle.current = title));
+        dispatcher._addToQueue(TITLE, (prevTitle.current = { payload: title }));
       }
     } else if (hasMounted.current && prevTitle.current) {
-      dispatcher._removeFromQueue(TITLE, prevTitle.current as string);
+      dispatcher._removeFromQueue(TITLE, prevTitle.current);
       prevTitle.current = undefined;
     }
   }, [title]);
 
   useEffect(() => {
     hasMounted.current = true;
-    dispatcher._addToQueue(TITLE, (prevTitle.current = title!));
+    dispatcher._addToQueue(TITLE, (prevTitle.current = { payload: title! }));
 
     return () => {
       hasMounted.current = false;
       if (prevTitle.current != null)
-        dispatcher._removeFromQueue(TITLE, prevTitle.current as string);
+        dispatcher._removeFromQueue(TITLE, prevTitle.current);
     };
   }, []);
 

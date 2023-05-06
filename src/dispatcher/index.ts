@@ -21,8 +21,14 @@ export interface MetaPayload {
   content: string;
 }
 
-const applyTitleTemplate = (title: string, template?: string) =>
-  template ? template.replace(/%s/g, title || '') : title;
+export interface TitlePayload {
+  payload: string;
+}
+
+const applyTitleTemplate = (title: TitlePayload, template?: string): string =>
+  template
+    ? template.replace(/%s/g, (title && title.payload) || '')
+    : (title && title.payload) || '';
 
 const changeOrCreateMetaTag = (meta: MetaPayload) => {
   const result = document.head.querySelectorAll(
@@ -71,8 +77,8 @@ export const createDispatcher = () => {
   let lang: string;
   let linkQueue: any[] = [];
   let scriptQueue: any[] = [];
-  let titleQueue: string[] = [];
-  let titleTemplateQueue: string[] = [];
+  let titleQueue: TitlePayload[] = [];
+  let titleTemplateQueue: TitlePayload[] = [];
   let metaQueue: MetaPayload[] = [];
   let currentTitleIndex = 0;
   let currentTitleTemplateIndex = 0;
@@ -92,10 +98,10 @@ export const createDispatcher = () => {
 
         document.title = applyTitleTemplate(
           titleQueue[0],
-          titleTemplateQueue[0]
+          titleTemplateQueue[0] && titleTemplateQueue[0].payload
         );
 
-        metaQueue.forEach((meta) => {
+        metaQueue.forEach(meta => {
           if (!visited.has(meta.charset ? meta.keyword : meta[meta.keyword])) {
             visited.add(meta.charset ? meta.keyword : meta[meta.keyword]);
             changeOrCreateMetaTag(meta);
@@ -111,18 +117,21 @@ export const createDispatcher = () => {
     _setLang: (l: string) => {
       lang = l;
     },
-    _addToQueue: (type: HeadType, payload: MetaPayload | string): void => {
+    _addToQueue: (
+      type: HeadType,
+      payload: MetaPayload | TitlePayload
+    ): void => {
       if (!isServerSide) processQueue();
 
       if (type === SCRIPT) {
         scriptQueue.push(payload);
       } else if (type === TITLE) {
-        titleQueue.splice(currentTitleIndex++, 0, payload as string);
+        titleQueue.splice(currentTitleIndex++, 0, payload as TitlePayload);
       } else if (type === TEMPLATE) {
         titleTemplateQueue.splice(
           currentTitleTemplateIndex++,
           0,
-          payload as string
+          payload as TitlePayload
         );
       } else if (type === META) {
         metaQueue.splice(currentMetaIndex++, 0, payload as MetaPayload);
@@ -130,16 +139,16 @@ export const createDispatcher = () => {
         linkQueue.push(payload);
       }
     },
-    _removeFromQueue: (type: HeadType, payload: MetaPayload | string) => {
+    _removeFromQueue: (type: HeadType, payload: MetaPayload | TitlePayload) => {
       if (type === TITLE || type === TEMPLATE) {
         const queue = type === TEMPLATE ? titleTemplateQueue : titleQueue;
-        const index = queue.indexOf(payload as string);
+        const index = queue.indexOf(payload as TitlePayload);
         queue.splice(index, 1);
 
         if (index === 0)
           document.title = applyTitleTemplate(
-            titleQueue[0] || '',
-            titleTemplateQueue[0]
+            titleQueue[0] || { payload: '' },
+            titleTemplateQueue[0] && titleTemplateQueue[0].payload
           );
       } else {
         const oldMeta = metaQueue[metaQueue.indexOf(payload as MetaPayload)];
@@ -147,7 +156,7 @@ export const createDispatcher = () => {
         if (oldMeta) {
           metaQueue.splice(metaQueue.indexOf(payload as MetaPayload), 1);
           const newMeta = metaQueue.find(
-            (m) =>
+            m =>
               m.keyword === oldMeta.keyword &&
               (m.charset || m[m.keyword] === oldMeta[m.keyword])
           );
@@ -170,22 +179,24 @@ export const createDispatcher = () => {
     },
     _change: (
       type: HeadType,
-      prevPayload: string | MetaPayload,
-      payload: any
+      prevPayload: TitlePayload | MetaPayload,
+      payload: TitlePayload | MetaPayload
     ) => {
       if (type === TITLE || type === TEMPLATE) {
         const queue = type === TEMPLATE ? titleTemplateQueue : titleQueue;
-        queue[queue.indexOf(prevPayload as string)] = payload;
+        queue[queue.indexOf(prevPayload as TitlePayload)] =
+          payload as TitlePayload;
 
-        if (queue.indexOf(payload) === 0) {
+        if (queue.indexOf(payload as TitlePayload) === 0) {
           document.title = applyTitleTemplate(
-            queue[queue.indexOf(payload)],
-            titleTemplateQueue[0]
+            queue[queue.indexOf(payload as TitlePayload)],
+            titleTemplateQueue[0] && titleTemplateQueue[0].payload
           );
         }
       } else {
         changeOrCreateMetaTag(
-          (metaQueue[metaQueue.indexOf(prevPayload as MetaPayload)] = payload)
+          (metaQueue[metaQueue.indexOf(prevPayload as MetaPayload)] =
+            payload as MetaPayload)
         );
       }
     },
@@ -244,7 +255,8 @@ export const createDispatcher = () => {
       //  will need a reset to prevent memory leaks.
       const title = applyTitleTemplate(
         titleQueue[titleQueue.length - 1],
-        titleTemplateQueue[titleTemplateQueue.length - 1]
+        titleTemplateQueue[titleTemplateQueue.length - 1] &&
+          titleTemplateQueue[titleTemplateQueue.length - 1].payload
       );
 
       const visited = new Set();
@@ -252,7 +264,7 @@ export const createDispatcher = () => {
       const scripts = [...scriptQueue];
       metaQueue.reverse();
       // @ts-ignore
-      const metas = [...metaQueue].filter((meta) => {
+      const metas = [...metaQueue].filter(meta => {
         if (!visited.has(meta.charset ? meta.keyword : meta[meta.keyword])) {
           visited.add(meta.charset ? meta.keyword : meta[meta.keyword]);
           return true;
@@ -269,9 +281,9 @@ export const createDispatcher = () => {
       return {
         lang,
         title,
-        links: links.map((x) => ({ ...x, ['data-hoofd']: '1' })),
+        links: links.map(x => ({ ...x, ['data-hoofd']: '1' })),
         scripts,
-        metas: metas.map((meta) =>
+        metas: metas.map(meta =>
           meta.keyword === 'charset'
             ? {
                 charset: meta[meta.keyword],
