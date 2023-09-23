@@ -179,6 +179,7 @@ describe('useMeta', () => {
       ));
     });
     vi.runAllTimers();
+    console.log(document.head.innerHTML);
     expect(document.head.innerHTML).toContain('<meta charset="utf-2">');
     expect(document.head.innerHTML).toContain(
       '<meta name="description" content="This is not a test">'

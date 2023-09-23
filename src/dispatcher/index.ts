@@ -95,7 +95,7 @@ export const createDispatcher = () => {
           titleTemplateQueue[0]
         );
 
-        metaQueue.forEach((meta) => {
+        metaQueue.forEach(meta => {
           if (!visited.has(meta.charset ? meta.keyword : meta[meta.keyword])) {
             visited.add(meta.charset ? meta.keyword : meta[meta.keyword]);
             changeOrCreateMetaTag(meta);
@@ -136,18 +136,27 @@ export const createDispatcher = () => {
         const index = queue.indexOf(payload as string);
         queue.splice(index, 1);
 
+        let currentIndex =
+          type === TITLE ? currentTitleIndex : currentTitleTemplateIndex;
+        if (currentIndex === index) {
+          currentIndex--;
+        }
+
         if (index === 0)
           document.title = applyTitleTemplate(
             titleQueue[0] || '',
             titleTemplateQueue[0]
           );
       } else {
-        const oldMeta = metaQueue[metaQueue.indexOf(payload as MetaPayload)];
+        const index = metaQueue.indexOf(payload as MetaPayload);
+
+        const oldMeta = metaQueue[index];
 
         if (oldMeta) {
-          metaQueue.splice(metaQueue.indexOf(payload as MetaPayload), 1);
+          metaQueue.splice(index, 1);
+
           const newMeta = metaQueue.find(
-            (m) =>
+            m =>
               m.keyword === oldMeta.keyword &&
               (m.charset || m[m.keyword] === oldMeta[m.keyword])
           );
@@ -252,7 +261,7 @@ export const createDispatcher = () => {
       const scripts = [...scriptQueue];
       metaQueue.reverse();
       // @ts-ignore
-      const metas = [...metaQueue].filter((meta) => {
+      const metas = [...metaQueue].filter(meta => {
         if (!visited.has(meta.charset ? meta.keyword : meta[meta.keyword])) {
           visited.add(meta.charset ? meta.keyword : meta[meta.keyword]);
           return true;
@@ -269,9 +278,9 @@ export const createDispatcher = () => {
       return {
         lang,
         title,
-        links: links.map((x) => ({ ...x, ['data-hoofd']: '1' })),
+        links: links.map(x => ({ ...x, ['data-hoofd']: '1' })),
         scripts,
-        metas: metas.map((meta) =>
+        metas: metas.map(meta =>
           meta.keyword === 'charset'
             ? {
                 charset: meta[meta.keyword],
