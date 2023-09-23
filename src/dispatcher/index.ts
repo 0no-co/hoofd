@@ -154,12 +154,15 @@ export const createDispatcher = () => {
 
         if (oldMeta) {
           metaQueue.splice(index, 1);
-
           const newMeta = metaQueue.find(
             m =>
               m.keyword === oldMeta.keyword &&
               (m.charset || m[m.keyword] === oldMeta[m.keyword])
           );
+
+          if (currentMetaIndex === index) {
+            currentMetaIndex--;
+          }
 
           if (newMeta) {
             changeOrCreateMetaTag(newMeta);
@@ -206,6 +209,9 @@ export const createDispatcher = () => {
             metaQueue = [];
             linkQueue = [];
             titleTemplateQueue = [];
+            currentMetaIndex = 0;
+            currentTitleIndex = 0;
+            currentTitleTemplateIndex = 0;
           }
         : // istanbul ignore next
           undefined,
