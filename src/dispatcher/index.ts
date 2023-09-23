@@ -77,6 +77,7 @@ export const createDispatcher = () => {
   let currentTitleIndex = 0;
   let currentTitleTemplateIndex = 0;
   let currentMetaIndex = 0;
+  let isBlocked = false;
 
   // A process can be debounced by one frame timing,
   // since microticks could potentially interfere with how
@@ -86,6 +87,7 @@ export const createDispatcher = () => {
 
     return () => {
       clearTimeout(timeout);
+      isBlocked = true;
       timeout = setTimeout(() => {
         timeout = null;
         const visited = new Set();
@@ -102,6 +104,7 @@ export const createDispatcher = () => {
           }
         });
 
+        isBlocked = false;
         currentTitleIndex = currentTitleTemplateIndex = currentMetaIndex = 0;
       }, 1000 / 60 /* One second divided by the max browser fps. */);
     };
@@ -136,10 +139,12 @@ export const createDispatcher = () => {
         const index = queue.indexOf(payload as string);
         queue.splice(index, 1);
 
-        let currentIndex =
-          type === TITLE ? currentTitleIndex : currentTitleTemplateIndex;
-        if (currentIndex === index) {
-          currentIndex--;
+        if (isBlocked) {
+          if (type === TITLE) {
+            currentTitleIndex--;
+          } else {
+            currentTitleTemplateIndex--;
+          }
         }
 
         if (index === 0)
@@ -160,7 +165,7 @@ export const createDispatcher = () => {
               (m.charset || m[m.keyword] === oldMeta[m.keyword])
           );
 
-          if (currentMetaIndex === index) {
+          if (isBlocked) {
             currentMetaIndex--;
           }
 
@@ -209,9 +214,11 @@ export const createDispatcher = () => {
             metaQueue = [];
             linkQueue = [];
             titleTemplateQueue = [];
-            currentMetaIndex = 0;
-            currentTitleIndex = 0;
-            currentTitleTemplateIndex = 0;
+            currentTitleTemplateIndex =
+              currentTitleIndex =
+              currentMetaIndex =
+                0;
+            isBlocked = false;
           }
         : // istanbul ignore next
           undefined,
