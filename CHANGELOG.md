@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 1.7.1
+
+### Patch Changes
+
+- ⚠️ Fix case where due to concurrent mode running effects twice our `currentIndex` would get wonky, we need to decrement the currentIndex when we remove the top of the stack during a process iteration
+  Submitted by [@JoviDeCroock](https://github.com/JoviDeCroock) (See [#95](https://github.com/0no-co/hoofd/pull/95))
+
 ## 1.7.0
 
 ### Minor Changes
