@@ -123,12 +123,12 @@ If you need to stringify these you can use the following algo:
 ```js
 const stringify = (title, metas, links) => {
   const stringifyTag = (tagName, tags) =>
-    tags.reduce((acc, tag) => {
+    tags.reduce((acc, tag) => 
       `${acc}<${tagName}${Object.keys(tag).reduce(
         (properties, key) => `${properties} ${key}="${tag[key]}"`,
         ''
-      )}>`;
-    }, '');
+      )}>`
+    , '');
 
   return `
     <title>${title}</title>
