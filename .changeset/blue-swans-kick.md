@@ -2,4 +2,4 @@
 "hoofd": patch
 ---
 
-fix(useScript): variable scope bug that stops scripts being unmounted
+Correct variable scoping in the `useEffect` of `useScript`, this prevents scripts from being wrongly unmounted
