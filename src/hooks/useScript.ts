@@ -29,7 +29,7 @@ export const useScript = (options: ScriptOptions) => {
     let script: HTMLScriptElement;
 
     if (!preExistingElements[0] && (options.src || options.id)) {
-      const script = document.createElement('script');
+      script = document.createElement('script');
 
       if (options.type) script.type = options.type;
       if (options.module) script.type = 'module';
