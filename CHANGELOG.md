@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 1.7.2
+
+### Patch Changes
+
+- Correct variable scoping in the `useEffect` of `useScript`, this prevents scripts from being wrongly unmounted
+  Submitted by [@webdevian](https://github.com/webdevian) (See [#103](https://github.com/0no-co/hoofd/pull/103))
+
 ## 1.7.1
 
 ### Patch Changes
