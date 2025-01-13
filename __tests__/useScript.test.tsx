@@ -116,6 +116,82 @@ describe('useScript', () => {
     document.head.removeChild(node);
   });
 
+  it('should remove script on unmount', () => {
+    const MyComponent = () => {
+      useScript({
+        crossorigin: 'anonymous',
+        type: 'application/javascript',
+        src: 'test.js',
+        async: true,
+      });
+      return <p>hi</p>;
+    };
+
+    let unmount;
+
+    act(() => {
+      unmount = render(<MyComponent />).unmount;
+    });
+
+    const scripts = document.head.querySelectorAll('script');
+
+    expect(scripts.length).to.equal(1);
+    expect(scripts[0].type).to.equal('application/javascript');
+    expect(scripts[0].crossOrigin).to.equal('anonymous');
+    expect(scripts[0].src).toContain('test.js');
+    expect(scripts[0].getAttribute('async')).to.equal('true');
+
+    unmount();
+
+    const updatedScripts = document.head.querySelectorAll('script');
+
+    expect(updatedScripts.length).to.equal(0);
+  });
+
+  it('should remove reused script on unmount', () => {
+    const MyComponent = () => {
+      useScript({
+        crossorigin: 'anonymous',
+        type: 'application/javascript',
+        src: 'test.js',
+        async: true,
+      });
+      return <p>hi</p>;
+    };
+
+    const node = document.createElement('script');
+    const options = {
+      crossorigin: 'anonymous',
+      src: 'test.js',
+      async: true,
+    };
+    Object.keys(options).forEach(key => {
+      // @ts-ignore
+      (node as Element).setAttribute(key, options[key]);
+    });
+    document.head.appendChild(node);
+
+    let unmount;
+
+    act(() => {
+      unmount = render(<MyComponent />).unmount;
+    });
+
+    const scripts = document.head.querySelectorAll('script');
+
+    expect(scripts.length).to.equal(1);
+    expect(scripts[0].type).to.equal('application/javascript');
+    expect(scripts[0].crossOrigin).to.equal('anonymous');
+    expect(scripts[0].src).toContain('test.js');
+    expect(scripts[0].getAttribute('async')).to.equal('true');
+
+    unmount();
+
+    const updatedScripts = document.head.querySelectorAll('script');
+
+    expect(updatedScripts.length).to.equal(0);
+  });
+
   it('should fill in the script with text', () => {
     const MyComponent = () => {
       useScript({
