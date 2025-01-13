@@ -28,10 +28,10 @@ export const useScript = (options: ScriptOptions) => {
 
     let script: HTMLScriptElement;
 
-    if (!preExistingElements[0] && (options.src || options.id)) {
-      script = document.createElement('script');
-    } else if (preExistingElements[0]) {
+    if (preExistingElements[0]) {
       script = preExistingElements[0] as HTMLScriptElement;
+    } else {
+      script = document.createElement('script');
     }
 
     if (options.type) script.type = options.type;
@@ -50,7 +50,7 @@ export const useScript = (options: ScriptOptions) => {
 
     if (options.text) script.text = options.text;
 
-    if (!preExistingElements[0] && (options.src || options.id)) {
+    if (!preExistingElements[0]) {
       document.head.appendChild(script);
     }
 
