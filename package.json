@@ -51,7 +51,7 @@
       "require": "./dist/hoofd.js"
     },
     "./preact": {
-      "types": "./preact/dist/index.d.ts",
+      "types": "./preact/index.d.ts",
       "browser": "./preact/dist/hoofd.module.js",
       "umd": "./preact/dist/hoofd.umd.js",
       "import": "./preact/dist/hoofd.mjs",

@@ -22,7 +22,7 @@
   "typings": "./index.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
+      "types": "./index.d.ts",
       "browser": "./dist/hoofd.module.js",
       "umd": "./dist/hoofd.umd.js",
       "import": "./dist/hoofd.mjs",
