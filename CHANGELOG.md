@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 1.7.3
+
+### Patch Changes
+
+- Correct the type path for the `hoofd/preact` package
+  Submitted by [@barelyhuman](https://github.com/barelyhuman) (See [#106](https://github.com/0no-co/hoofd/pull/106))
+
 ## 1.7.2
 
 ### Patch Changes
