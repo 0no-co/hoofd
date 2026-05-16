@@ -8,13 +8,73 @@ jobs:
     name: Release
     runs-on: ubuntu-20.04
     timeout-minutes: 20
+    outputs:
+      has_changesets: ${{ steps.changesets.outputs.hasChangesets }}
+      has_unpublished_packages: ${{ steps.unpublished.outputs.has_unpublished }}
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Update npm
+        run: npm install -g npm@latest
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 8
+          run_install: false
+
+      - name: Get pnpm store directory
+        id: pnpm-store
+        run: echo "pnpm_cache_dir=$(pnpm store path)" >> $GITHUB_OUTPUT
+
+      - name: Use pnpm store
+        uses: actions/cache@v3
+        id: pnpm-cache
+        with:
+          path: ${{ steps.pnpm-store.outputs.pnpm_cache_dir }}
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-
+
+      - name: Check for unpublished package versions
+        id: unpublished
+        run: node .github/scripts/has-unpublished-packages.mjs
+
+      - name: Install Dependencies
+        run: pnpm install --frozen-lockfile --prefer-offline
+
+      - name: Create Release Pull Request
+        id: changesets
+        uses: changesets/action@v1.5.3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  publish:
+    name: Publish
+    needs: release
+    if: needs.release.outputs.has_changesets == 'false' && needs.release.outputs.has_unpublished_packages == 'true'
+    runs-on: ubuntu-20.04
+    timeout-minutes: 20
+    environment:
+      name: npm
+      url: https://www.npmjs.com/package/hoofd
     permissions:
       contents: write
       id-token: write
       issues: write
-      repository-projects: write
-      deployments: write
-      packages: write
       pull-requests: write
     steps:
       - name: Checkout Repo
@@ -53,7 +113,7 @@ jobs:
       - name: Install Dependencies
         run: pnpm install --frozen-lockfile --prefer-offline
 
-      - name: PR or Publish
+      - name: Publish packages
         id: changesets
         uses: changesets/action@v1.5.3
         with:
