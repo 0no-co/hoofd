@@ -12,6 +12,8 @@ export interface LinkOptions {
   crossorigin?: 'anonymous' | 'use-credentials';
   type?: string;
   hreflang?: string;
+  imagesrcset?: string;
+  imagesizes?: string;
 }
 
 export const useLink = (options: LinkOptions) => {
@@ -40,6 +42,8 @@ export const useLink = (options: LinkOptions) => {
     options.type,
     options.hreflang,
     options.sizes,
+    options.imagesizes,
+    options.imagesrcset
   ]);
 
   useEffect(() => {

@@ -154,4 +154,23 @@ describe('useLink', () => {
       '<link crossorigin="anonymous" as="audio" href="htt://chow" media="en" rel="prefetch" sizes="x">'
     );
   });
+
+  it('sets imagesrcset and imagesizes on the link', () => {
+    const MyComponent = () => {
+      useLink({
+        rel: 'preload',
+        as: 'image',
+        href: '/pic-800.jpg',
+        imagesrcset: '/pic-400.jpg 400w, /pic-800.jpg 800w',
+        imagesizes: '(max-width: 600px) 100vw, 50vw',
+      });
+      return null;
+    };
+
+    render(<MyComponent />);
+
+    const link = document.head.querySelector('link[rel="preload"]')!;
+    expect(link.getAttribute('imagesrcset')).toBe('/pic-400.jpg 400w, /pic-800.jpg 800w');
+    expect(link.getAttribute('imagesizes')).toBe('(max-width: 600px) 100vw, 50vw');
+  });
 });
