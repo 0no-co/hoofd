@@ -133,7 +133,9 @@ export const useHead = ({ title, metas, language }: HeadObject) => {
 
   useEffect(() => {
     hasMounted.current = true;
-    dispatcher._addToQueue(TITLE, (prevTitle.current = title!));
+    if (title !== undefined) {
+      dispatcher._addToQueue(TITLE, (prevTitle.current = title));
+    }
 
     return () => {
       hasMounted.current = false;
