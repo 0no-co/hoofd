@@ -5,7 +5,7 @@ import * as React from 'react';
 import { act, render, cleanup } from '@testing-library/react';
 import { expect, describe, afterEach, it, vi } from 'vitest';
 
-import { useHead } from '../src';
+import { useHead, useTitle } from '../src';
 import dispatcher from '../src/dispatcher';
 
 describe('useMeta', () => {
@@ -73,6 +73,53 @@ describe('useMeta', () => {
     expect(document.head.innerHTML).not.toContain(
       '<meta property="og:description" content="This is a test">'
     );
+  });
+
+  it('should not overwrite the title when no title is provided', async () => {
+    vi.useFakeTimers();
+    document.title = 'Existing title';
+
+    const MyComponent = () => {
+      useHead({
+        metas: [{ name: 'description', content: 'This is a test' }],
+      });
+
+      return <p>hi</p>;
+    };
+
+    await act(async () => {
+      await render(<MyComponent />);
+    });
+
+    vi.runAllTimers();
+    expect(document.title).toEqual('Existing title');
+    expect(document.head.innerHTML).toContain(
+      '<meta name="description" content="This is a test">'
+    );
+  });
+
+  it('should not overwrite a title from useTitle when no title is provided', async () => {
+    vi.useFakeTimers();
+
+    const MyChild = () => {
+      useHead({
+        metas: [{ name: 'description', content: 'This is a test' }],
+      });
+
+      return null;
+    };
+
+    const MyComponent = () => {
+      useTitle('Hello world');
+      return <MyChild />;
+    };
+
+    await act(async () => {
+      await render(<MyComponent />);
+    });
+
+    vi.runAllTimers();
+    expect(document.title).toEqual('Hello world');
   });
 
   it('should deeply utilize head', async () => {

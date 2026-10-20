@@ -92,10 +92,12 @@ export const createDispatcher = () => {
         timeout = null;
         const visited = new Set();
 
-        document.title = applyTitleTemplate(
-          titleQueue[0],
-          titleTemplateQueue[0]
-        );
+        if (titleQueue.length || titleTemplateQueue.length) {
+          document.title = applyTitleTemplate(
+            titleQueue[0],
+            titleTemplateQueue[0]
+          );
+        }
 
         metaQueue.forEach(meta => {
           if (!visited.has(meta.charset ? meta.keyword : meta[meta.keyword])) {

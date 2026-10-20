@@ -14,6 +14,23 @@ describe('useMeta', () => {
     dispatcher._reset!();
   });
 
+  it('should not change the document title', async () => {
+    vi.useFakeTimers();
+    document.title = 'Existing title';
+
+    const Component = () => {
+      useMeta({ name: 'description', content: 'This is a test' });
+      return <p>hi</p>;
+    };
+
+    await act(async () => {
+      await render(<Component />);
+    });
+    vi.runAllTimers();
+
+    expect(document.title).toEqual('Existing title');
+  });
+
   it('should create and change http-equiv', async () => {
     let rerender: any;
     vi.useFakeTimers();
