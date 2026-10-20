@@ -201,9 +201,16 @@ export const createDispatcher = () => {
           );
         }
       } else {
-        changeOrCreateMetaTag(
-          (metaQueue[metaQueue.indexOf(prevPayload as MetaPayload)] = payload)
+        const index = metaQueue.indexOf(prevPayload as MetaPayload);
+        if (index !== -1) metaQueue[index] = payload;
+
+        const newMeta = metaQueue.find(
+          m =>
+            m.keyword === payload.keyword &&
+            (m.charset || m[m.keyword] === payload[m.keyword])
         );
+
+        if (newMeta) changeOrCreateMetaTag(newMeta);
       }
     },
     _reset:
