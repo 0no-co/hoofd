@@ -14,6 +14,44 @@ describe('useMeta', () => {
     dispatcher._reset!();
   });
 
+  it('should keep a deeper meta when the parent metas change', async () => {
+    vi.useFakeTimers();
+    const MyChild = () => {
+      useHead({
+        metas: [{ name: 'description', content: 'This is a child' }],
+      });
+      return null;
+    };
+
+    const MyComponent = ({ content }: { content: string }) => {
+      useHead({
+        metas: [{ name: 'description', content }],
+      });
+      return <MyChild />;
+    };
+
+    let rerender: any;
+
+    await act(async () => {
+      ({ rerender } = await render(<MyComponent content="This is a parent" />));
+    });
+    vi.runAllTimers();
+    expect(document.head.innerHTML).toContain(
+      '<meta name="description" content="This is a child">'
+    );
+
+    await act(async () => {
+      await rerender(<MyComponent content="This is an updated parent" />);
+    });
+    vi.runAllTimers();
+    expect(document.head.innerHTML).toContain(
+      '<meta name="description" content="This is a child">'
+    );
+    expect(document.head.innerHTML).not.toContain(
+      '<meta name="description" content="This is an updated parent">'
+    );
+  });
+
   it('should use full head', async () => {
     vi.useFakeTimers();
     const MyComponent = ({ description }: any) => {

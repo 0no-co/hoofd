@@ -236,6 +236,40 @@ describe('useMeta', () => {
     );
   });
 
+  it('should keep a deeper meta when the parent content changes', async () => {
+    vi.useFakeTimers();
+    const MyChild = () => {
+      useMeta({ name: 'description', content: 'This is a child' });
+      return null;
+    };
+
+    const MyComponent = ({ content }: { content: string }) => {
+      useMeta({ name: 'description', content });
+      return <MyChild />;
+    };
+
+    let rerender: any;
+
+    await act(async () => {
+      ({ rerender } = await render(<MyComponent content="This is a parent" />));
+    });
+    vi.runAllTimers();
+    expect(document.head.innerHTML).toContain(
+      '<meta name="description" content="This is a child">'
+    );
+
+    await act(async () => {
+      await rerender(<MyComponent content="This is an updated parent" />);
+    });
+    vi.runAllTimers();
+    expect(document.head.innerHTML).toContain(
+      '<meta name="description" content="This is a child">'
+    );
+    expect(document.head.innerHTML).not.toContain(
+      '<meta name="description" content="This is an updated parent">'
+    );
+  });
+
   it('should deeply replace meta-tags', async () => {
     vi.useFakeTimers();
     const MyComponent = ({ children }: any) => children;
